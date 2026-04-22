@@ -38,7 +38,7 @@ export default function Navbar() {
           <button className="hover:text-[#EF3B36] transition-colors">Services</button>
           <button className="hover:text-[#EF3B36] transition-colors">Tracking</button>
           <button className="hover:text-[#EF3B36] transition-colors">Get a Quote</button>
-          <button className="hover:text-[#EF3B36] transition-colors">Pricing</button>
+          <Link href="/pricing" className="hover:text-[#EF3B36] transition-colors">Pricing</Link>
           <Link href="/contact" className="hover:text-[#EF3B36] transition-colors">Company</Link>
           <button className="flex items-center gap-2 hover:text-[#EF3B36] transition-colors">
             <Image src="/assets/icons/userProfile.png" alt="User" width={20} height={20} />

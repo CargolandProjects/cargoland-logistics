@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function LandingPage() {
   return (
@@ -274,9 +275,9 @@ export default function LandingPage() {
 
     {/* See More Button */}
     <div className="text-center mt-12">
-      <button className="border border-white text-white px-12 py-3 rounded-xl font-medium hover:bg-white hover:text-[#E32027] transition-all">
+      <Link href="/pricing" className="inline-block border border-white text-white px-12 py-3 rounded-xl font-medium hover:bg-white hover:text-[#E32027] transition-all">
         See more
-      </button>
+      </Link>
     </div>
   </div>
 </section>

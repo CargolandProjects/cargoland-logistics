@@ -5,39 +5,39 @@ export default function Footer() {
   return (
     <footer className="w-full">
       {/* Track Shipment Banner */}
-      <section className="bg-[#E32027] py-20 px-6 md:px-32 flex flex-col lg:flex-row items-center justify-between gap-12 overflow-hidden">
-        <div className="max-w-xl text-white">
-          <h2 className="font-montserrat font-extrabold text-[44px] leading-tight mb-6">
-            Track Your Shipment in Real Time
-          </h2>
-          <p className="font-montserrat font-light text-white/90 text-[18px] mb-10">
-            Enter your tracking ID to monitor shipment progress from pickup to delivery.
-          </p>
-          
-          {/* Tracking Input Group */}
-          <div className="bg-white p-1.5 rounded-full flex items-center w-full max-w-md shadow-lg">
-            <input 
-              type="text" 
-              placeholder="Enter your tracking number"
-              className="bg-transparent border-none outline-none px-6 py-3 w-full text-[#1a1a2e] placeholder:text-gray-400 font-medium"
-            />
-            <button className="bg-[#E32027] text-white px-8 py-3 rounded-full font-bold text-[16px] hover:bg-red-700 transition-all flex items-center gap-2 whitespace-nowrap">
-              Track <span className="text-lg">→</span>
-            </button>
-          </div>
-        </div>
+     <section className="bg-[#E32027] py-20 px-6 md:px-16 flex flex-col lg:flex-row items-center justify-center gap-100 overflow-hidden">
+  {/* Changed px-32 to px-16 and justify-between to justify-center */}
+  <div className="max-w-xl text-white">
+    <h2 className="font-montserrat font-extrabold text-[44px] leading-tight mb-6">
+      Track Your Shipment in Real Time
+    </h2>
+  <p className="font-montserrat font-light text-white/90 text-[18px] mb-10 whitespace-nowrap">
+  Enter your tracking ID to monitor shipment progress from pickup to delivery.
+</p>
+    
+    <div className="bg-white p-1.5 rounded-full flex items-center w-full max-w-md shadow-lg">
+      <input 
+        type="text" 
+        placeholder="Enter your tracking number"
+        className="bg-transparent border-none outline-none px-6 py-3 w-full text-[#1a1a2e] placeholder:text-gray-400 font-medium"
+      />
+      <button className="bg-[#E32027] text-white px-8 py-3 rounded-full font-bold text-[16px] hover:bg-red-700 transition-all flex items-center gap-2 whitespace-nowrap">
+        Track <span className="text-lg">→</span>
+      </button>
+    </div>
+  </div>
 
-        {/* Tracking Image */}
-        <div className="relative w-full lg:w-[500px]">
-          <Image 
-            src="/assets/pictures/package.png" 
-            alt="Delivery person with packages" 
-            width={500} 
-            height={400}
-            className="rounded-[24px] object-cover shadow-2xl"
-          />
-        </div>
-      </section>
+  {/* Tracking Image */}
+  <div className="relative w-full lg:w-[450px]"> {/* Slightly reduced width */}
+    <Image 
+      src="/assets/pictures/package.png" 
+      alt="Delivery person with packages" 
+      width={500} 
+      height={400}
+      className="rounded-[16px] object-cover shadow-2xl" 
+    />
+  </div>
+</section>
 
       {/* Main Footer Links */}
       <section className="bg-[#0B112B] text-white pt-20 pb-10 px-6 md:px-32">
