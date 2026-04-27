@@ -1,0 +1,114 @@
+import { DeliveryTruck, Plane, Ship } from "@/components/icons";
+import { Button } from "@/components/ui/button";
+import {
+  Field,
+  FieldContent,
+  FieldLabel,
+  FieldTitle,
+} from "@/components/ui/field";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ShipmentType, useShipmentStore } from "@/lib/stores/useShipmentStore";
+
+import { useState } from "react";
+
+const SelectFreight = () => {
+  const [value, setValue] = useState<ShipmentType | null>(null);
+
+  const setShipmentType = useShipmentStore((s) => s.setShipmentType);
+
+  const handleNext = () => {
+    if (!value) {
+      alert("Set a shipment type");
+      return;
+    }
+
+    setShipmentType(value);
+  };
+  return (
+    <section className="mt-7.5">
+      <h2 className="text-lg font-semibold leading-7 font-roboto">
+        Select a Freight?
+      </h2>
+      <p className="text-sm font-light leading-5.5">
+        Flexible shipping solutions tailored to your needs.
+      </p>
+
+      <RadioGroup
+        value={value}
+        onValueChange={(value: ShipmentType) => setValue(value)}
+        className="grid md:grid-cols-3 mt-8 gap-3 md:gap-6"
+      >
+        <FieldLabel
+          htmlFor="air-freight"
+          className="p-4 md:p-6 border border-neutral-200 rounded-[16px] cursor-pointer"
+        >
+          <Field orientation="horizontal" className="p-0! ">
+            <FieldContent>
+              <Plane className="text-primary size-10" />
+
+              <FieldTitle className="mt-5 text-base font-medium leading-6">
+                Air Freight
+              </FieldTitle>
+            </FieldContent>
+            <RadioGroupItem
+              value="domestic"
+              id="air-freight"
+              className="size-5 border-2 border-neutral-400"
+            />
+          </Field>
+        </FieldLabel>
+
+        <FieldLabel
+          htmlFor="ocean-freight"
+          className="p-4 md:p-6 border border-neutral-200 rounded-[16px] cursor-pointer"
+        >
+          <Field orientation="horizontal" className="p-0! ">
+            <FieldContent>
+              <Ship className="text-primary size-10" />
+
+              <FieldTitle className="mt-5 text-base font-medium leading-6">
+                Ocean Freight
+              </FieldTitle>
+            </FieldContent>
+            <RadioGroupItem
+              value="ocean"
+              id="ocean-freight"
+              className="size-5 border-2 border-neutral-400"
+            />
+          </Field>
+        </FieldLabel>
+
+        <FieldLabel
+          htmlFor="road-freight"
+          className="p-4 md:p-6 border border-neutral-200 rounded-[16px] cursor-pointer"
+        >
+          <Field orientation="horizontal" className="p-0! ">
+            <FieldContent>
+              <DeliveryTruck className="text-primary size-10" />
+
+              <FieldTitle className="mt-5 text-base font-medium leading-6">
+                Road Freight
+              </FieldTitle>
+            </FieldContent>
+            <RadioGroupItem
+              value="road"
+              id="road-freight"
+              className="size-5 border-2 border-neutral-400"
+            />
+          </Field>
+        </FieldLabel>
+      </RadioGroup>
+
+      <div className="flex justify-end">
+        <Button
+          onClick={handleNext}
+          className="w-[180px] h-[55px] text-base font-semibold rounded-md mt-6"
+        >
+          Next Step
+        </Button>
+      </div>
+    </section>
+  );
+};
+
+export default SelectFreight;

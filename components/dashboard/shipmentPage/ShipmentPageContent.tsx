@@ -18,7 +18,7 @@ const ShipmentPageContent = () => {
       case "selectScope":
         return <WhereTo />;
       case "selectType":
-        // return <SelectFreight />;
+        return <SelectFreight />;
       case "ShipmentForm":
         return <ShipmentForm />;
     }
