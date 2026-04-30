@@ -27,8 +27,6 @@ import "intl-tel-input/styles";
 import { useEffect, useRef } from "react";
 import { Iso2 } from "intl-tel-input";
 
-// console.log(" All COuntries: ", countryOptions);
-
 const ShipperDetailsForm = () => {
   const { control, watch } = useFormContext<ShipmentFormType>();
   const phoneInputRef = useRef<any>(null);

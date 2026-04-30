@@ -10,7 +10,7 @@ import {
   defaultShipmentValues,
 } from "@/lib/schemas/shipmentSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, DeepPartial } from "react-hook-form";
 import { useShipmentStore } from "@/lib/stores/useShipmentStore";
 import { Button } from "@/components/ui/button";
 
@@ -20,7 +20,7 @@ const ShipmentForm = () => {
   const clearShipmentForm = useShipmentStore((s) => s.clearShipment);
   const formData = useShipmentStore((s) => s.formData);
   const saveFormData = useShipmentStore((s) => s.setFormData);
-
+//   clearShipmentForm();
   console.log("form data: ", formData);
 
   const form = useForm<ShipmentFormType>({
@@ -30,7 +30,10 @@ const ShipmentForm = () => {
 
   const { watch } = form;
 
-  const save = (value: any) => {
+  const save = (value: {
+    step: number;
+    data: DeepPartial<ShipmentFormType>;
+  }) => {
     if (!value) return;
     saveFormData(value);
   };
@@ -44,11 +47,11 @@ const ShipmentForm = () => {
 
   //   autosaves form progress
   useEffect(() => {
-    const sub = watch((value) => {
+    const sub = watch((data) => {
       cancel();
 
       timeoutRef.current = setTimeout(() => {
-        save(value);
+        save({ step, data });
       }, 1000);
     });
 
@@ -76,7 +79,7 @@ const ShipmentForm = () => {
     const data = form.getValues();
 
     cancel(); // stop oending autosave
-    save(data); // save immediately
+    save({ step, data }); // save immediately
 
     setStep((step) => step + 1);
   };

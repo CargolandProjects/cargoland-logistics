@@ -87,19 +87,63 @@ export const shipmentSchema = z.object({
       ),
     email: z.email("Enter a valid email address"),
     country: z.string().min(1, "Country is required"),
-    phoneCountryCode: z.string().min(1, "Country code is required"),
     phoneNumber: z
       .string()
       .min(7, "Phone number is too short")
       .max(15, "Phone number is too long")
-      .regex(/^\d+$/, "Phone number must contain only digits"),
+      .regex(/^\+?\d+$/, "Phone number must contain only digits"),
     stateOrCity: z.string().min(2, "State/City is required").max(100),
     address: z
       .string()
       .min(5, "Address is too short")
       .max(200, "Address is too long"),
   }),
-  shipment: z.object({}),
+
+  shipment: z.object({
+    packageType: z.enum(["box", "crate", "pallet", "envelope", "other"], {
+      error: "Please select a package type",
+    }),
+
+    itemNumber: z
+      .number({
+        error: "Number of items is required (must be a number)",
+      })
+      .min(1, "Must be at least 1 item")
+      .max(100, "Maximum 100 items"),
+
+    weightKg: z
+      .number({
+        error: "Weight is required (must be a number)",
+      })
+      .min(0.1, "Weight must be at least 0.1 kg")
+      .max(1000, "Weight cannot exceed 1000 kg"),
+
+    lengthCm: z
+      .number({
+        error: "Length is required (must be a number)",
+      })
+      .min(1, "Length must be at least 1 cm")
+      .max(500, "Length cannot exceed 500 cm"),
+
+    breadthCm: z
+      .number({
+        error: "Breadth is required (must be a number)",
+      })
+      .min(1, "Breadth must be at least 1 cm")
+      .max(500, "Breadth cannot exceed 500 cm"),
+
+    heightCm: z
+      .number({
+        error: "Height is required (must be a number)",
+      })
+      .min(1, "Height must be at least 1 cm")
+      .max(500, "Height cannot exceed 500 cm"),
+
+    description: z
+      .string()
+      .min(5, "Description must be at least 5 characters")
+      .max(500, "Description is too long"),
+  }),
 });
 
 export type ShipmentFormType = z.infer<typeof shipmentSchema>;
@@ -125,5 +169,14 @@ export const defaultShipmentValues = {
     phoneNumber: "",
     stateOrCity: "",
     address: "",
+  },
+  shipment: {
+    packageType: undefined,
+    itemNumber: 0,
+    weightKg: 0,
+    lengthCm: 0,
+    breadthCm: 0,
+    heightCm: 0,
+    description: "",
   },
 };
