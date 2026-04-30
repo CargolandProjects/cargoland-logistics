@@ -10,7 +10,7 @@
   --color-primary-red: var(--primary-red);
   --color-primary-dark: var(--primary-dark);
   --color-background-screen: var(--bg-screen);
-  --color-brand-gray: var(--brand-gray) ;
+  --color-brand-gray: var(--brand-gray);
   --color-dark-navy: var(--dark-navy);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -102,7 +102,7 @@
   --dark-navy: #1a1a2e;
   --primary-dark: oklch(28.038% 0.09856 24.393);
   --bg-screen: oklch(98.511% 0.00011 271.152);
-  --brand-gray: oklch(66.604% 0.02831 266.519); 
+  --brand-gray: oklch(66.604% 0.02831 266.519);
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -205,8 +205,10 @@ body {
   }
 
   p,
-  a {
-    @apply font-roboto
+  a,
+  label,
+  input {
+    @apply font-roboto font-normal text-sm
   }
 
   button {
@@ -217,6 +219,26 @@ body {
 @layer utilities {
   .padding-x {
     @apply px-4 sm:px-14 lg:px-28
+  }
+
+  .form-label {
+    @apply font-medium text-sm font-roboto
+  }
+
+  .form-input {
+    @apply h-14 py-4.5 px-4 text-sm focus-visible:ring-primary focus-visible:ring-1 focus-visible:outline-none focus-visible:border-none rounded-sm placeholder:text-neutral-400 border-[#D0D5DD] outline-none shadow-none
+  }
+
+  .form-description {
+    @apply font-normal text-base text-neutral-600 leading-5
+  }
+
+  .form-error {
+    @apply font-roboto mt-0.5
+  }
+
+  .field {
+    @apply gap-1
   }
 
 }

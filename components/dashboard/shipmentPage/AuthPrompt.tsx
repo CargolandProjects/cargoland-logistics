@@ -9,7 +9,7 @@ import { useState } from "react";
 const AuthPrompt = () => {
   const [showPrompt, setShowPrompt] = useState(true);
 
-  if (!showPrompt) return null;
+  if (!showPrompt) return null; 
 
   const handleClose = () => {
     setShowPrompt(false);

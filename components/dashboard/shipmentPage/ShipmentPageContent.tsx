@@ -25,7 +25,7 @@ const ShipmentPageContent = () => {
   };
   return (
     <div className="min-h-screen padding-x bg-background-screen">
-      <div className="max-w-[778px] mx-auto">
+      <div className="max-w-[888.5px] mx-auto">
         <AuthPrompt />
         {shipmentStage()}
       </div>

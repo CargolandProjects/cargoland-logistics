@@ -13,7 +13,7 @@ interface ShipmentStore {
 
   setShipmentScope: (shipmentScope: ShipmentScope) => void;
   setShipmentType: (shipmentType: ShipmentType) => void;
-  setFOrmData: (formData: Record<string, string>) => void;
+  setFormData: (formData: Record<string, string>) => void;
   clearShipment: () => void;
 }
 
@@ -31,7 +31,7 @@ export const useShipmentStore = create(
       },
       setShipmentType: (shipmentType) =>
         set({ shipmentType, step: "ShipmentForm" }),
-      setFOrmData: (formData) =>
+      setFormData: (formData) =>
         set((state) => ({ ...state.formData, formData })),
 
       clearShipment: () =>
