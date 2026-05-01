@@ -20,7 +20,7 @@ const ShipmentForm = () => {
   const clearShipmentForm = useShipmentStore((s) => s.clearShipment);
   const formData = useShipmentStore((s) => s.formData);
   const saveFormData = useShipmentStore((s) => s.setFormData);
-//   clearShipmentForm();
+  //   clearShipmentForm();
   console.log("form data: ", formData);
 
   const form = useForm<ShipmentFormType>({

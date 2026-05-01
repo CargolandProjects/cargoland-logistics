@@ -21,6 +21,16 @@ const isValidPickupTime = (timeStr: string) => {
   return timeInMinutes >= minTime && timeInMinutes <= maxTime;
 };
 
+export const packageType = [
+  "Document",
+  "Box",
+  "Crate",
+  "Pallet",
+  "Parcel",
+
+  "other",
+] as const;
+
 export const shipmentSchema = z.object({
   sender: z
     .object({
@@ -100,7 +110,7 @@ export const shipmentSchema = z.object({
   }),
 
   shipment: z.object({
-    packageType: z.enum(["box", "crate", "pallet", "envelope", "other"], {
+    packageType: z.enum(packageType, {
       error: "Please select a package type",
     }),
 
@@ -116,7 +126,7 @@ export const shipmentSchema = z.object({
         error: "Weight is required (must be a number)",
       })
       .min(0.1, "Weight must be at least 0.1 kg")
-      .max(1000, "Weight cannot exceed 1000 kg"),
+      .max(10000, "Weight cannot exceed 10000 kg"),
 
     lengthCm: z
       .number({
@@ -142,7 +152,9 @@ export const shipmentSchema = z.object({
     description: z
       .string()
       .min(5, "Description must be at least 5 characters")
-      .max(500, "Description is too long"),
+      .max(500, "Description is too long")
+      .optional()
+      .or(z.literal("")),
   }),
 });
 
@@ -153,7 +165,6 @@ export const defaultShipmentValues = {
     fullName: "",
     email: "",
     country: "",
-
     phoneNumber: "",
     stateOrCity: "",
     address: "",
@@ -172,11 +183,11 @@ export const defaultShipmentValues = {
   },
   shipment: {
     packageType: undefined,
-    itemNumber: 0,
-    weightKg: 0,
-    lengthCm: 0,
-    breadthCm: 0,
-    heightCm: 0,
+    itemNumber: undefined,
+    weightKg: undefined,
+    lengthCm: undefined,
+    breadthCm: undefined,
+    heightCm: undefined,
     description: "",
   },
 };

@@ -29,7 +29,7 @@ const ReceiverDetailsForm = () => {
   const { control, watch } = useFormContext<ShipmentFormType>();
   const phoneInputRef = useRef<any>(null);
 
-  const selectedCountryLabel = watch("sender.country");
+  const selectedCountryLabel = watch("receiver.country");
   const selectedCountry = countryOptions.find(
     (c) => c.label === selectedCountryLabel
   );
@@ -90,7 +90,7 @@ const ReceiverDetailsForm = () => {
                   {...field}
                   id={field.name}
                   aria-invalid={fieldState.invalid}
-                  placeholder="First Name and Last Name"
+                  placeholder="Email Address"
                   className="form-input"
                 />
                 {fieldState.invalid && (
