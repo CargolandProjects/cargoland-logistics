@@ -32,7 +32,7 @@ const ShipmentDetailsForm = () => {
   const totalWeightInKg = (weightKg ?? 0) * (itemNumber ?? 0);
 
   return (
-    <div className="mt-7.5 px-6 py-8 bg-white rounded-lg border">
+    <div className="mt-7.5 px-6 py-8 bg-white rounded-lg">
       <FieldSet className="gap-10">
         <FieldLegend className="text-lg font-semibold leading-7 m-0">
           Please enter your shipment details

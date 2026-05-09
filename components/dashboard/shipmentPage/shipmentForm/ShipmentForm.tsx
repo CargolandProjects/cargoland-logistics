@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import FormStep from "./FormStep";
 import ShipperDetailsForm from "./ShipperDetailsForm";
 import ReceiverDetailsForm from "./ReceiverDetailsForm";
@@ -10,14 +10,18 @@ import {
   defaultShipmentValues,
 } from "@/lib/schemas/shipmentSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, FormProvider, DeepPartial } from "react-hook-form";
+import { useForm, FormProvider, DeepPartial, useWatch } from "react-hook-form";
 import { useShipmentStore } from "@/lib/stores/useShipmentStore";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 const ShipmentForm = () => {
   const [step, setStep] = useState(0);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const clearShipmentForm = useShipmentStore((s) => s.clearShipment);
+  const hasHydrated = useRef(false);
+
+  const router = useRouter();
+
   const formData = useShipmentStore((s) => s.formData);
   const saveFormData = useShipmentStore((s) => s.setFormData);
   //   clearShipmentForm();
@@ -28,15 +32,15 @@ const ShipmentForm = () => {
     defaultValues: defaultShipmentValues,
   });
 
-  const { watch } = form;
+  const formValues = useWatch({ control: form.control });
 
-  const save = (value: {
-    step: number;
-    data: DeepPartial<ShipmentFormType>;
-  }) => {
-    if (!value) return;
-    saveFormData(value);
-  };
+  const save = useCallback(
+    (value: { step: number; data: DeepPartial<ShipmentFormType> }) => {
+      if (!value) return;
+      saveFormData(value);
+    },
+    [saveFormData]
+  );
 
   const cancel = () => {
     if (!timeoutRef.current) return;
@@ -45,25 +49,39 @@ const ShipmentForm = () => {
     timeoutRef.current = null;
   };
 
-  //   autosaves form progress
   useEffect(() => {
-    const sub = watch((data) => {
-      cancel();
+    if (!formData || hasHydrated.current) return;
 
-      timeoutRef.current = setTimeout(() => {
-        save({ step, data });
-      }, 1000);
+    //Restore step
+    if (formData.step !== null) {
+      const step = () => setStep(formData.step ?? 0);
+      step();
+    }
+
+    // Restore form values
+
+    form.reset({
+      ...defaultShipmentValues,
+      ...formData.data,
     });
 
-    return () => {
-      sub.unsubscribe();
-      cancel();
-    };
-  }, [watch]);
+    hasHydrated.current = true;
+  }, [form, formData]);
+
+  //   autosaves form progress
+  useEffect(() => {
+    cancel();
+
+    timeoutRef.current = setTimeout(() => {
+      save({ step, data: formValues as DeepPartial<ShipmentFormType> });
+    }, 1000);
+
+    return cancel;
+  }, [save, formValues, step]);
 
   const onSubmit = (data: ShipmentFormType) => {
     console.log("The submitted Data: ", data);
-    clearShipmentForm();
+    setStep(3);
   };
 
   const stepFields = [["sender"], ["receiver"], ["shipment"]] as const;
@@ -84,6 +102,12 @@ const ShipmentForm = () => {
     setStep((step) => step + 1);
   };
 
+  const handlePayment = () => {
+    setTimeout(() => {
+      router.push("/payment-successful");
+    }, 400);
+  };
+
   const shipmentForms = () => {
     switch (step) {
       case 0:
@@ -99,19 +123,40 @@ const ShipmentForm = () => {
 
   return (
     <div className="mt-7.5">
-      <FormStep currentStep={step} />
+      <FormStep currentStep={step} setStep={setStep} />
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           {shipmentForms()}
 
           <div className="flex justify-end mt-12.5">
-            <Button
-              onClick={handleNext}
-              type="button"
-              className="px-[69px] h-13.75 rounded-md"
-            >
-              Next Step
-            </Button>
+            {step < 2 && (
+              <Button
+                onClick={handleNext}
+                type="button"
+                className="w-[215px] h-13.75 rounded-md"
+              >
+                Next Step
+              </Button>
+            )}
+
+            {/* Separate button of type 'submit" to submit shipment details is needed rather than
+            conditionally using step to assign button type due to some funny
+            default form behaviour thereby introducing a bug */}
+            {step === 2 && (
+              <Button type="submit" className="w-[215px] h-13.75 rounded-md">
+                Next Step
+              </Button>
+            )}
+
+            {step === 3 && (
+              <Button
+                onClick={handlePayment}
+                type="button"
+                className="w-[215px] h-13.75 rounded-md"
+              >
+                Make Payment
+              </Button>
+            )}
           </div>
         </form>
       </FormProvider>

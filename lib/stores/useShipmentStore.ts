@@ -5,7 +5,7 @@ import { DeepPartial } from "react-hook-form";
 
 export type ShipmentType = "air" | "road" | "ocean";
 export type ShipmentScope = "domestic" | "international";
-type Step = "selectScope" | "selectType" | "ShipmentForm";
+type Step = "selectScope" | "selectType" | "ShipmentForm" | "successful";
 
 // Create a type that matches react-hook-form's watch return type
 // export type DeepPartial<T> = {
@@ -18,11 +18,12 @@ interface ShipmentStore {
   shipmentScope: ShipmentScope | null;
   formData: {
     step: number | null;
-    data: DeepPartial<ShipmentFormType> | {};
+    data: DeepPartial<ShipmentFormType> | null;
   };
 
   setShipmentScope: (shipmentScope: ShipmentScope) => void;
   setShipmentType: (shipmentType: ShipmentType) => void;
+  setShipmentFlow: (shipmentFlow: Step) => void;
   setFormData: (formData: {
     step: number;
     data: DeepPartial<ShipmentFormType>;
@@ -38,7 +39,7 @@ export const useShipmentStore = create(
       shipmentScope: null,
       formData: {
         step: null,
-        data: {},
+        data: null,
       },
 
       setShipmentScope: (shipmentScope) => {
@@ -47,6 +48,13 @@ export const useShipmentStore = create(
       },
       setShipmentType: (shipmentType) =>
         set({ shipmentType, step: "ShipmentForm" }),
+
+      setShipmentFlow: (shipmentFlow) => {
+        set({
+          step: shipmentFlow,
+        });
+      },
+
       setFormData: (formData) =>
         set((state) => ({
           formData: {
@@ -63,7 +71,7 @@ export const useShipmentStore = create(
           shipmentType: null,
           formData: {
             step: null,
-            data: {},
+            data: null,
           },
         }),
     }),

@@ -51,7 +51,7 @@ const SelectFreight = () => {
               </FieldTitle>
             </FieldContent>
             <RadioGroupItem
-              value="domestic"
+              value="air"
               id="air-freight"
               className="size-5 border-2 border-neutral-400"
             />

@@ -1,7 +1,7 @@
 "use client";
 
 import FlightInternatonal from "@/components/icons/FlightInternational";
-import Location from "@/components/icons/Location";
+import { Location } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
   Field,

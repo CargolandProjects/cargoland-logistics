@@ -20,14 +20,14 @@ import {
   ComboboxList,
 } from "@/components/ui/combobox";
 
-import IntlTelInput from "@intl-tel-input/react";
+import IntlTelInput, { IntlTelInputRef } from "@intl-tel-input/react";
 import "intl-tel-input/styles";
 import { useEffect, useRef } from "react";
 import { Iso2 } from "intl-tel-input";
 
 const ReceiverDetailsForm = () => {
   const { control, watch } = useFormContext<ShipmentFormType>();
-  const phoneInputRef = useRef<any>(null);
+  const phoneInputRef = useRef<IntlTelInputRef>(null);
 
   const selectedCountryLabel = watch("receiver.country");
   const selectedCountry = countryOptions.find(
@@ -41,15 +41,15 @@ const ReceiverDetailsForm = () => {
     // Access the underlying intl-tel-input instance
     const iti = phoneInputRef.current.getInstance();
     if (iti && iti.setCountry) {
-      iti.setCountry(selectedCountry.value.toLowerCase());
+      iti.setCountry(selectedCountry.value.toLowerCase() as Iso2);
     }
   }, [selectedCountry?.value]);
 
   return (
-    <div className="mt-7.5 px-6 py-8 bg-white rounded-lg border">
+    <div className="mt-7.5 px-6 py-8 bg-white rounded-lg">
       <FieldSet className="gap-10">
         <FieldLegend className="text-lg font-semibold leading-7 m-0">
-          Please enter the receiver's details
+          Please enter the receiver&apos;s details
         </FieldLegend>
         <Separator className="mt-2 bg-brand-gray/35" />
 

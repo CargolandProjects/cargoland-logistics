@@ -1,8 +1,25 @@
-import location from "./Location";
+import Location from "./Location";
 import FlightInternatonal from "./FlightInternational";
 import Cancel from "./Cancel";
 import Plane from "./Plane";
 import Ship from "./Ship";
 import DeliveryTruck from "./DeliveryTruck";
+import ArrowRight from "./ArrowRight";
+import CheckboxMarkedCircle from "./CheckboxMarkedCircle";
+import CheckboxMarkedOutline from "./CheckboxMarkedOutline";
+import EditCircle from "./EditCircle";
+import FileDownload from "./FileDownload";
 
-export { location, FlightInternatonal, Cancel, Plane, Ship, DeliveryTruck };
+export {
+  Location,
+  FlightInternatonal,
+  Cancel,
+  Plane,
+  Ship,
+  DeliveryTruck,
+  ArrowRight,
+  CheckboxMarkedCircle,
+  CheckboxMarkedOutline,
+  EditCircle,
+  FileDownload,
+};

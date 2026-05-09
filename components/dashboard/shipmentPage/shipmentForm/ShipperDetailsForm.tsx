@@ -29,6 +29,7 @@ import { Iso2 } from "intl-tel-input";
 
 const ShipperDetailsForm = () => {
   const { control, watch } = useFormContext<ShipmentFormType>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const phoneInputRef = useRef<any>(null);
 
   const selectedCountryLabel = watch("sender.country");
@@ -48,10 +49,10 @@ const ShipperDetailsForm = () => {
   }, [selectedCountry?.value]);
 
   return (
-    <div className="mt-7.5 px-6 py-8 bg-white rounded-lg border">
+    <div className="mt-7.5 px-6 py-8 bg-white rounded-lg">
       <FieldSet className="gap-10">
         <FieldLegend className="text-lg font-semibold leading-7 m-0">
-          Please enter the shipper's details
+          Please enter the shipper&apos;s details
         </FieldLegend>
         <Separator className="mt-2 bg-brand-gray/35" />
 
@@ -68,7 +69,7 @@ const ShipperDetailsForm = () => {
                   {...field}
                   id={field.name}
                   aria-invalid={fieldState.invalid}
-                  placeholder="Email Address"
+                  placeholder="First Name and Last Name"
                   className="form-input"
                 />
                 {fieldState.invalid && (
@@ -80,6 +81,7 @@ const ShipperDetailsForm = () => {
               </Field>
             )}
           />
+          
           <Controller
             name="sender.email"
             control={control}
