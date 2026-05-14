@@ -40,10 +40,15 @@ export default function Navbar() {
           <button className="hover:text-[#EF3B36] transition-colors">Get a Quote</button>
           <Link href="/pricing" className="hover:text-[#EF3B36] transition-colors">Pricing</Link>
           <Link href="/contact" className="hover:text-[#EF3B36] transition-colors">Company</Link>
-          <button className="flex items-center gap-2 hover:text-[#EF3B36] transition-colors">
-            <Image src="/assets/icons/userProfile.png" alt="User" width={20} height={20} />
-            Login/Register
-          </button>
+          <div className="flex items-center gap-4">
+            <button className="flex items-center gap-2 hover:text-[#EF3B36] transition-colors">
+              <Image src="/assets/icons/userProfile.png" alt="User" width={20} height={20} />
+              Login
+            </button>
+            <Link href="/register" className="hover:text-[#EF3B36] transition-colors">
+              Register
+            </Link>
+          </div>
         </div>
 
         <button className="md:hidden text-2xl text-[#1a1a2e]" onClick={() => setIsMenuOpen(!isMenuOpen)}>☰</button>
