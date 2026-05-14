@@ -1,13 +1,26 @@
-import Image from "next/image";
-import Link from "next/link";
+import { ReactNode } from 'react';
+import AuthNavbar from '@/components/layout/AuthNavbar';
 
-export default function Footer() {
+interface AuthLayoutProps {
+  children: ReactNode;
+}
+
+export default function AuthLayout({ children }: AuthLayoutProps) {
+  return (
+    <div className="flex flex-col min-h-screen">
+      <AuthNavbar />
+      <main className="flex-1">
+        {children}
+      </main>
+      <AuthFooter />
+    </div>
+  );
+}
+
+function AuthFooter() {
   return (
     <footer className="w-full">
-      {/* Track Shipment Banner */}
-  
-
-      {/* Main Footer Links */}
+      {/* Main Footer Links (excluding Track Shipment Banner) */}
       <section className="bg-[#0B112B] text-white pt-20 pb-10 px-6 md:px-32">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-20">
@@ -50,12 +63,8 @@ export default function Footer() {
               <h5 className="font-bold text-[18px] mb-8">Customer Support</h5>
               <ul className="flex flex-col gap-4 text-[#878FA4] text-[15px] font-medium">
                 <li className="hover:text-white cursor-pointer transition-colors">Help Center</li>
-                <li className="hover:text-white cursor-pointer transition-colors">
-                  <Link href="/contact-support">Contact Support</Link>
-                </li>
-                <li className="hover:text-white cursor-pointer transition-colors">
-                  <Link href="/faq">FAQs</Link>
-                </li>
+                <li className="hover:text-white cursor-pointer transition-colors">Contact Support</li>
+                <li className="hover:text-white cursor-pointer transition-colors">FAQs</li>
                 <li className="hover:text-white cursor-pointer transition-colors">Report an Issue</li>
               </ul>
             </div>
@@ -82,12 +91,12 @@ export default function Footer() {
             </div>
 
             <div className="flex gap-6 text-[#878FA4] text-[14px]">
-              <Link href="/privacy-policy" className="hover:text-white cursor-pointer transition-colors">
+              <a href="/privacy-policy" className="hover:text-white cursor-pointer transition-colors">
                 Privacy Policy
-              </Link>
-              <Link href="/terms-conditions" className="hover:text-white cursor-pointer transition-colors">
+              </a>
+              <a href="/terms-conditions" className="hover:text-white cursor-pointer transition-colors">
                 Terms & Conditions
-              </Link>
+              </a>
             </div>
           </div>
         </div>

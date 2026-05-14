@@ -1,11 +1,15 @@
 "use client";
 
-import { useState } from 'react';
-import Image from "next/image";
-import Link from "next/link";
+import { usePathname } from 'next/navigation';
+import Image from 'next/image';
+import Link from 'next/link';
 
-export default function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+export default function AuthNavbar() {
+  const pathname = usePathname();
+  const isRegister = pathname.includes('/register') || 
+    pathname.includes('/verify-email') || 
+    pathname.includes('/account-created') ||
+    pathname.includes('/auth-success');
 
   return (
     <>
@@ -27,31 +31,25 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Navigation Bar */}
+      {/* Navigation Bar — logo + single auth link only */}
       <nav className="px-6 md:px-12 py-4 flex justify-between items-center bg-white">
         <Link href="/" className="flex items-center cursor-pointer">
-          {/* Logo size: 151x48 */}
           <Image src="/assets/pictures/cargoLandLogo.png" alt="CargoLand Logo" width={151} height={48} />
         </Link>
 
-        <div className="hidden md:flex gap-8 items-center font-medium text-[#1a1a2e]">
-          <button className="hover:text-[#EF3B36] transition-colors">Services</button>
-          <button className="hover:text-[#EF3B36] transition-colors">Tracking</button>
-          <button className="hover:text-[#EF3B36] transition-colors">Get a Quote</button>
-          <Link href="/pricing" className="hover:text-[#EF3B36] transition-colors">Pricing</Link>
-          <Link href="/contact" className="hover:text-[#EF3B36] transition-colors">Company</Link>
-          <div className="flex items-center gap-4">
-            <button className="flex items-center gap-2 hover:text-[#EF3B36] transition-colors">
+        <div className="flex items-center font-medium text-[#1a1a2e]">
+          {isRegister ? (
+            <Link href="/login" className="flex items-center gap-2 hover:text-[#EF3B36] transition-colors">
               <Image src="/assets/icons/userProfile.png" alt="User" width={20} height={20} />
               Login
-            </button>
-            <Link href="/register" className="hover:text-[#EF3B36] transition-colors">
+            </Link>
+          ) : (
+            <Link href="/register" className="flex items-center gap-2 hover:text-[#EF3B36] transition-colors">
+              <Image src="/assets/icons/userProfile.png" alt="User" width={20} height={20} />
               Register
             </Link>
-          </div>
+          )}
         </div>
-
-        <button className="md:hidden text-2xl text-[#1a1a2e]" onClick={() => setIsMenuOpen(!isMenuOpen)}>☰</button>
       </nav>
     </>
   );

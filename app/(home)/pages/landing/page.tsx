@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import PricingTable from "@/components/PricingTable";
 
 export default function LandingPage() {
   return (
@@ -228,49 +229,19 @@ export default function LandingPage() {
 
     {/* Table Container */}
     <div className="bg-white rounded-[20px] overflow-hidden shadow-2xl">
-      <table className="w-full text-left border-collapse">
-        <thead>
-          <tr className="bg-[#FBDEDF] text-[#1a1a2e] font-bold text-sm uppercase tracking-wider">
-            <th className="px-8 py-5">Route</th>
-            <th className="px-8 py-5">Air /KG</th>
-            <th className="px-8 py-5">Land /KG</th>
-            <th className="px-8 py-5">Ocean /KG</th>
-            <th className="px-8 py-5">Tread</th>
-            <th className="px-8 py-5"></th>
-          </tr>
-        </thead>
-        <tbody className="text-[#1a1a2e]">
-          {[1, 2, 3, 4, 5, 6].map((row, index) => (
-            <tr 
-              key={index} 
-              className="border-b border-gray-100 hover:bg-gray-50 transition-colors last:border-0"
-            >
-              <td className="px-8 py-6">
-                <div className="flex items-center gap-3 font-bold text-lg">
-                  Nigeria <span className="text-[#E32027]">→</span> Ghana
-                </div>
-                <div className="text-[#878FA4] text-xs mt-1 font-medium">
-                  Air: 2-4 days • Ocean 18-25 days
-                </div>
-              </td>
-              <td className="px-8 py-6 font-extrabold text-lg">$10.5</td>
-              <td className="px-8 py-6 font-extrabold text-lg">$10.5</td>
-              <td className="px-8 py-6 font-extrabold text-lg">$10.5</td>
-              <td className="px-8 py-6">
-                <div className={`flex items-center gap-1 font-bold ${index % 2 === 0 ? 'text-[#1DB954]' : 'text-[#E32027]'}`}>
-                  <span className="text-xl">{index % 2 === 0 ? '↗' : '↘'}</span>
-                  +3.2%
-                </div>
-              </td>
-              <td className="px-8 py-6">
-                <button className="border border-[#E32027] text-[#E32027] px-6 py-2 rounded-xl font-medium hover:bg-[#E32027] hover:text-white transition-all">
-                  Book
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <PricingTable 
+        data={[1, 2, 3, 4, 5, 6].map(() => ({
+          route: 'Nigeria → Ghana',
+          origin: 'Nigeria',
+          destination: 'Ghana',
+          air: '$10.5',
+          land: '$10.5',
+          ocean: '$10.5',
+          trend: '+3.2%',
+          trendUp: true
+        }))}
+        variant="landing"
+      />
     </div>
 
     {/* See More Button */}

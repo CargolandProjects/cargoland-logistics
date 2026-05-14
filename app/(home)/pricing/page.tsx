@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from "next/image";
+import PricingTable from "@/components/PricingTable";
 
 export default function PricingPage() {
   const [filters, setFilters] = useState({
