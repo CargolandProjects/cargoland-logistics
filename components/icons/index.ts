@@ -9,6 +9,10 @@ import CheckboxMarkedCircle from "./CheckboxMarkedCircle";
 import CheckboxMarkedOutline from "./CheckboxMarkedOutline";
 import EditCircle from "./EditCircle";
 import FileDownload from "./FileDownload";
+import Orders from "./Orders";
+import DeliveryTruckSpeed from "./DeliveryTruckSpeed";
+import DeliveryTruckBolt from "./DeliveryTruckBolt";
+import PendingClipboard from "./PendingClipboard";
 
 export {
   Location,
@@ -22,4 +26,8 @@ export {
   CheckboxMarkedOutline,
   EditCircle,
   FileDownload,
+  Orders,
+  DeliveryTruckSpeed,
+  DeliveryTruckBolt,
+  PendingClipboard,
 };

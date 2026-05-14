@@ -115,39 +115,34 @@ export const shipmentSchema = z.object({
     }),
 
     itemNumber: z
-      .number({
-        error: "Number of items is required (must be a number)",
-      })
+      .string("Number of items is required")
       .min(1, "Must be at least 1 item")
-      .max(100, "Maximum 100 items"),
+      .max(100, "Maximum 100 items")
+      .regex(/^\d+$/, "Must be a positive whole number"),
 
     weightKg: z
-      .number({
-        error: "Weight is required (must be a number)",
-      })
+      .string("Weight is required")
       .min(0.1, "Weight must be at least 0.1 kg")
-      .max(10000, "Weight cannot exceed 10000 kg"),
+      .max(10000, "Weight cannot exceed 10000 kg")
+      .regex(/^\d+(\.\d+)?$/, "Must be a valid number"),
 
     lengthCm: z
-      .number({
-        error: "Length is required (must be a number)",
-      })
+      .string("Length is required")
       .min(1, "Length must be at least 1 cm")
-      .max(500, "Length cannot exceed 500 cm"),
+      .max(500, "Length cannot exceed 500 cm")
+      .regex(/^\d+(\.\d+)?$/, "Must be a valid number"),
 
     breadthCm: z
-      .number({
-        error: "Breadth is required (must be a number)",
-      })
+      .string("Breadth is required ")
       .min(1, "Breadth must be at least 1 cm")
-      .max(500, "Breadth cannot exceed 500 cm"),
+      .max(500, "Breadth cannot exceed 500 cm")
+      .regex(/^\d+(\.\d+)?$/, "Must be a valid number"),
 
     heightCm: z
-      .number({
-        error: "Height is required (must be a number)",
-      })
+      .string("Height is required ")
       .min(1, "Height must be at least 1 cm")
-      .max(500, "Height cannot exceed 500 cm"),
+      .max(500, "Height cannot exceed 500 cm")
+      .regex(/^\d+(\.\d+)?$/, "Must be a valid number"),
 
     description: z
       .string()

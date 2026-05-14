@@ -29,7 +29,7 @@ const ShipmentDetailsForm = () => {
   const weightKg = watch("shipment.weightKg");
   const itemNumber = watch("shipment.itemNumber");
 
-  const totalWeightInKg = (weightKg ?? 0) * (itemNumber ?? 0);
+  const totalWeightInKg = Number(weightKg ?? 0) * Number(itemNumber ?? 0);
 
   return (
     <div className="mt-7.5 px-6 py-8 bg-white rounded-lg">
@@ -37,7 +37,7 @@ const ShipmentDetailsForm = () => {
         <FieldLegend className="text-lg font-semibold leading-7 m-0">
           Please enter your shipment details
         </FieldLegend>
-        <Separator className="mt-2 bg-brand-gray/35" />
+        <Separator className="mt-2 bg-brand-gray/35"   />
 
         <div className="grid md:grid-cols-2 gap-10">
           {/* package type */}
@@ -102,12 +102,6 @@ const ShipmentDetailsForm = () => {
                   id={field.name}
                   aria-invalid={fieldState.invalid}
                   type="number"
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    field.onChange(
-                      val === "" || val === undefined ? undefined : Number(val)
-                    );
-                  }}
                   placeholder=""
                   className="form-input"
                 />
@@ -137,12 +131,6 @@ const ShipmentDetailsForm = () => {
                   id={field.name}
                   aria-invalid={fieldState.invalid}
                   type="number"
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    field.onChange(
-                      val === "" || val === undefined ? undefined : Number(val)
-                    );
-                  }}
                   placeholder="Weight must be between 0.1kg - 10,000kg"
                   className="form-input"
                 />
@@ -172,14 +160,6 @@ const ShipmentDetailsForm = () => {
                       id={field.name}
                       aria-invalid={fieldState.invalid}
                       type="number"
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        field.onChange(
-                          val === "" || val === undefined
-                            ? undefined
-                            : Number(val)
-                        );
-                      }}
                       placeholder="Length (cm)"
                       className="form-input"
                     />
@@ -203,14 +183,6 @@ const ShipmentDetailsForm = () => {
                       id={field.name}
                       aria-invalid={fieldState.invalid}
                       type="number"
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        field.onChange(
-                          val === "" || val === undefined
-                            ? undefined
-                            : Number(val)
-                        );
-                      }}
                       placeholder="Breadth (cm)"
                       className="form-input"
                     />
@@ -234,14 +206,6 @@ const ShipmentDetailsForm = () => {
                       id={field.name}
                       aria-invalid={fieldState.invalid}
                       type="number"
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        field.onChange(
-                          val === "" || val === undefined
-                            ? undefined
-                            : Number(val)
-                        );
-                      }}
                       placeholder="Height (cm)"
                       className="form-input"
                     />

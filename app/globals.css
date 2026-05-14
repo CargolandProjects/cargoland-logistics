@@ -7,12 +7,16 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
   --color-primary-red: var(--primary-red);
   --color-primary-dark: var(--primary-dark);
   --color-background-screen: var(--bg-screen);
   --color-brand-gray: var(--brand-gray);
   --color-brand-black: var(--brand-black);
   --color-dark-navy: var(--dark-navy);
+  --color-cargo-warning: var(--color-cargo-warning);
+  --color-cargo-success: var(--color-cargo-success);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-roboto: var(--font-roboto);
@@ -97,6 +101,10 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  --color-cargo-success: #00D218;
+  --color-cargo-warning: #FFC517;
+
 }
 
 .dark {
@@ -173,10 +181,15 @@ body {
     font-synthesis: none;
   }
 
+  h1,
+  h2 {
+    @apply font-montserrat
+  }
+
   p,
   a,
   label,
-  input {
+  input, th, tr {
     @apply font-roboto font-normal text-sm
   }
 

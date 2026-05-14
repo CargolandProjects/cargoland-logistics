@@ -16,8 +16,8 @@ const ShipmentSuccessful = () => {
   }, [clearShipmentData]);
 
   return (
-    <section className="mt-10 flex justify-center">
-      <div className="bg-white p-8.5 rounded-lg flex flex-col items-center">
+    <section className=" flex justify-center bg-background-screen">
+      <div className="mt-10 mb-16.25 bg-white p-8.5 rounded-lg flex flex-col items-center">
         <div className="size-[90px] relative">
           <Image
             src={boxChecked}
@@ -27,7 +27,7 @@ const ShipmentSuccessful = () => {
           />
         </div>
 
-        <h1 className="mt-2 text-[32px] font-extrabold leading-10n text-primary">
+        <h1 className="mt-2 text-[32px] font-extrabold leading-10 text-primary">
           Thank You
         </h1>
         <div className="mt-2 space-y-2">
