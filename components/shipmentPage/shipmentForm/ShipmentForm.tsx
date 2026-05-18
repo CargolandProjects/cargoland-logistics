@@ -49,6 +49,7 @@ const ShipmentForm = () => {
     timeoutRef.current = null;
   };
 
+  // Restores shipment step and form data
   useEffect(() => {
     if (!formData || hasHydrated.current) return;
 

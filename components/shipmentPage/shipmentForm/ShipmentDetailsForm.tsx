@@ -37,7 +37,7 @@ const ShipmentDetailsForm = () => {
         <FieldLegend className="text-lg font-semibold leading-7 m-0">
           Please enter your shipment details
         </FieldLegend>
-        <Separator className="mt-2 bg-brand-gray/35"   />
+        <Separator className="mt-2 bg-brand-gray/35" />
 
         <div className="grid md:grid-cols-2 gap-10">
           {/* package type */}

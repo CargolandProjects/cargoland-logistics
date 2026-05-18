@@ -13,6 +13,7 @@ import Orders from "./Orders";
 import DeliveryTruckSpeed from "./DeliveryTruckSpeed";
 import DeliveryTruckBolt from "./DeliveryTruckBolt";
 import PendingClipboard from "./PendingClipboard";
+import EyeOff from "./EyeOff";
 
 export {
   Location,
@@ -30,4 +31,5 @@ export {
   DeliveryTruckSpeed,
   DeliveryTruckBolt,
   PendingClipboard,
+  EyeOff,
 };
