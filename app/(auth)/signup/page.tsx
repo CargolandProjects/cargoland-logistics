@@ -128,7 +128,9 @@ export default function SignupPage() {
     signUp(payload, {
       onSuccess: (res) => {
         toast.success("Signup successful!");
-        router.push(`/verify-email?email=${res.data.email}`);
+        router.push(
+          `/verify-email?email=${encodeURIComponent(res.data.email)}`
+        );
       },
       onError: (data) => {
         toast.error(data.message || "Signup failed!");

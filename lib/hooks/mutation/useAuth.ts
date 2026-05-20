@@ -6,3 +6,15 @@ export const useSignUp = () => {
     mutationFn: auth.SignUp,
   });
 };
+
+export const useVerifyEmail = () => {
+  return useMutation({
+    mutationFn: auth.verifyEmail,
+  });
+};
+
+export const useResendOtp = () => {
+  return useMutation({
+    mutationFn: auth.resendOtp,
+  });
+};
