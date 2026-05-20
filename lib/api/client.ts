@@ -1,40 +1,108 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from "axios";
+import { API_ROUTES } from "./endpoints";
 
-const api: AxiosInstance = axios.create({
+// Simple API client setup
+const apiClient: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   timeout: 10000,
-  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Request interceptor (prepare for auth later)
-api.interceptors.request.use(
-  (config) => {
-    // You’ll plug token logic here later
-    // const token = localStorage.getItem("token");
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
-
+// Add auth token to requests
+apiClient.interceptors.request.use(
+  async (config) => {
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem(`${process.env.NEXT_PUBLIC_ACCESS_KEY}`) : null;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
-  (error) => Promise.reject(error)
-);
-
-// Response interceptor (global error handling)
-api.interceptors.response.use(
-  (response) => response,
   (error) => {
-    // Handle common errors globally
-    if (error.response?.status === 401) {
-      // future: redirect to login or refresh token
-      console.log("Unauthorized");
-    }
-
     return Promise.reject(error);
   }
 );
 
-export default api;
+// Minimal refresh-on-401 with single-flight and retry
+let isRefreshing = false;
+let refreshPromise: Promise<string> | null = null;
+
+apiClient.interceptors.response.use(
+  (response: AxiosResponse) => response,
+  async (error) => {
+    const status = error?.response?.status;
+    const originalRequest: AxiosRequestConfig & { _retry?: boolean } =
+      error.config || {};
+
+    const data = error?.response?.data as
+      | { statusCode?: number; code?: string; message?: string }
+      | undefined;
+    // Normalize Error Shape to Match Backend Standard
+    const normalized = {
+      message: data?.message || error.message || "Something went wrong",
+      statusCode: data?.statusCode ?? error.response?.status,
+      code: data?.code,
+      cause: error, // keep original error for debugging
+    };
+
+    if (status === 401 && !originalRequest._retry) {
+      const refreshToken =
+        typeof window !== "undefined"
+          ? localStorage.getItem(`${process.env.NEXT_PUBLIC_REFRESH_KEY}`)
+          : null;
+      if (!refreshToken) {
+        // No refresh token; treat as logged out
+        return Promise.reject(normalized);
+      }
+
+      originalRequest._retry = true;
+
+      try {
+        if (!isRefreshing) {
+          isRefreshing = true;
+          refreshPromise = apiClient
+            .post(API_ROUTES.auth.refresh, { refreshToken })
+            .then((res) => {
+              // Expecting { token: { accessToken, refreshToken } }
+              const tokens = res?.data;
+              const newAccess = tokens?.accessToken;
+              const newRefresh = tokens?.refreshToken;
+              if (newAccess) localStorage.setItem(`${process.env.NEXT_PUBLIC_ACCESS_KEY}`, newAccess);
+              if (newRefresh) localStorage.setItem(`${process.env.NEXT_PUBLIC_REFRESH_KEY}`, newRefresh);
+              return newAccess as string;
+            })
+            .finally(() => {
+              isRefreshing = false;
+            });
+        }
+
+        const newAccessToken = await refreshPromise!;
+        if (newAccessToken) {
+          // Retry original request with new token
+          originalRequest.headers = originalRequest.headers || {};
+          (
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            originalRequest.headers as any
+          ).Authorization = `Bearer ${newAccessToken}`;
+          return apiClient(originalRequest);
+        }
+      } catch {
+        window.dispatchEvent(new Event("auth:logout"));
+          
+        // Refresh failed; clear tokens
+        if (typeof window !== "undefined") {
+          localStorage.removeItem(`${process.env.NEXT_PUBLIC_ACCESS_KEY}`);
+          localStorage.removeItem(`${process.env.NEXT_PUBLIC_REFRESH_KEY }`);
+        }
+        
+        return Promise.reject(normalized);
+      }
+    }
+
+    return Promise.reject(normalized);
+  }
+);
+
+export default apiClient;

@@ -17,9 +17,7 @@ import { Input } from "@/components/ui/input";
 import { PhoneInput, phoneSchema } from "@/components/ui/phone-input";
 import { useSignUp } from "@/lib/hooks/mutation/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import IntlTelInput from "@intl-tel-input/react";
-import "intl-tel-input/styles";
-import { Check, Eye, EyeOffIcon } from "lucide-react";
+import { Check, Eye } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -85,9 +83,10 @@ const formSchema = z
     path: ["confirmPassword"],
   });
 
-type SignUp = z.infer<typeof formSchema>;
+export type SignUpData = z.infer<typeof formSchema>;
 
 export default function SignupPage() {
+  const { mutate: signUp } = useSignUp();
   const router = useRouter();
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
   const [isVisible, setIsVisible] = useState({
@@ -97,7 +96,7 @@ export default function SignupPage() {
 
   //   console.log("Selected Country:", selectedCountry);
 
-  const { handleSubmit, control, setValue } = useForm<SignUp>({
+  const { handleSubmit, control, setValue } = useForm<SignUpData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       firstName: "",
@@ -120,24 +119,35 @@ export default function SignupPage() {
   };
   //   console.log("passwordRequirements: ", passwordReq);
 
-  const onSubmit = (data: SignUp) => {
-    console.log("Signup Data: ", data);
-    const payload = { ...data, country: selectedCountry?.name };
-   
+  const onSubmit = (data: SignUpData) => {
+    if (!selectedCountry?.name) return;
+
+    const payload = { ...data, country: selectedCountry.name };
+    console.log("Signup Data: ", payload);
+
+    signUp(payload, {
+      onSuccess: (res) => {
+        toast.success("Signup successful!");
+        router.push(`/verify-email?email=${res.data.email}`);
+      },
+      onError: (data) => {
+        toast.error(data.message || "Signup failed!");
+      },
+    });
   };
 
   return (
-    <div className="mt-18.75 mb-40.75 ">
+    <div className="mt-18.75 mb-40.75 px-4">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="p-6 bg-white rounded-lg max-w-[747px] mx-auto "
       >
         <FieldSet>
           <div className="flex flex-col items-center">
-            <FieldTitle className="font-heading text-2xl font-bold leading-8">
+            <FieldTitle className="font-heading text-2xl font-bold leading-8 text-center">
               Create Your CargoLand Account
             </FieldTitle>
-            <FieldLegend className="mt-2 font-roboto text-brand-gray text-base font-normal leading-6">
+            <FieldLegend className="mt-2 font-roboto text-brand-gray text-base font-normal leading-6 text-center">
               Sign up to start shipping smarter and track every delivery with
               ease.
             </FieldLegend>

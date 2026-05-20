@@ -4,7 +4,7 @@ import "./globals.css";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import { cn } from "@/lib/utils";
-
+import Providers from "./Providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +30,8 @@ const roboto = Roboto({
 
 export const metadata: Metadata = {
   title: "CargoLand - Fast & Reliable Global Shipping",
-  description: "Ship packages across countries via Air, Ocean, or Road freight with real-time tracking and transparent pricing.",
+  description:
+    "Ship packages across countries via Air, Ocean, or Road freight with real-time tracking and transparent pricing.",
 };
 
 export default function RootLayout({
@@ -41,12 +42,22 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, montserrat.variable, roboto.variable , "font-sans")}
+      className={cn(
+        "h-full",
+        "antialiased",
+        geistSans.variable,
+        geistMono.variable,
+        montserrat.variable,
+        roboto.variable,
+        "font-sans"
+      )}
     >
       <body className="min-h-full flex flex-col">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <Providers>
+          <Navbar />
+          <main className="flex-1 flex flex-col">{children}</main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
