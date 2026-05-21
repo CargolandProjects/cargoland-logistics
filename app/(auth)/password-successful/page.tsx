@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export default function AccountSuccessfulPage() {
+export default function PasswordSuccessfulPage() {
   const router = useRouter();
-  const handleRoute = () => router.push("/login");
+  const handleRoute = () => router.push("/dashboard");
 
   return (
     <div className="mx-4 flex justify-center my-[75px]">
@@ -19,15 +19,15 @@ export default function AccountSuccessfulPage() {
         </div>
         <div className="mt-5 max-w-[571px] mx-auto">
           <h1 className="text-2xl font-bold leading-8 text-center">
-            Account Created Successfully
+            Password Reset Successful
           </h1>
           <p className="mt-2 text-base leading-6 text-center text-[#8C94A6]">
-            Your account is ready. You can now start booking shipments and
-            tracking deliveries with ease.
+            Your password has been updated. You can now use your new password to
+            log in securely.
           </p>
         </div>
         <Button onClick={handleRoute} className="submit-button mt-8">
-          Login
+          Go to Dashboard
         </Button>
       </div>
     </div>

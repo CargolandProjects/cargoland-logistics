@@ -30,3 +30,9 @@ export const useRequestPassword = () => {
     mutationFn: auth.requestPasswordReset,
   });
 };
+
+export const useUpdatePassword = () => {
+  return useMutation({
+    mutationFn: auth.updatePassword,
+  });
+};

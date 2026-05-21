@@ -19,6 +19,7 @@ import { useResendOtp, useVerifyEmail } from "@/lib/hooks/mutation/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -30,7 +31,7 @@ const otpSchema = z.object({
 
 export type OtpData = z.infer<typeof otpSchema>;
 
-export default function VerifyEmailPage() {
+const VerifyEmailPageContent = () => {
   const { mutate, isPending } = useVerifyEmail();
   const { mutate: resendOtp, isPending: isResendingOtp } = useResendOtp();
   const router = useRouter();
@@ -50,7 +51,10 @@ export default function VerifyEmailPage() {
   const isOtpComplete = otp.length === 6;
 
   const onSubmit = (data: OtpData) => {
-    console.log("OTP Data: ", data);
+    if (!email) {
+      toast.error("Email is required to verify email");
+      return;
+    }
 
     const payload = { ...data, email };
 
@@ -58,7 +62,7 @@ export default function VerifyEmailPage() {
       onSuccess: () => {
         const route =
           intent === "reset-password"
-            ? "/create-password"
+            ? `create-password?email=${encodeURIComponent(email)}`
             : "/account-successful";
         router.replace(route);
       },
@@ -171,5 +175,13 @@ export default function VerifyEmailPage() {
         </form>
       </div>
     </div>
+  );
+};
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense>
+      <VerifyEmailPageContent />
+    </Suspense>
   );
 }

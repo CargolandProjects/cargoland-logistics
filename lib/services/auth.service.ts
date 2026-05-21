@@ -2,6 +2,7 @@ import { SignUpData } from "@/app/(auth)/signup/page";
 import api from "../api/client";
 import { API_ROUTES } from "../api/endpoints";
 import { LoginData } from "@/app/(auth)/signin/page";
+import { createPasswordData } from "@/app/(auth)/create-password/page";
 
 export type APIResponse<T> = {
   status: string;
@@ -41,6 +42,8 @@ type SignUpRes = APIResponse<User>;
 
 type SignInRes = APIResponse<SignIn>;
 
+type UpdatePasswordData = createPasswordData & { email: string };
+
 export const auth = {
   async SignUp(data: SignUpData) {
     const res = await api.post<SignUpRes>(API_ROUTES.auth.register, data);
@@ -69,6 +72,11 @@ export const auth = {
 
   async requestPasswordReset(email: { email: string }) {
     const res = await api.post(API_ROUTES.auth.requestPasswordReset, email);
+    return res.data;
+  },
+
+  async updatePassword(data: UpdatePasswordData) {
+    const res = await api.post(API_ROUTES.auth.updatePassword, data);
     return res.data;
   },
 };
