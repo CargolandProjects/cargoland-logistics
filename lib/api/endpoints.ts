@@ -6,5 +6,6 @@ export const API_ROUTES = {
     login: "/users/login",
     requestPasswordReset: "/users/request-reset-password",
     updatePassword: "/users/update-password",
+    getUserById: (id: string) => `/users/${id}`,
   },
 };

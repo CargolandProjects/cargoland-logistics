@@ -16,11 +16,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { PhoneInput, phoneSchema } from "@/components/ui/phone-input";
 import { useSignUp } from "@/lib/hooks/mutation/useAuth";
+import { useProtectedRoute } from "@/lib/hooks/useProtectedRoute";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, Eye } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -86,15 +87,14 @@ const formSchema = z
 export type SignUpData = z.infer<typeof formSchema>;
 
 export default function SignupPage() {
-  const { mutate: signUp } = useSignUp();
+  const { mutate: signUp, isPending } = useSignUp();
   const router = useRouter();
+  const { isChecking, isAuthenticated } = useProtectedRoute();
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
   const [isVisible, setIsVisible] = useState({
     createPassword: false,
     confirmPassword: false,
   });
-
-  //   console.log("Selected Country:", selectedCountry);
 
   const { handleSubmit, control, setValue } = useForm<SignUpData>({
     resolver: zodResolver(formSchema),
@@ -109,8 +109,14 @@ export default function SignupPage() {
     },
   });
 
+  // route user to dashboard if authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/dashboard");
+    }
+  }, [isAuthenticated, router]);
+
   const password = useWatch({ control: control, name: "password" }) || "";
-  //   console.log("password: ", password);
 
   const passwordReq = {
     letterAndNumber: /(?=.*[a-z])/.test(password) && /(?=.*\d)/.test(password),
@@ -138,13 +144,18 @@ export default function SignupPage() {
     });
   };
 
+  // Block render until initial check completes
+  if (isChecking) {
+    return null;
+  }
+
   return (
-    <div className="mt-18.75 mb-40.75 px-4">
+    <div className="my-18.75 px-4">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="p-6 bg-white rounded-lg max-w-[747px] mx-auto "
       >
-        <FieldSet>
+        <FieldSet className="gap-0">
           <div className="flex flex-col items-center">
             <FieldTitle className="font-heading text-2xl font-bold leading-8 text-center">
               Create Your CargoLand Account
@@ -227,6 +238,7 @@ export default function SignupPage() {
                 </Field>
               )}
             />
+
             <div className="flex gap-4.5">
               <Controller
                 name="country"
@@ -314,11 +326,13 @@ export default function SignupPage() {
                           createPassword: !prev.createPassword,
                         }))
                       }
+                      type="button"
+                      className="absolute right-4 top-1/2 -translate-y-1/2"
                     >
                       {isVisible.createPassword ? (
-                        <Eye className="size-6 text-slate-600/85 absolute right-4 top-1/2 -translate-y-1/2" />
+                        <Eye className="size-6 text-slate-600/85" />
                       ) : (
-                        <EyeOff className="size-6 text-slate-600/85 absolute right-4 top-1/2 -translate-y-1/2" />
+                        <EyeOff className="size-6 text-slate-600/85" />
                       )}
                     </button>
                   </div>
@@ -356,11 +370,13 @@ export default function SignupPage() {
                           confirmPassword: !prev.confirmPassword,
                         }))
                       }
+                      type="button"
+                      className="absolute right-4 top-1/2 -translate-y-1/2"
                     >
                       {isVisible.confirmPassword ? (
-                        <Eye className="size-6 text-slate-600/85 absolute right-4 top-1/2 -translate-y-1/2" />
+                        <Eye className="size-6 text-slate-600/85" />
                       ) : (
-                        <EyeOff className="size-6 text-slate-600/85 absolute right-4 top-1/2 -translate-y-1/2" />
+                        <EyeOff className="size-6 text-slate-600/85" />
                       )}
                     </button>
                   </div>
@@ -504,7 +520,11 @@ export default function SignupPage() {
           )}
         />
 
-        <Button type="submit" className="mt-6 submit-button">
+        <Button
+          disabled={isPending}
+          type="submit"
+          className="mt-6 submit-button"
+        >
           Sign Up
         </Button>
       </form>

@@ -18,3 +18,9 @@ export const useResendOtp = () => {
     mutationFn: auth.resendOtp,
   });
 };
+
+export const useSIgnIn = () => {
+  return useMutation({
+    mutationFn: auth.signIn,
+  });
+};

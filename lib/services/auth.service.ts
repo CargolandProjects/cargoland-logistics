@@ -1,6 +1,7 @@
 import { SignUpData } from "@/app/(auth)/signup/page";
 import api from "../api/client";
 import { API_ROUTES } from "../api/endpoints";
+import { LoginData } from "@/app/(auth)/signin/page";
 
 export type APIResponse<T> = {
   status: string;
@@ -8,7 +9,7 @@ export type APIResponse<T> = {
   data: T;
 };
 
-export interface SignUp {
+export interface User {
   id: string;
   firstName: string;
   lastName: string;
@@ -17,7 +18,7 @@ export interface SignUp {
   country: string;
   isActive: boolean;
   termsAndCondition: boolean;
-  otpVerifiedAt: null;
+  otpVerifiedAt: string | null;
   role: "USER";
   createdAt: string;
   updatedAt: string;
@@ -28,7 +29,17 @@ interface VerifyEmailData {
   email: string;
 }
 
-type SignUpRes = APIResponse<SignUp>;
+interface SignIn {
+  user: User;
+  token: {
+    accessToken: string;
+    refreshToken: string;
+  };
+}
+
+type SignUpRes = APIResponse<User>;
+
+type SignInRes = APIResponse<SignIn>;
 
 export const auth = {
   async SignUp(data: SignUpData) {
@@ -43,6 +54,16 @@ export const auth = {
 
   async resendOtp(email: string) {
     const res = await api.post(API_ROUTES.auth.resendOtp, { email });
+    return res.data;
+  },
+
+  async signIn(data: LoginData) {
+    const res = await api.post<SignInRes>(API_ROUTES.auth.login, data);
+    return res.data;
+  },
+
+  async getUserById(id: string) {
+    const res = await api.get<SignUpRes>(API_ROUTES.auth.getUserById(id));
     return res.data;
   },
 };

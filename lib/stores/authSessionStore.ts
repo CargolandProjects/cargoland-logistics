@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { auth, User } from "@/lib/services/auth.service";
+import {  User } from "@/lib/services/auth.service";
 import type { QueryClient } from "@tanstack/react-query";
 
 export type SessionStatus = "loading" | "authenticated" | "unauthenticated";
@@ -13,7 +13,7 @@ interface AuthSessionState {
   hydrateFromStorage: () => Promise<void>;
 
   setUser: (user: User | null) => void;
-  updateUser: (patch: Partial<User>) => Promise<void>;
+  // updateUser: (patch: Partial<User>) => Promise<void>;
   signOut: (queryClient?: QueryClient) => void;
 }
 
@@ -64,15 +64,15 @@ export const useAuthSessionStore = create<AuthSessionState>((set, get) => ({
     set({ user, status: user ? "authenticated" : "unauthenticated" });
   },
 
-  updateUser: async (patch) => {
-    const current = get().user;
-    if (!current?.id) return;
-    const res = await auth.updateUserById({ id: current.id, payload: patch });
-    if (res?.user) {
-      writeJSON(USER_KEY, res.user);
-      set({ user: res.user, status: "authenticated" });
-    }
-  },
+  // updateUser: async (patch) => {
+  //   const current = get().user;
+  //   if (!current?.id) return;
+  //   const res = await auth.updateUserById({ id: current.id, payload: patch });
+  //   if (res?.user) {
+  //     writeJSON(USER_KEY, res.user);
+  //     set({ user: res.user, status: "authenticated" });
+  //   }
+  // },
 
   signOut: (queryClient?: QueryClient) => {
     if (typeof window !== "undefined") {

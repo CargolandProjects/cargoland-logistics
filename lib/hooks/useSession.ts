@@ -6,10 +6,10 @@ import { useQueryClient } from "@tanstack/react-query";
 
 export function useSession() {
   const queryClient = useQueryClient();
-  const user = useAuthSessionStore((s) => s.user);
+  const session = useAuthSessionStore((s) => s.user);
   const status = useAuthSessionStore((s) => s.status);
   const setUser = useAuthSessionStore((s) => s.setUser);
-  const updateUser = useAuthSessionStore((s) => s.updateUser);
+  // const updateUser = useAuthSessionStore((s) => s.updateUser);
   const storeSignOut = useAuthSessionStore((s) => s.signOut);
   const hydrate = useAuthSessionStore((s) => s.hydrateFromStorage);
 
@@ -46,7 +46,8 @@ export function useSession() {
   }, [storeSignOut, queryClient]);
 
   const refreshSession = useCallback(async () => {
-    const id = user?.id;
+    const id = session?.id;
+    if (!id) return { success: false, error: "No user ID found" };
     try {
       const response = await auth.getUserById(id);
       if (response?.data) {
@@ -60,7 +61,7 @@ export function useSession() {
         error instanceof Error ? error.message : "Failed to refresh session";
       return { success: false, error: errorMessage };
     }
-  }, [user?.id, setUser]);
+  }, [session?.id, setUser]);
 
   const isAuthenticated = useMemo(() => status === "authenticated", [status]);
 
@@ -69,12 +70,12 @@ export function useSession() {
   }, [storeSignOut, queryClient]);
 
   return {
-    user,
+    session,
     status,
     isAuthenticated,
     // actions
     setUser,
-    updateUser,
+    // updateUser,
     signOut,
     refreshSession,
   } as const;
