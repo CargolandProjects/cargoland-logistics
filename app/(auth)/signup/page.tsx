@@ -138,8 +138,8 @@ export default function SignupPage() {
           `/verify-email?email=${encodeURIComponent(res.data.email)}`
         );
       },
-      onError: (data) => {
-        toast.error(data.message || "Signup failed!");
+      onError: (res) => {
+        toast.error(res.message || "Signup failed!");
       },
     });
   };
@@ -235,6 +235,12 @@ export default function SignupPage() {
                     placeholder="Email Address"
                     className="form-input"
                   />
+                  {fieldState.invalid && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="form-error"
+                    />
+                  )}
                 </Field>
               )}
             />

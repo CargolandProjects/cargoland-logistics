@@ -76,6 +76,7 @@ export default function SignInPage() {
         if (!user) return;
 
         setUser(user);
+        toast.success(res.message || "Login successful!");
         router.replace("/dashboard");
       },
       onError: (res) => {
@@ -123,6 +124,12 @@ export default function SignInPage() {
                     placeholder="Email Address"
                     className="form-input"
                   />
+                  {fieldState.invalid && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="form-error"
+                    />
+                  )}
                 </Field>
               )}
             />
@@ -196,7 +203,9 @@ export default function SignInPage() {
             </label>
             <span className="text-slate-500">Remember me</span>
           </div>
-          <Link href="/forgot-password" className="text-primary underline">Forget Password </Link>
+          <Link href="/forgot-password" className="text-primary underline">
+            Forget Password{" "}
+          </Link>
         </div>
 
         <Button

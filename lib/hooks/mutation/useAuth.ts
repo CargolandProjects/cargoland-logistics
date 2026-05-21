@@ -24,3 +24,9 @@ export const useSIgnIn = () => {
     mutationFn: auth.signIn,
   });
 };
+
+export const useRequestPassword = () => {
+  return useMutation({
+    mutationFn: auth.requestPasswordReset,
+  });
+};

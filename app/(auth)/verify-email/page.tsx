@@ -34,8 +34,10 @@ export default function VerifyEmailPage() {
   const { mutate, isPending } = useVerifyEmail();
   const { mutate: resendOtp, isPending: isResendingOtp } = useResendOtp();
   const router = useRouter();
+
   const searchParams = useSearchParams();
   const email = searchParams.get("email") ?? "";
+  const intent = searchParams.get("intent") ?? "";
 
   const { handleSubmit, control } = useForm<OtpData>({
     resolver: zodResolver(otpSchema),
@@ -53,7 +55,13 @@ export default function VerifyEmailPage() {
     const payload = { ...data, email };
 
     mutate(payload, {
-      onSuccess: () => router.replace("/account-successful"),
+      onSuccess: () => {
+        const route =
+          intent === "reset-password"
+            ? "/create-password"
+            : "/account-successful";
+        router.replace(route);
+      },
       onError: (res) => toast.error(res.message || "Email verified!"),
     });
   };
@@ -71,7 +79,10 @@ export default function VerifyEmailPage() {
   return (
     <div className="mx-4 flex justify-center mt-[75px] mb-[123px]">
       <div className="max-w-[747px] w-full p-6 bg-white rounded-lg">
-        <button onClick={() => router.back()} className="flex gap-2 items-center">
+        <button
+          onClick={() => router.back()}
+          className="flex gap-2 items-center"
+        >
           <ArrowLeft className="size-4 " />
           <span>Back</span>
         </button>

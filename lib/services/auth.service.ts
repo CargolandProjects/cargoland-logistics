@@ -66,4 +66,9 @@ export const auth = {
     const res = await api.get<SignUpRes>(API_ROUTES.auth.getUserById(id));
     return res.data;
   },
+
+  async requestPasswordReset(email: { email: string }) {
+    const res = await api.post(API_ROUTES.auth.requestPasswordReset, email);
+    return res.data;
+  },
 };
