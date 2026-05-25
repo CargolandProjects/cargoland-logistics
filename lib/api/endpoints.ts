@@ -8,4 +8,8 @@ export const API_ROUTES = {
     updatePassword: "/users/update-password",
     getUserById: (id: string) => `/users/${id}`,
   },
+
+  shipment: {
+    trackShipment: "/shipments/shipment-tracking-id",
+  },
 };

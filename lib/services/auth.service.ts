@@ -1,8 +1,9 @@
 import { SignUpData } from "@/app/(auth)/signup/page";
-import api from "../api/client";
+
 import { API_ROUTES } from "../api/endpoints";
 import { LoginData } from "@/app/(auth)/signin/page";
 import { createPasswordData } from "@/app/(auth)/create-password/page";
+import apiClient from "../api/client";
 
 export type APIResponse<T> = {
   status: string;
@@ -46,37 +47,40 @@ type UpdatePasswordData = createPasswordData & { email: string };
 
 export const auth = {
   async SignUp(data: SignUpData) {
-    const res = await api.post<SignUpRes>(API_ROUTES.auth.register, data);
+    const res = await apiClient.post<SignUpRes>(API_ROUTES.auth.register, data);
     return res.data;
   },
 
   async verifyEmail(data: VerifyEmailData) {
-    const res = await api.post(API_ROUTES.auth.verifyEmail, data);
+    const res = await apiClient.post(API_ROUTES.auth.verifyEmail, data);
     return res.data;
   },
 
   async resendOtp(email: string) {
-    const res = await api.post(API_ROUTES.auth.resendOtp, { email });
+    const res = await apiClient.post(API_ROUTES.auth.resendOtp, { email });
     return res.data;
   },
 
   async signIn(data: LoginData) {
-    const res = await api.post<SignInRes>(API_ROUTES.auth.login, data);
+    const res = await apiClient.post<SignInRes>(API_ROUTES.auth.login, data);
     return res.data;
   },
 
   async getUserById(id: string) {
-    const res = await api.get<SignUpRes>(API_ROUTES.auth.getUserById(id));
+    const res = await apiClient.get<SignUpRes>(API_ROUTES.auth.getUserById(id));
     return res.data;
   },
 
   async requestPasswordReset(email: { email: string }) {
-    const res = await api.post(API_ROUTES.auth.requestPasswordReset, email);
+    const res = await apiClient.post(
+      API_ROUTES.auth.requestPasswordReset,
+      email
+    );
     return res.data;
   },
 
   async updatePassword(data: UpdatePasswordData) {
-    const res = await api.post(API_ROUTES.auth.updatePassword, data);
+    const res = await apiClient.post(API_ROUTES.auth.updatePassword, data);
     return res.data;
   },
 };
