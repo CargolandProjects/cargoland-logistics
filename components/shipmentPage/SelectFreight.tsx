@@ -7,14 +7,14 @@ import {
   FieldTitle,
 } from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ShipmentType, useShipmentStore } from "@/lib/stores/useShipmentStore";
+import { FreightType, useShipmentStore } from "@/lib/stores/useShipmentStore";
 
 import { useState } from "react";
 
 const SelectFreight = () => {
-  const [value, setValue] = useState<ShipmentType | null>(null);
+  const [value, setValue] = useState<FreightType | null>(null);
 
-  const setShipmentType = useShipmentStore((s) => s.setShipmentType);
+  const setFreightType = useShipmentStore((s) => s.setFreightType);
 
   const handleNext = () => {
     if (!value) {
@@ -22,7 +22,7 @@ const SelectFreight = () => {
       return;
     }
 
-    setShipmentType(value);
+    setFreightType(value);
   };
   return (
     <section className="mt-7.5">
@@ -35,7 +35,7 @@ const SelectFreight = () => {
 
       <RadioGroup
         value={value}
-        onValueChange={(value: ShipmentType) => setValue(value)}
+        onValueChange={(value: FreightType) => setValue(value)}
         className="grid md:grid-cols-3 mt-8 gap-3 md:gap-6"
       >
         <FieldLabel
@@ -51,7 +51,7 @@ const SelectFreight = () => {
               </FieldTitle>
             </FieldContent>
             <RadioGroupItem
-              value="air"
+              value="AIR_FREIGHT"
               id="air-freight"
               className="size-5 border-2 border-neutral-400"
             />
@@ -71,7 +71,7 @@ const SelectFreight = () => {
               </FieldTitle>
             </FieldContent>
             <RadioGroupItem
-              value="ocean"
+              value="OCEAN_FREIGHT"
               id="ocean-freight"
               className="size-5 border-2 border-neutral-400"
             />
@@ -91,7 +91,7 @@ const SelectFreight = () => {
               </FieldTitle>
             </FieldContent>
             <RadioGroupItem
-              value="road"
+              value="ROAD_FREIGHT"
               id="road-freight"
               className="size-5 border-2 border-neutral-400"
             />

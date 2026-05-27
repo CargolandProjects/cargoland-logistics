@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
-import { ShipmentFormType } from "@/lib/schemas/shipmentSchema";
+import { ShipmentDataType } from "@/lib/schemas/shipmentSchema";
 import { useFormContext, Controller } from "react-hook-form";
 
 import { countryOptions } from "@/lib/utils/countryOptions";
@@ -28,11 +28,11 @@ import { useEffect, useRef } from "react";
 import { Iso2 } from "intl-tel-input";
 
 const ShipperDetailsForm = () => {
-  const { control, watch } = useFormContext<ShipmentFormType>();
+  const { control, watch } = useFormContext<ShipmentDataType>();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const phoneInputRef = useRef<any>(null);
 
-  const selectedCountryLabel = watch("sender.country");
+  const selectedCountryLabel = watch("country");
   const selectedCountry = countryOptions.find(
     (c) => c.label === selectedCountryLabel
   );
@@ -58,7 +58,7 @@ const ShipperDetailsForm = () => {
 
         <div className="grid md:grid-cols-2 gap-10">
           <Controller
-            name="sender.fullName"
+            name="fullName"
             control={control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid} className="gap-1">
@@ -81,9 +81,9 @@ const ShipperDetailsForm = () => {
               </Field>
             )}
           />
-          
+
           <Controller
-            name="sender.email"
+            name="email"
             control={control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid} className="gap-1">
@@ -111,7 +111,7 @@ const ShipperDetailsForm = () => {
         {/* country & phone number */}
         <div className="grid md:grid-cols-2 gap-10">
           <Controller
-            name="sender.country"
+            name="country"
             control={control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid} className="gap-1">
@@ -157,7 +157,7 @@ const ShipperDetailsForm = () => {
           />
 
           <Controller
-            name="sender.phoneNumber"
+            name="phoneNumber"
             control={control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid} className="gap-1">
@@ -191,7 +191,7 @@ const ShipperDetailsForm = () => {
         {/* state/city & address */}
         <div className="grid md:grid-cols-2 gap-10">
           <Controller
-            name="sender.stateOrCity"
+            name="stateOrCity"
             control={control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid} className="gap-1">
@@ -215,7 +215,7 @@ const ShipperDetailsForm = () => {
             )}
           />
           <Controller
-            name="sender.address"
+            name="address"
             control={control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid} className="gap-1">
@@ -242,7 +242,7 @@ const ShipperDetailsForm = () => {
 
         <div className="grid md:grid-cols-2">
           <Controller
-            name="sender.pickupAddressType"
+            name="pickUpAddressType"
             control={control}
             render={({ field, fieldState }) => (
               <FieldSet>
@@ -270,7 +270,7 @@ const ShipperDetailsForm = () => {
                         Home
                       </FieldTitle>
                       <RadioGroupItem
-                        value="home"
+                        value="HOME"
                         id={`${field.name}-home`}
                         aria-invalid={fieldState.invalid}
                         className="border-brand-gray/90"
@@ -291,7 +291,7 @@ const ShipperDetailsForm = () => {
                         Office
                       </FieldTitle>
                       <RadioGroupItem
-                        value="office"
+                        value="OFFICE"
                         id={`${field.name}-office`}
                         aria-invalid={fieldState.invalid}
                         className="border-brand-gray/90"
@@ -312,7 +312,7 @@ const ShipperDetailsForm = () => {
                         Drop Off
                       </FieldTitle>
                       <RadioGroupItem
-                        value="dropOff"
+                        value="DROP_OFF"
                         id={`${field.name}-dropOff`}
                         aria-invalid={fieldState.invalid}
                         className="border-brand-gray/90"
@@ -334,7 +334,7 @@ const ShipperDetailsForm = () => {
         {/* pickup date & time */}
         <div className="grid md:grid-cols-2 gap-10">
           <Controller
-            name="sender.pickupDate"
+            name="pickupDate"
             control={control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid} className="gap-1">
@@ -359,7 +359,7 @@ const ShipperDetailsForm = () => {
             )}
           />
           <Controller
-            name="sender.pickupTime"
+            name="pickupTime"
             control={control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid} className="gap-1">

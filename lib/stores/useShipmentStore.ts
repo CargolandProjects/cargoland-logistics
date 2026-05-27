@@ -1,10 +1,11 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { ShipmentFormType } from "../schemas/shipmentSchema";
+import { ShipmentDataType } from "../schemas/shipmentSchema";
 import { DeepPartial } from "react-hook-form";
+import { Shipment } from "../services/shipment.service";
 
-export type ShipmentType = "air" | "road" | "ocean";
-export type ShipmentScope = "domestic" | "international";
+export type FreightType = "AIR_FREIGHT" | "OCEAN_FREIGHT" | "ROAD_FREIGHT";
+export type ShipmentType = "DOMESTIC" | "INTERNATIONAL";
 type Step = "selectScope" | "selectType" | "ShipmentForm" | "successful";
 
 // Create a type that matches react-hook-form's watch return type
@@ -14,19 +15,21 @@ type Step = "selectScope" | "selectType" | "ShipmentForm" | "successful";
 
 interface ShipmentStore {
   step: Step;
+  freightType: FreightType | null;
   shipmentType: ShipmentType | null;
-  shipmentScope: ShipmentScope | null;
+  createdShipment: Shipment | null;
   formData: {
     step: number | null;
-    data: DeepPartial<ShipmentFormType> | null;
+    data: DeepPartial<ShipmentDataType> | null;
   };
 
-  setShipmentScope: (shipmentScope: ShipmentScope) => void;
   setShipmentType: (shipmentType: ShipmentType) => void;
+  setFreightType: (freightType: FreightType) => void;
   setShipmentFlow: (shipmentFlow: Step) => void;
+  setCreatedShipment: (createdShipment: Shipment) => void;
   setFormData: (formData: {
     step: number;
-    data: DeepPartial<ShipmentFormType>;
+    data?: DeepPartial<ShipmentDataType>;
   }) => void;
   clearShipment: () => void;
 }
@@ -35,40 +38,46 @@ export const useShipmentStore = create(
   persist<ShipmentStore>(
     (set) => ({
       step: "selectScope",
+      freightType: null,
       shipmentType: null,
-      shipmentScope: null,
+      createdShipment: null,
       formData: {
         step: null,
         data: null,
       },
 
-      setShipmentScope: (shipmentScope) => {
-        set({ shipmentScope, step: "selectType" });
+      setShipmentType: (shipmentType) => {
+        set({ shipmentType, step: "selectType" });
         // alert("SHipment scope set to: " + shipmentScope);
       },
-      setShipmentType: (shipmentType) =>
-        set({ shipmentType, step: "ShipmentForm" }),
+      setFreightType: (freightType) =>
+        set({ freightType, step: "ShipmentForm" }),
 
       setShipmentFlow: (shipmentFlow) => {
         set({
           step: shipmentFlow,
         });
       },
+      setCreatedShipment: (createdShipment) =>
+        set({
+          createdShipment,
+        }),
 
       setFormData: (formData) =>
         set((state) => ({
           formData: {
             ...state.formData,
             step: formData.step,
-            data: { ...formData.data },
+            data: { ...state.formData.data, ...formData.data },
           },
         })),
 
       clearShipment: () =>
         set({
           step: "selectScope",
-          shipmentScope: null,
           shipmentType: null,
+          freightType: null,
+          createdShipment: null,
           formData: {
             step: null,
             data: null,

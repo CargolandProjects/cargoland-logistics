@@ -5,7 +5,7 @@ import ReceiverDetailsForm from "./ReceiverDetailsForm";
 import ShipmentDetailsForm from "./ShipmentDetailsForm";
 import Payment from "./Payment";
 import {
-  ShipmentFormType,
+  ShipmentDataType,
   shipmentSchema,
   defaultShipmentValues,
 } from "@/lib/schemas/shipmentSchema";
@@ -14,20 +14,34 @@ import { useForm, FormProvider, DeepPartial, useWatch } from "react-hook-form";
 import { useShipmentStore } from "@/lib/stores/useShipmentStore";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import {
+  useCreateShipment,
+  useCreateShipmentUser,
+} from "@/lib/hooks/mutation/useMutateShipment";
+import { useSession } from "@/lib/hooks/useSession";
+import { toast } from "sonner";
 
 const ShipmentForm = () => {
+  const { mutate: createShipment } = useCreateShipment();
+  const { mutate: createShipmentUser } = useCreateShipmentUser();
+  const formData = useShipmentStore((s) => s.formData);
+  const freightType = useShipmentStore((s) => s.freightType);
+  const shipmentType = useShipmentStore((s) => s.shipmentType);
+  const saveShipmentData = useShipmentStore((s) => s.setFormData);
+  const saveCreatedShipment = useShipmentStore((s) => s.setCreatedShipment);
+  const { isAuthenticated } = useSession();
+  const router = useRouter();
+
   const [step, setStep] = useState(0);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
+
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasHydrated = useRef(false);
 
-  const router = useRouter();
-
-  const formData = useShipmentStore((s) => s.formData);
-  const saveFormData = useShipmentStore((s) => s.setFormData);
   //   clearShipmentForm();
   console.log("form data: ", formData);
 
-  const form = useForm<ShipmentFormType>({
+  const form = useForm<ShipmentDataType>({
     resolver: zodResolver(shipmentSchema),
     defaultValues: defaultShipmentValues,
   });
@@ -35,11 +49,11 @@ const ShipmentForm = () => {
   const formValues = useWatch({ control: form.control });
 
   const save = useCallback(
-    (value: { step: number; data: DeepPartial<ShipmentFormType> }) => {
+    (value: { step: number; data: DeepPartial<ShipmentDataType> }) => {
       if (!value) return;
-      saveFormData(value);
+      saveShipmentData(value);
     },
-    [saveFormData]
+    [saveShipmentData]
   );
 
   const cancel = () => {
@@ -71,21 +85,46 @@ const ShipmentForm = () => {
 
   //   autosaves form progress
   useEffect(() => {
+    if (hasSubmitted) return;
     cancel();
 
     timeoutRef.current = setTimeout(() => {
-      save({ step, data: formValues as DeepPartial<ShipmentFormType> });
+      save({ step, data: formValues as DeepPartial<ShipmentDataType> });
     }, 1000);
 
     return cancel;
-  }, [save, formValues, step]);
+  }, [save, formValues, step, hasSubmitted]);
 
-  const onSubmit = (data: ShipmentFormType) => {
-    console.log("The submitted Data: ", data);
-    setStep(3);
-  };
-
-  const stepFields = [["sender"], ["receiver"], ["shipment"]] as const;
+  const stepFields = [
+    [
+      "fullName",
+      "email",
+      "country",
+      "phoneNumber",
+      "stateOrCity",
+      "address",
+      "pickUpAddressType",
+      "pickupDate",
+      "pickupTime",
+    ],
+    [
+      "receiverName",
+      "receiverEmail",
+      "receiverCountry",
+      "receiverNumber",
+      "receiverStateOrCity",
+      "receiverAddress",
+    ],
+    [
+      "packageType",
+      "numberOfItems",
+      "weight",
+      "length",
+      "breadth",
+      "height",
+      "descriptionOfGoods",
+    ],
+  ] as const;
 
   const handleNext = async () => {
     const isValid = await form.trigger(stepFields[step]);
@@ -103,10 +142,57 @@ const ShipmentForm = () => {
     setStep((step) => step + 1);
   };
 
+  const onSubmit = (data: ShipmentDataType) => {
+    const payload = {
+      ...data,
+      shipmentType: shipmentType,
+      freightType: freightType,
+    };
+    // console.log("IsAuthenticated", payload);
+
+    if (isAuthenticated)
+      createShipmentUser(payload, {
+        onSuccess: (res) => {
+          setHasSubmitted(true);
+          toast.success(res.message || "Shipment created successfully");
+          saveCreatedShipment(res.data);
+          // save next step
+          setStep((prev) => {
+            const next = prev + 1;
+            saveShipmentData({ step: next });
+            return next;
+          });
+        },
+        onError: (res) => {
+          toast.error(res.message || "Failed to create shipment");
+        },
+      });
+    else
+      createShipment(payload, {
+        onSuccess: (res) => {
+          setHasSubmitted(true);
+          toast.success(res.message || "Shipment created successfully");
+          saveCreatedShipment(res.data);
+          // save next step
+          setStep((prev) => {
+            const next = prev + 1;
+            saveShipmentData({ step: next });
+            return next;
+          });
+        },
+        onError: (res) => {
+          toast.error(res.message || "Failed to create shipment");
+        },
+      });
+  };
+
   const handlePayment = () => {
-    setTimeout(() => {
+    if (!isAuthenticated) {
+      toast.error("Please login to make payment");
+      router.push("/login");
+    } else {
       router.push("/payment-successful");
-    }, 400);
+    }
   };
 
   const shipmentForms = () => {

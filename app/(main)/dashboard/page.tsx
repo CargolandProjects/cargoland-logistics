@@ -1,3 +1,5 @@
+"use client";
+
 import { boxChecked } from "@/assets/images";
 import {
   ArrowRight,
@@ -15,6 +17,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useProtectedRoute } from "@/lib/hooks/useProtectedRoute";
+import { useSession } from "@/lib/hooks/useSession";
 import { formatDate } from "@/lib/utils";
 import { MoreVertical } from "lucide-react";
 import Image from "next/image";
@@ -133,7 +137,16 @@ const statusStyles = {
 };
 
 export default function DashboardPage() {
+  const { isAuthenticated, session, signOut } = useSession();
+  const { isChecking } = useProtectedRoute();
+
+  console.log("session", session, isAuthenticated);
+
   const noRecentOrders = false;
+
+  if (isChecking) {
+    return null;
+  }
 
   return (
     <div className="px-4 sm:px-6 md:px-16 lg:px-[112px]">
@@ -162,7 +175,13 @@ export default function DashboardPage() {
       <section className="mt-8">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold leading-7">Recent Shipments</h2>
-          <Button variant="outline" className="text-primary border-primary w-[81px]">See All</Button>
+          <Button
+            onClick={() => signOut()}
+            variant="outline"
+            className="text-primary border-primary w-[81px]"
+          >
+            See All
+          </Button>
         </div>
 
         {noRecentOrders && (

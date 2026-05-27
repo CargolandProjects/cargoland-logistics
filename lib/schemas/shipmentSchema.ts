@@ -27,66 +27,12 @@ export const packageType = [
   "Crate",
   "Pallet",
   "Parcel",
-
   "other",
 ] as const;
 
-export const shipmentSchema = z.object({
-  sender: z
-    .object({
-      fullName: z
-        .string()
-        .min(3, "Full name must be at least 3 characters long")
-        .max(100, "Full name must be less than 100 characters")
-        .regex(
-          /^[a-zA-Z\s'-]+$/,
-          "Full name can only contain letters, spaces, hyphens, and apostrophes"
-        ),
-      email: z.email("Enter a valid email address"),
-      country: z.string().min(1, "Country is required"),
-      phoneNumber: z
-        .string()
-        .min(7, "Phone number is too short")
-        .max(15, "Phone number is too long")
-        .regex(/^\+?\d+$/, "Phone number must contain only digits"),
-      stateOrCity: z.string().min(2, "State/City is required").max(100),
-      address: z
-        .string()
-        .min(5, "Address is too short")
-        .max(200, "Address is too long"),
-
-      pickupAddressType: z.enum(
-        ["home", "office", "dropOff"],
-        "Select a pickup address type"
-      ),
-
-      pickupDate: z
-        .string()
-        .min(1, "Pickup date is required")
-        .refine(isTodayOrFuture, "Pickup date must be today or a future date"),
-
-      pickupTime: z
-        .string()
-        .min(1, "Pickup time is required")
-        .refine(
-          isValidPickupTime,
-          "Pickup time must be between 8:00 AM and 8:00 PM"
-        ),
-    })
-    .refine(
-      (data) => {
-        const { pickupDate, pickupTime } = data;
-        const pickupDateTime = new Date(`${pickupDate}T${pickupTime}`);
-        const now = new Date();
-
-        return pickupDateTime.getTime() > now.getTime();
-      },
-      {
-        message: "Pickup date and time must be in the future",
-        path: ["pickupTime", "pickupDate"], // Error shows on pickupTime field
-      }
-    ),
-  receiver: z.object({
+export const shipmentSchema = z
+  .object({
+    // Sender Details Starts Here
     fullName: z
       .string()
       .min(3, "Full name must be at least 3 characters long")
@@ -107,82 +53,131 @@ export const shipmentSchema = z.object({
       .string()
       .min(5, "Address is too short")
       .max(200, "Address is too long"),
-  }),
 
-  shipment: z.object({
+    pickUpAddressType: z.enum(
+      ["HOME", "OFFICE", "DROP_OFF"],
+      "Select a pickup address type"
+    ),
+
+    pickupDate: z
+      .string()
+      .min(1, "Pickup date is required")
+      .refine(isTodayOrFuture, "Pickup date must be today or a future date"),
+
+    pickupTime: z
+      .string()
+      .min(1, "Pickup time is required")
+      .refine(
+        isValidPickupTime,
+        "Pickup time must be between 8:00 AM and 8:00 PM"
+      ),
+
+    //  Receiver's Details Starts Here
+    receiverName: z
+      .string()
+      .min(3, "Full name must be at least 3 characters long")
+      .max(100, "Full name must be less than 100 characters")
+      .regex(
+        /^[a-zA-Z\s'-]+$/,
+        "Full name can only contain letters, spaces, hyphens, and apostrophes"
+      ),
+    receiverEmail: z.email("Enter a valid email address"),
+    receiverCountry: z.string().min(1, "Country is required"),
+    receiverNumber: z
+      .string()
+      .min(7, "Phone number is too short")
+      .max(15, "Phone number is too long")
+      .regex(/^\+?\d+$/, "Phone number must contain only digits"),
+    receiverStateOrCity: z.string().min(2, "State/City is required").max(100),
+    receiverAddress: z
+      .string()
+      .min(5, "Address is too short")
+      .max(200, "Address is too long"),
+
+    //  Package Details Starts Here
     packageType: z.enum(packageType, {
       error: "Please select a package type",
     }),
 
-    itemNumber: z
+    numberOfItems: z
       .string("Number of items is required")
       .min(1, "Must be at least 1 item")
       .max(100, "Maximum 100 items")
       .regex(/^\d+$/, "Must be a positive whole number"),
 
-    weightKg: z
+    weight: z
       .string("Weight is required")
       .min(0.1, "Weight must be at least 0.1 kg")
       .max(10000, "Weight cannot exceed 10000 kg")
       .regex(/^\d+(\.\d+)?$/, "Must be a valid number"),
 
-    lengthCm: z
+    length: z
       .string("Length is required")
       .min(1, "Length must be at least 1 cm")
       .max(500, "Length cannot exceed 500 cm")
       .regex(/^\d+(\.\d+)?$/, "Must be a valid number"),
 
-    breadthCm: z
+    breadth: z
       .string("Breadth is required ")
       .min(1, "Breadth must be at least 1 cm")
       .max(500, "Breadth cannot exceed 500 cm")
       .regex(/^\d+(\.\d+)?$/, "Must be a valid number"),
 
-    heightCm: z
+    height: z
       .string("Height is required ")
       .min(1, "Height must be at least 1 cm")
       .max(500, "Height cannot exceed 500 cm")
       .regex(/^\d+(\.\d+)?$/, "Must be a valid number"),
 
-    description: z
+    descriptionOfGoods: z
       .string()
       .min(5, "Description must be at least 5 characters")
       .max(500, "Description is too long")
       .optional()
       .or(z.literal("")),
-  }),
-});
+  })
+  .refine(
+    (data) => {
+      const { pickupDate, pickupTime } = data;
+      const pickupDateTime = new Date(`${pickupDate}T${pickupTime}`);
+      const now = new Date();
 
-export type ShipmentFormType = z.infer<typeof shipmentSchema>;
+      return pickupDateTime.getTime() > now.getTime();
+    },
+    {
+      message: "Pickup date and time must be in the future",
+      path: ["pickupTime", "pickupDate"], // Error shows on pickupTime field
+    }
+  );
+
+export type ShipmentDataType = z.infer<typeof shipmentSchema>;
 
 export const defaultShipmentValues = {
-  sender: {
-    fullName: "",
-    email: "",
-    country: "",
-    phoneNumber: "",
-    stateOrCity: "",
-    address: "",
-    pickupAddressType: undefined,
-    pickupDate: "",
-    pickupTime: "",
-  },
-  receiver: {
-    fullName: "",
-    email: "",
-    country: "",
-    phoneCountryCode: "",
-    phoneNumber: "",
-    stateOrCity: "",
-    address: "",
-  },
-  shipment: {
-    packageType: undefined,
-    itemNumber: undefined,
-    weightKg: undefined,
-    lengthCm: undefined,
-    breadthCm: undefined,
-    heightCm: undefined,
-    description: "",
-  },
+  // Sender Details
+  fullName: "",
+  email: "",
+  country: "",
+  phoneNumber: "",
+  stateOrCity: "",
+  address: "",
+  pickUpAddressType: undefined,
+  pickupDate: "",
+  pickupTime: "",
+
+  // Receiver Details
+  receiverName: "",
+  receiverEmail: "",
+  receiverCountry: "",
+  receiverNumber: "",
+  receiverStateOrCity: "",
+  receiverAddress: "",
+
+  // Package Details
+  packageType: undefined,
+  numberOfItems: "",
+  weight: "",
+  length: "",
+  breadth: "",
+  height: "",
+  descriptionOfGoods: "",
 };

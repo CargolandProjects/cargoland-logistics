@@ -4,14 +4,10 @@ import { useShipmentStore } from "@/lib/stores/useShipmentStore";
 import { formatDate } from "@/lib/utils";
 
 const Payment = () => {
-  const shipmentType = useShipmentStore((s) => s.shipmentType);
-  const formData = useShipmentStore((s) => s.formData.data);
-  const sender = formData?.sender;
-  const receiver = formData?.receiver;
-  const shipment = formData?.shipment;
+  const freightType = useShipmentStore((s) => s.freightType);
+  const shipmentData = useShipmentStore((s) => s.createdShipment);
 
-  const totalShipmentWeight =
-    (shipment?.weightKg ?? 0) * (shipment?.itemNumber ?? 0);
+  console.log("Shipment Data", shipmentData);
 
   return (
     <div className="mt-7.5 px-6 py-8 bg-white rounded-lg">
@@ -25,12 +21,12 @@ const Payment = () => {
           <h3 className="bill-sub-title">From</h3>
 
           <div className="mt-2 space-y-1.5">
-            <p className="text-sm font-normal">{sender?.fullName}</p>
+            <p className="text-sm font-normal">{shipmentData?.fullName}</p>
             <p className="text-sm font-normal text-[#475367]">
-              {sender?.address}
+              {shipmentData?.address}
             </p>
             <p className="text-sm font-normal text-[#475367]">
-              {sender?.phoneNumber}
+              {shipmentData?.phoneNumber}
             </p>
           </div>
         </div>
@@ -39,12 +35,12 @@ const Payment = () => {
           <h3 className="bill-sub-title">To</h3>
 
           <div className="mt-2 space-y-1.5">
-            <p className="text-sm font-normal">{receiver?.fullName}</p>
+            <p className="text-sm font-normal">{shipmentData?.receiverName}</p>
             <p className="text-sm font-normal text-[#475367]">
-              {receiver?.address}
+              {shipmentData?.receiverAddress}
             </p>
             <p className="text-sm font-normal text-[#475367]">
-              {receiver?.phoneNumber}
+              {shipmentData?.receiverNumber}
             </p>
           </div>
         </div>
@@ -53,7 +49,7 @@ const Payment = () => {
           <h3 className="bill-sub-title">Invoice Date</h3>
 
           <p className="mt-2 text-sm font-normal">
-            {formatDate(new Date().toISOString())}
+            {formatDate(shipmentData?.createdAt ?? "")}
           </p>
         </div>
 
@@ -61,7 +57,7 @@ const Payment = () => {
           <h3 className="bill-sub-title">Subject</h3>
 
           <p className="mt-2 text-sm font-normal capitalize">
-            {shipmentType} freight
+            {freightType?.toLowerCase().replace("_", " ")}
           </p>
         </div>
       </div>
@@ -73,9 +69,9 @@ const Payment = () => {
           <h3 className="bill-sub-title">Shipment Summary</h3>
 
           <p className="mt-2 text-sm font-normal capitalize">
-            {sender?.country}
+            {shipmentData?.country}
             <ArrowRight className="size-4.5 text-primary inline mx-2.5" />
-            {receiver?.country}
+            {shipmentData?.receiverCountry}
           </p>
         </div>
 
@@ -90,14 +86,16 @@ const Payment = () => {
         <div>
           <h3 className="bill-sub-title">ID Number</h3>
 
-          <p className="mt-2 text-sm font-normal capitalize">CLD-12345678</p>
+          <p className="mt-2 text-sm font-normal capitalize">
+            {shipmentData?.trackingId}
+          </p>
         </div>
 
         <div>
           <h3 className="bill-sub-title">Invoice of Naira</h3>
 
           <p className="mt-2 text-[32px] font-semibold leading-10 text-primary capitalize">
-            ₦45,000
+            ₦{Number(shipmentData?.price).toLocaleString()}
           </p>
         </div>
       </div>
@@ -107,7 +105,7 @@ const Payment = () => {
       <div className="mt-10">
         <h3 className="bill-sub-title">Shipment Weight</h3>
         <p className="text-sm font-medium leading-5.5">
-          Total Shipment Weight: {totalShipmentWeight} kg
+          Total Shipment Weight: {shipmentData?.totalShipmentWeight} kg
         </p>
       </div>
 

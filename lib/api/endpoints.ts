@@ -11,5 +11,7 @@ export const API_ROUTES = {
 
   shipment: {
     trackShipment: "/shipments/shipment-tracking-id",
+    createShipment: "/shipments/create-shipment",
+    createShipmentUser: "/shipments/create-shipment-user",
   },
 };

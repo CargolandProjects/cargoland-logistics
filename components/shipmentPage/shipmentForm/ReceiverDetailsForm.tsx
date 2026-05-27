@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { ShipmentFormType } from "@/lib/schemas/shipmentSchema";
+import { ShipmentDataType } from "@/lib/schemas/shipmentSchema";
 import { useFormContext, Controller } from "react-hook-form";
 
 import { countryOptions } from "@/lib/utils/countryOptions";
@@ -26,10 +26,10 @@ import { useEffect, useRef } from "react";
 import { Iso2 } from "intl-tel-input";
 
 const ReceiverDetailsForm = () => {
-  const { control, watch } = useFormContext<ShipmentFormType>();
+  const { control, watch } = useFormContext<ShipmentDataType>();
   const phoneInputRef = useRef<IntlTelInputRef>(null);
 
-  const selectedCountryLabel = watch("receiver.country");
+  const selectedCountryLabel = watch("receiverCountry");
   const selectedCountry = countryOptions.find(
     (c) => c.label === selectedCountryLabel
   );
@@ -55,7 +55,7 @@ const ReceiverDetailsForm = () => {
 
         <div className="grid md:grid-cols-2 gap-10">
           <Controller
-            name="receiver.fullName"
+            name="receiverName"
             control={control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid} className="gap-1">
@@ -79,7 +79,7 @@ const ReceiverDetailsForm = () => {
             )}
           />
           <Controller
-            name="receiver.email"
+            name="receiverEmail"
             control={control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid} className="gap-1">
@@ -107,7 +107,7 @@ const ReceiverDetailsForm = () => {
         {/* country & phone number */}
         <div className="grid md:grid-cols-2 gap-10">
           <Controller
-            name="receiver.country"
+            name="receiverCountry"
             control={control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid} className="gap-1">
@@ -153,7 +153,7 @@ const ReceiverDetailsForm = () => {
           />
 
           <Controller
-            name="receiver.phoneNumber"
+            name="receiverNumber"
             control={control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid} className="gap-1">
@@ -187,7 +187,7 @@ const ReceiverDetailsForm = () => {
         {/* state/city & address */}
         <div className="grid md:grid-cols-2 gap-10">
           <Controller
-            name="receiver.stateOrCity"
+            name="receiverStateOrCity"
             control={control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid} className="gap-1">
@@ -211,7 +211,7 @@ const ReceiverDetailsForm = () => {
             )}
           />
           <Controller
-            name="receiver.address"
+            name="receiverAddress"
             control={control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid} className="gap-1">

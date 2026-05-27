@@ -5,9 +5,11 @@ import WhereTo from "./WhereTo";
 import SelectFreight from "./SelectFreight";
 import { useShipmentStore } from "@/lib/stores/useShipmentStore";
 import ShipmentForm from "./shipmentForm/ShipmentForm";
+import { useSession } from "@/lib/hooks/useSession";
 
 const ShipmentPageContent = () => {
   const shipmentStep = useShipmentStore((s) => s.step);
+  const { isAuthenticated } = useSession();
   //   const clearShipment = useShipmentStore((s) => s.clearShipment);
 
   console.log("Shipment Step: ", shipmentStep);
@@ -26,7 +28,7 @@ const ShipmentPageContent = () => {
   return (
     <div className="min-h-screen padding-x bg-background-screen text-brand-black pb-6">
       <div className="max-w-[888.5px] mx-auto">
-        <AuthPrompt />
+        {!isAuthenticated && <AuthPrompt />}
         {shipmentStage()}
       </div>
     </div>
