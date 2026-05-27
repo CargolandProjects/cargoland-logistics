@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import {  User } from "@/lib/services/auth.service";
+import { Tokens, User } from "@/lib/services/auth.service";
 import type { QueryClient } from "@tanstack/react-query";
 
 export type SessionStatus = "loading" | "authenticated" | "unauthenticated";
@@ -12,6 +12,7 @@ interface AuthSessionState {
   // Actions
   hydrateFromStorage: () => Promise<void>;
 
+  setTokens: (tokens: Tokens) => void;
   setUser: (user: User | null) => void;
   // updateUser: (patch: Partial<User>) => Promise<void>;
   signOut: (queryClient?: QueryClient) => void;
@@ -54,6 +55,17 @@ export const useAuthSessionStore = create<AuthSessionState>((set, get) => ({
     }
 
     set({ user: storedUser, status: "authenticated" });
+  },
+
+  setTokens: (tokens) => {
+    if (!tokens.accessToken || !tokens.refreshToken) return;
+    if (typeof window !== "undefined") {
+      localStorage.setItem(ACCESS_KEY, tokens.accessToken);
+      localStorage.setItem(REFRESH_KEY, tokens.refreshToken);
+    } else {
+      localStorage.removeItem(ACCESS_KEY);
+      localStorage.removeItem(REFRESH_KEY);
+    }
   },
 
   setUser: (user) => {

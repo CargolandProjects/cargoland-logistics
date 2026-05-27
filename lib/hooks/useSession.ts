@@ -9,9 +9,14 @@ export function useSession() {
   const session = useAuthSessionStore((s) => s.user);
   const status = useAuthSessionStore((s) => s.status);
   const setUser = useAuthSessionStore((s) => s.setUser);
+  const setTokens = useAuthSessionStore((s) => s.setTokens);
   // const updateUser = useAuthSessionStore((s) => s.updateUser);
   const storeSignOut = useAuthSessionStore((s) => s.signOut);
   const hydrate = useAuthSessionStore((s) => s.hydrateFromStorage);
+
+  const USER_KEY = process.env.NEXT_PUBLIC_USER_KEY;
+  const ACCESS_KEY = process.env.NEXT_PUBLIC_ACCESS_KEY;
+  const REFRESH_KEY = process.env.NEXT_PUBLIC_REFRESH_KEY;
 
   useEffect(() => {
     // hydrate once on mount
@@ -20,17 +25,13 @@ export function useSession() {
     const onStorage = (e: StorageEvent) => {
       if (!e.key) return;
       // change to .env values
-      if (
-        e.key === "auth_token" ||
-        e.key === "refresh_token" ||
-        e.key === "user"
-      ) {
+      if (e.key === ACCESS_KEY || e.key === REFRESH_KEY || e.key === USER_KEY) {
         hydrate();
       }
     };
     window.addEventListener("storage", onStorage);
     return () => window.removeEventListener("storage", onStorage);
-  }, [hydrate]);
+  }, [hydrate, USER_KEY, ACCESS_KEY, REFRESH_KEY]);
 
   // Listen for auth logout events from API layer  (token refresh failure)
   useEffect(() => {
@@ -75,6 +76,7 @@ export function useSession() {
     isAuthenticated,
     // actions
     setUser,
+    setTokens,
     // updateUser,
     signOut,
     refreshSession,

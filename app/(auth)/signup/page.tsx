@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { PhoneInput, phoneSchema } from "@/components/ui/phone-input";
 import { useSignUp } from "@/lib/hooks/mutation/useAuth";
 import { useProtectedRoute } from "@/lib/hooks/useProtectedRoute";
+import { useSession } from "@/lib/hooks/useSession";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, Eye } from "lucide-react";
 import Link from "next/link";
@@ -89,7 +90,9 @@ export type SignUpData = z.infer<typeof formSchema>;
 export default function SignupPage() {
   const { mutate: signUp, isPending } = useSignUp();
   const router = useRouter();
-  const { isChecking, isAuthenticated } = useProtectedRoute();
+  const { isAuthenticated } = useSession();
+
+  // const { isChecking, isAuthenticated } = useProtectedRoute();
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
   const [isVisible, setIsVisible] = useState({
     createPassword: false,
@@ -143,11 +146,6 @@ export default function SignupPage() {
       },
     });
   };
-
-  // Block render until initial check completes
-  if (isChecking) {
-    return null;
-  }
 
   return (
     <div className="my-18.75 px-4">

@@ -19,9 +19,9 @@ export const useResendOtp = () => {
   });
 };
 
-export const useSIgnIn = () => {
+export const useLogIn = () => {
   return useMutation({
-    mutationFn: auth.signIn,
+    mutationFn: auth.logIn,
   });
 };
 

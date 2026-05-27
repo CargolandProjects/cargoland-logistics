@@ -1,7 +1,7 @@
 import { SignUpData } from "@/app/(auth)/signup/page";
 
 import { API_ROUTES } from "../api/endpoints";
-import { LoginData } from "@/app/(auth)/signin/page";
+import { LoginData } from "@/app/(auth)/login/page";
 import { createPasswordData } from "@/app/(auth)/create-password/page";
 import apiClient from "../api/client";
 
@@ -26,22 +26,24 @@ export interface User {
   updatedAt: string;
 }
 
+export interface Tokens {
+  accessToken: string;
+  refreshToken: string;
+}
+
 interface VerifyEmailData {
   verificationCode: string;
   email: string;
 }
 
-interface SignIn {
+export interface LogIn {
   user: User;
-  token: {
-    accessToken: string;
-    refreshToken: string;
-  };
+  token: Tokens;
 }
 
 type SignUpRes = APIResponse<User>;
 
-type SignInRes = APIResponse<SignIn>;
+type LogInRes = APIResponse<LogIn>;
 
 type UpdatePasswordData = createPasswordData & { email: string };
 
@@ -61,8 +63,8 @@ export const auth = {
     return res.data;
   },
 
-  async signIn(data: LoginData) {
-    const res = await apiClient.post<SignInRes>(API_ROUTES.auth.login, data);
+  async logIn(data: LoginData) {
+    const res = await apiClient.post<LogInRes>(API_ROUTES.auth.login, data);
     return res.data;
   },
 

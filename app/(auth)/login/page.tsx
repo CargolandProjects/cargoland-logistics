@@ -12,8 +12,7 @@ import {
   FieldTitle,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useSIgnIn } from "@/lib/hooks/mutation/useAuth";
-import { useProtectedRoute } from "@/lib/hooks/useProtectedRoute";
+import { useLogIn } from "@/lib/hooks/mutation/useAuth";
 import { useSession } from "@/lib/hooks/useSession";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye } from "lucide-react";
@@ -43,10 +42,9 @@ const loginSchema = z.object({
 
 export type LoginData = z.infer<typeof loginSchema>;
 
-export default function SignInPage() {
-  const { mutate, isPending } = useSIgnIn();
-  const { isChecking } = useProtectedRoute();
-  const { setUser, isAuthenticated } = useSession();
+export default function LogInPage() {
+  const { mutate, isPending } = useLogIn();
+  const { setUser, setTokens, isAuthenticated } = useSession();
   const router = useRouter();
   const [isVisible, setIsVisible] = useState({
     createPassword: false,
@@ -73,8 +71,11 @@ export default function SignInPage() {
     mutate(data, {
       onSuccess: (res) => {
         const user = res.data.user;
-        if (!user) return;
+        const tokens = res.data.token;
 
+        if (!tokens || !user) return;
+
+        setTokens(tokens);
         setUser(user);
         toast.success(res.message || "Login successful!");
         router.replace("/dashboard");
@@ -84,11 +85,6 @@ export default function SignInPage() {
       },
     });
   };
-
-  // Block render until initial check completes
-  if (isChecking) {
-    return null;
-  }
 
   return (
     <div className="my-18.75 px-4">
