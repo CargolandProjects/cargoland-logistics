@@ -10,6 +10,7 @@
 
   --color-primary-red: var(--primary-red);
   --color-primary-dark: var(--primary-dark);
+  --color-primary-light: var(--primary-light);
   --color-background-screen: var(--bg-screen);
   --color-brand-gray: var(--brand-gray);
   --color-brand-black: var(--brand-black);
@@ -66,6 +67,7 @@
   --primary-red: #EF3B36;
   --dark-navy: #1a1a2e;
   --primary-dark: oklch(28.038% 0.09856 24.393);
+  --primary-light: oklch(94.918% 0.02071 17.238);
   --bg-screen: oklch(98.511% 0.00011 271.152);
   --brand-gray: oklch(66.604% 0.02831 266.519);
   --brand-black: oklch(22.095% 0.0136 285.216);

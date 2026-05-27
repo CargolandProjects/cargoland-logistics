@@ -15,6 +15,11 @@ import DeliveryTruckBolt from "./DeliveryTruckBolt";
 import PendingClipboard from "./PendingClipboard";
 import EyeOff from "./EyeOff";
 import ArrowLeft from "./ArrowLeft";
+import NoticeOutline from "./NoticeOutline";
+import Package from "./Package";
+import DepartmentStore from "./DepartmentStore";
+import Location3Line from "./Location3Line";
+import DeliveryTruckSpeedOutline from "./DeliveryTruckSpeedOutline";
 
 export {
   Location,
@@ -34,4 +39,9 @@ export {
   PendingClipboard,
   EyeOff,
   ArrowLeft,
+  NoticeOutline,
+  Package,
+  DepartmentStore,
+  Location3Line,
+  DeliveryTruckSpeedOutline,
 };

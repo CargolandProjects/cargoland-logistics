@@ -11,3 +11,11 @@ export function formatDate(date: Date | string) {
 
   return `${format(date, "MMM d, yyyy")}`;
 }
+
+export function formatDayOfWeek(date: Date | string) {
+ return `${format(date, "EEE")}`
+}
+
+export function formatTime(date: Date | string) {
+return `${format(date, "h:m")}`
+}
