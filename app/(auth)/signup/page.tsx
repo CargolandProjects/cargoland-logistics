@@ -16,7 +16,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { PhoneInput, phoneSchema } from "@/components/ui/phone-input";
 import { useSignUp } from "@/lib/hooks/mutation/useAuth";
-import { useProtectedRoute } from "@/lib/hooks/useProtectedRoute";
 import { useSession } from "@/lib/hooks/useSession";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, Eye } from "lucide-react";

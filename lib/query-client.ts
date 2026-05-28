@@ -8,6 +8,7 @@ export const getQueryClient = () =>
         refetchOnMount: false,
         refetchOnWindowFocus: false,
         refetchOnReconnect: true,
+        retryDelay: 500,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         retry: (failureCount, error: any) => {
           //          // Don't retry for 4xx errors (client errors)

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 export default function PasswordSuccessfulPage() {
   const router = useRouter();
-  const handleRoute = () => router.push("/dashboard");
+  const handleRoute = () => router.push("/login");
 
   return (
     <div className="mx-4 flex justify-center my-[75px]">
@@ -27,7 +27,7 @@ export default function PasswordSuccessfulPage() {
           </p>
         </div>
         <Button onClick={handleRoute} className="submit-button mt-8">
-          Go to Dashboard
+          Login
         </Button>
       </div>
     </div>

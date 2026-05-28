@@ -26,7 +26,7 @@ const resetPasswordSchema = z.object({
 
 export type resetPasswordData = z.infer<typeof resetPasswordSchema>;
 
-export default function ResetPassword() {
+export default function ForgotPasswordPage() {
   const { mutate, isPending } = useRequestPassword();
   //   const { isChecking, isAuthenticated } = useProtectedRoute();
 

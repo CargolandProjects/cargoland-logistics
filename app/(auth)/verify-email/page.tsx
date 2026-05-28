@@ -15,7 +15,11 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { useResendOtp, useVerifyEmail } from "@/lib/hooks/mutation/useAuth";
+import {
+  useRequestPassword,
+  useResendOtp,
+  useVerifyEmail,
+} from "@/lib/hooks/mutation/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -34,6 +38,9 @@ export type OtpData = z.infer<typeof otpSchema>;
 const VerifyEmailPageContent = () => {
   const { mutate, isPending } = useVerifyEmail();
   const { mutate: resendOtp, isPending: isResendingOtp } = useResendOtp();
+  const { mutate: requestPassword, isPending: isRequestingPassword } =
+    useRequestPassword();
+
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -72,12 +79,23 @@ const VerifyEmailPageContent = () => {
 
   const handleResendOtp = () => {
     if (!email) return;
-    resendOtp(email, {
-      onSuccess: () => {
-        toast.success("OTP sent successfully!");
-      },
-      onError: () => toast.error("Failed to send OTP!"),
-    });
+    if (intent === "reset-password")
+      requestPassword(
+        { email },
+        {
+          onSuccess: () => {
+            toast.success("OTP sent successfully!");
+          },
+          onError: (res) => toast.error(res.message || "Failed to send OTP!"),
+        }
+      );
+    else
+      resendOtp(email, {
+        onSuccess: () => {
+          toast.success("OTP sent successfully!");
+        },
+        onError: (res) => toast.error(res.message || "Failed to send OTP!"),
+      });
   };
 
   return (

@@ -51,8 +51,27 @@ interface TrackShipment {
   updatedAt: string;
 }
 
+interface DashboardStats {
+  totalShipments: number;
+  activeShipments: number;
+  deliveredShipments: number;
+  pendingShipments: number;
+}
+
+interface AllShipments {
+  shipments: TrackShipment[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
 type CreateShipment = APIResponse<Shipment>;
 type TrackShipmentRes = APIResponse<TrackShipment>;
+type DashboardStatsRes = APIResponse<DashboardStats>;
+type AllShipmentsRes = APIResponse<AllShipments>;
 
 export const shipment = {
   async createShipment(data: ShipmentDataType) {
@@ -74,6 +93,20 @@ export const shipment = {
   async trackShipment(trackingId: string) {
     const res = await apiClient.get<TrackShipmentRes>(
       `${API_ROUTES.shipment.trackShipment}?trackingId=${trackingId}`
+    );
+    return res.data;
+  },
+
+  async dashboardStats() {
+    const res = await apiClient.get<DashboardStatsRes>(
+      API_ROUTES.shipment.dashboardStats
+    );
+    return res.data;
+  },
+
+  async allShipments() {
+    const res = await apiClient.get<AllShipmentsRes>(
+      API_ROUTES.shipment.allShipments
     );
     return res.data;
   },

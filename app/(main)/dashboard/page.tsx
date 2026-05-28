@@ -8,6 +8,7 @@ import {
   Orders,
   PendingClipboard,
 } from "@/components/icons";
+import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -17,6 +18,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  useAllShipments,
+  useDashboardStats,
+} from "@/lib/hooks/queries/useShipment";
 import { useProtectedRoute } from "@/lib/hooks/useProtectedRoute";
 import { useSession } from "@/lib/hooks/useSession";
 import { formatDate } from "@/lib/utils";
@@ -34,29 +39,6 @@ interface ShimentData {
   date: string;
   status: ShipmentStatus;
 }
-
-const overview = [
-  {
-    title: "Total Shipments",
-    icon: Orders,
-    figure: "1000000",
-  },
-  {
-    title: "Active Shipments",
-    icon: DeliveryTruckSpeed,
-    figure: "1000000",
-  },
-  {
-    title: "Pending Shipments",
-    icon: PendingClipboard,
-    figure: "1000000",
-  },
-  {
-    title: "Delivered Shipments",
-    icon: DeliveryTruckBolt,
-    figure: "1000000",
-  },
-];
 
 const shipmentData: ShimentData[] = [
   {
@@ -116,7 +98,7 @@ const shipmentData: ShimentData[] = [
 ];
 
 const statusStyles = {
-  pending: {
+  PENDING: {
     bgcolor: "bg-cargo-warning",
     containerStyles:
       "border-cargo-warning bg-cargo-warning/5 text-cargo-warning",
@@ -137,12 +119,45 @@ const statusStyles = {
 };
 
 export default function DashboardPage() {
+  const { data, isLoading: isLoadingStats } = useDashboardStats();
+  const { data: shipments, isSuccess, isLoading, isError } = useAllShipments();
   const { isAuthenticated, session, signOut } = useSession();
   const { isChecking } = useProtectedRoute();
 
+  console.log("DashboardStats", data);
   console.log("session", session, isAuthenticated);
 
-  const noRecentOrders = false;
+  const getDashboardStats = () => {
+    const dashboardStats = [
+      {
+        title: "Total Shipments",
+        icon: Orders,
+        figure: data?.totalShipments || 0,
+      },
+      {
+        title: "Active Shipments",
+        icon: DeliveryTruckSpeed,
+        figure: data?.activeShipments || 0,
+      },
+      {
+        title: "Pending Shipments",
+        icon: PendingClipboard,
+        figure: data?.pendingShipments || 0,
+      },
+      {
+        title: "Delivered Shipments",
+        icon: DeliveryTruckBolt,
+        figure: data?.deliveredShipments || 0,
+      },
+    ];
+
+    return dashboardStats;
+  };
+
+  const dashboardStats = getDashboardStats();
+  const allShipments = shipments?.shipments || [];
+
+  const fullName = `${session?.firstName} ${session?.lastName} `;
 
   if (isChecking) {
     return null;
@@ -151,21 +166,25 @@ export default function DashboardPage() {
   return (
     <div className="px-4 sm:px-6 md:px-16 lg:px-[112px]">
       <section className="mt-16.5">
-        <h1 className="font-bold text-[32px] leading-10 ">Welcome, Joshua</h1>
+        <h1 className="font-bold text-[32px] leading-10 ">
+          Welcome, {fullName}
+        </h1>
         <p className="text-base font-light leading-6">
           Manage your shipments easily with fast tracking and reliable delivery.
         </p>
       </section>
 
       <section className="mt-6 grid sm:grid-cols-2 md:grid-cols-4 gap-6 ">
-        {overview.map((shipment, idx) => (
+        {dashboardStats.map((shipment, idx) => (
           <div className=" px-5.25 py-6.75 bg-white rounded-[16px]" key={idx}>
             <div className="flex items-center gap-3">
               <shipment.icon className="size-6 text-primary" />
               <p className="leading-5.5 text-neutral-500">{shipment.title}</p>
             </div>
 
-            <p className="mt-5 text-xl font-semibold leading-7">
+            <p className={` ${
+              isLoadingStats && "animate-pulse duration-300"
+            } mt-5 text-xl font-semibold leading-7`}>
               {Number(shipment.figure).toLocaleString()}
             </p>
           </div>
@@ -184,7 +203,19 @@ export default function DashboardPage() {
           </Button>
         </div>
 
-        {noRecentOrders && (
+        {isLoading && (
+          <div className="h-20 flex items-center justify-center">
+            <Loader styles="size-9 sm:size-12 " />
+          </div>
+        )}
+
+        {isError && (
+          <p className="text-red-600 font-roboto ">
+            Failed to fetch all shipments
+          </p>
+        )}
+
+        {isSuccess && allShipments.length === 0 && (
           <div className="min-h-[437px] md:min-h-[537px] flex flex-col">
             <div className="flex-1 flex flex-col items-center justify-center">
               {/* Image */}
@@ -211,7 +242,7 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {!noRecentOrders && (
+        {isSuccess && allShipments.length > 0 && (
           <Table className="mt-3 bg-white rounded-lg">
             <TableHeader>
               <TableRow className="h-[53px]">
@@ -237,26 +268,26 @@ export default function DashboardPage() {
             </TableHeader>
 
             <TableBody>
-              {shipmentData.map((shipment, idx) => (
+              {allShipments.map((shipment, idx) => (
                 <TableRow key={idx} className="h-15.5">
                   <TableCell className="pl-6 leading-5.5">
                     {shipment.trackingId}
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2 leading-5.5">
-                      {shipment.origin}
+                      {shipment.country}
                       <ArrowRight className="size-4.5 text-primary" />
-                      {shipment.destination}
+                      {shipment.receiverCountry}
                     </div>
                   </TableCell>
-                  <TableCell className="leading-5.5">
-                    {shipment.shipingType}
+                  <TableCell className="leading-5.5 capitalize">
+                    {shipment.freightType.replace("_", " ").toLowerCase()}
                   </TableCell>
                   <TableCell className="leading-5.5">
-                    ₦{shipment.price}
+                    ₦{Number(shipment.price).toLocaleString()}
                   </TableCell>
                   <TableCell className="leading-5.5">
-                    {formatDate(shipment.date)}
+                    {formatDate(shipment.createdAt)}
                   </TableCell>
                   <TableCell className="">
                     <div
