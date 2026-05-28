@@ -6,10 +6,12 @@ import { Button } from "@/components/ui/button";
 import { useShipmentStore } from "@/lib/stores/useShipmentStore";
 import { Copy } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const ShipmentSuccessful = () => {
   const clearShipmentData = useShipmentStore((s) => s.clearShipment);
+  const router = useRouter();
 
   useEffect(() => {
     clearShipmentData();
@@ -61,10 +63,14 @@ const ShipmentSuccessful = () => {
         </Button>
 
         <div className="mt-10 flex gap-4">
-          <Button className="w-[178px] h-[55px] rounded-md">
+          <Button
+            onClick={() => router.push("/dashboard")}
+            className="w-[178px] h-[55px] rounded-md"
+          >
             Go to dashboard
           </Button>
           <Button
+            onClick={() => router.push("/track-shipment")}
             variant="outline"
             className="w-[178px] h-[55px] rounded-md text-primary border-2 border-primary hover:text-primary hover:bg-transparent"
           >

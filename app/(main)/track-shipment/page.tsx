@@ -130,7 +130,7 @@ export default function TrackShipmentPage() {
   };
 
   return (
-    <div className="py-16.5 mx-4 lg:mx-28">
+    <div className="py-16.5 margin-x ">
       {/* Enter Tracking Number */}
       {!shipment && (
         <div className=" px-4 max-w-[638px] mx-auto">

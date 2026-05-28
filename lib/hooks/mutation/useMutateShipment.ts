@@ -17,3 +17,9 @@ export const useTrackShipment = () => {
     mutationFn: shipment.trackShipment,
   });
 };
+
+export const useEstimateShipment = () => {
+  return useMutation({
+    mutationFn: shipment.estimateShipment,
+  });
+};

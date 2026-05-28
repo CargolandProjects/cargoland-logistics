@@ -26,7 +26,7 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 
-const formSchema = z
+const signUpSchema = z
   .object({
     firstName: z
       .string()
@@ -84,7 +84,7 @@ const formSchema = z
     path: ["confirmPassword"],
   });
 
-export type SignUpData = z.infer<typeof formSchema>;
+export type SignUpData = z.infer<typeof signUpSchema>;
 
 export default function SignupPage() {
   const { mutate: signUp, isPending } = useSignUp();
@@ -99,7 +99,7 @@ export default function SignupPage() {
   });
 
   const { handleSubmit, control, setValue } = useForm<SignUpData>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
       firstName: "",
       lastName: "",

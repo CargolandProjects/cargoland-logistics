@@ -202,8 +202,8 @@ body {
 }
 
 @layer utilities {
-  .padding-x {
-    @apply px-4 sm:px-14 lg:px-28
+  .margin-x {
+    @apply mx-4 sm:mx-14 lg:mx-28
   }
 
   .form-label {
@@ -233,4 +233,9 @@ body {
   .submit-button {
     @apply h-[55px] w-full rounded-md text-base font-semibold text-white
   }
+
+  .dialog {
+    @apply max-w-[400px]! max-sm:w-[95vw] m-0 p-0 gap-0 rounded-2xl px-[28.5px] max-h-[95vh] min-h-[520px] overflow-hidden
+  }
+
 }

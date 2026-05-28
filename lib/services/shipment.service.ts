@@ -68,10 +68,23 @@ interface AllShipments {
   };
 }
 
+interface EstimateData {
+  weight: number;
+  length: number;
+  breadth: number;
+  height: number;
+}
+
+interface Estimate {
+  totalShipmentWeight: number;
+  estimatedPrice: number;
+}
+
 type CreateShipment = APIResponse<Shipment>;
 type TrackShipmentRes = APIResponse<TrackShipment>;
 type DashboardStatsRes = APIResponse<DashboardStats>;
 type AllShipmentsRes = APIResponse<AllShipments>;
+type EstimateRes = APIResponse<Estimate>;
 
 export const shipment = {
   async createShipment(data: ShipmentDataType) {
@@ -107,6 +120,14 @@ export const shipment = {
   async allShipments() {
     const res = await apiClient.get<AllShipmentsRes>(
       API_ROUTES.shipment.allShipments
+    );
+    return res.data;
+  },
+
+  async estimateShipment(data: EstimateData) {
+    const res = await apiClient.post<EstimateRes>(
+      API_ROUTES.shipment.estimateShipment,
+      data
     );
     return res.data;
   },
