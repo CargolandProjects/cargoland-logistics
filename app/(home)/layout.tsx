@@ -1,12 +1,12 @@
-import AuthHeader from "@/components/layout/AuthHeader";
 import Footer from "@/components/layout/Footer";
+import Header from "@/components/layout/Header";
 
-export default function AuthLayout({
+export default function HomeLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <div className="bg-background-screen">
-      <AuthHeader />
+    <div>
+      <Header />
       {children}
       <Footer />
     </div>

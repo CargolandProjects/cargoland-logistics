@@ -147,7 +147,7 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="my-18.75 px-4">
+    <div className="margin-y padding-x">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="p-6 bg-white rounded-lg max-w-[747px] mx-auto "

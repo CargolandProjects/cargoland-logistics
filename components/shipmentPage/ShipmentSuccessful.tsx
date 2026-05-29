@@ -18,7 +18,7 @@ const ShipmentSuccessful = () => {
   }, [clearShipmentData]);
 
   return (
-    <section className=" flex justify-center bg-background-screen">
+    <section className="padding-x flex justify-center bg-background-screen">
       <div className="mt-10 mb-16.25 bg-white p-8.5 rounded-lg flex flex-col items-center">
         <div className="size-[90px] relative">
           <Image
@@ -62,17 +62,17 @@ const ShipmentSuccessful = () => {
           Download PDF
         </Button>
 
-        <div className="mt-10 flex gap-4">
+        <div className="mt-10 flex gap-4 max-md:flex-col w-full">
           <Button
             onClick={() => router.push("/dashboard")}
-            className="w-[178px] h-[55px] rounded-md"
+            className="md:w-[178px] h-[55px] rounded-md"
           >
             Go to dashboard
           </Button>
           <Button
             onClick={() => router.push("/track-shipment")}
             variant="outline"
-            className="w-[178px] h-[55px] rounded-md text-primary border-2 border-primary hover:text-primary hover:bg-transparent"
+            className="md:w-[178px] h-[55px] rounded-md text-primary border-2 border-primary hover:text-primary hover:bg-transparent"
           >
             Track Shipment
           </Button>

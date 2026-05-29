@@ -202,9 +202,18 @@ body {
 }
 
 @layer utilities {
-  .margin-x {
-    @apply mx-4 sm:mx-14 lg:mx-28
+  .padding-x {
+    @apply px-4 sm:px-14 lg:px-28
   }
+
+  .margin-y {
+    @apply my-18.75
+  }
+
+  .container {
+    @apply w-full max-w-[1440px] mx-auto
+  }
+
 
   .form-label {
     @apply font-medium text-sm font-roboto

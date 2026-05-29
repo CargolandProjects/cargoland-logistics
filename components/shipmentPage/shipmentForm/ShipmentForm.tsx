@@ -209,7 +209,7 @@ const ShipmentForm = () => {
   };
 
   return (
-    <div className="mt-7.5">
+    <div>
       <FormStep currentStep={step} setStep={setStep} />
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>

@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Montserrat, Roboto } from "next/font/google";
 import "./globals.css";
-import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import { cn } from "@/lib/utils";
 import Providers from "./Providers";
+import ContactHeader from "@/components/layout/ContactHeader";
+import Header from "../components/layout/Header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -54,9 +55,8 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Providers>
-          <Navbar />
+          <ContactHeader />
           <main className="flex-1 flex flex-col">{children}</main>
-          <Footer />
         </Providers>
       </body>
     </html>

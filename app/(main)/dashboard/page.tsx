@@ -157,15 +157,15 @@ export default function DashboardPage() {
   const dashboardStats = getDashboardStats();
   const allShipments = shipments?.shipments || [];
 
-  const fullName = `${session?.firstName} ${session?.lastName} `;
+  const fullName = `${session?.firstName || ""} ${session?.lastName || ""}`;
 
   if (isChecking) {
     return null;
   }
 
   return (
-    <div className="px-4 sm:px-6 md:px-16 lg:px-[112px]">
-      <section className="mt-16.5">
+    <div className="padding-x mt-16.5">
+      <section className="">
         <h1 className="font-bold text-[32px] leading-10 ">
           Welcome, {fullName}
         </h1>
@@ -182,9 +182,11 @@ export default function DashboardPage() {
               <p className="leading-5.5 text-neutral-500">{shipment.title}</p>
             </div>
 
-            <p className={` ${
-              isLoadingStats && "animate-pulse duration-300"
-            } mt-5 text-xl font-semibold leading-7`}>
+            <p
+              className={` ${
+                isLoadingStats && "animate-pulse duration-300"
+              } mt-5 text-xl font-semibold leading-7`}
+            >
               {Number(shipment.figure).toLocaleString()}
             </p>
           </div>
@@ -216,7 +218,7 @@ export default function DashboardPage() {
         )}
 
         {isSuccess && allShipments.length === 0 && (
-          <div className="min-h-[437px] md:min-h-[537px] flex flex-col">
+          <div className="mt-3 min-h-[437px] md:min-h-[537px] flex flex-col rounded-lg bg-white">
             <div className="flex-1 flex flex-col items-center justify-center">
               {/* Image */}
               <div className="size-40 relative">

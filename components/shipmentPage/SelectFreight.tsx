@@ -25,7 +25,7 @@ const SelectFreight = () => {
     setFreightType(value);
   };
   return (
-    <section className="mt-7.5">
+    <section>
       <h2 className="text-lg font-semibold leading-7 font-roboto">
         Select a Freight?
       </h2>

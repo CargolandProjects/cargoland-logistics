@@ -96,7 +96,7 @@ const CreatePasswordPageContent = () => {
   };
 
   return (
-    <div className="mx-4 flex justify-center my-[75px]">
+    <div className="margin-y padding-x flex justify-center my-[75px]">
       <div className="max-w-[747px] w-full p-6 bg-white rounded-lg">
         <button
           onClick={() => router.back()}

@@ -20,6 +20,10 @@ import Package from "./Package";
 import DepartmentStore from "./DepartmentStore";
 import Location3Line from "./Location3Line";
 import DeliveryTruckSpeedOutline from "./DeliveryTruckSpeedOutline";
+import Mail from "./Mail";
+import ArrowDown from "./ArrowDown";
+import CallOutline from "./CallOutline";
+import WorldFilled from "./WorldFilled";
 
 export {
   Location,
@@ -44,4 +48,8 @@ export {
   DepartmentStore,
   Location3Line,
   DeliveryTruckSpeedOutline,
+  Mail,
+  CallOutline,
+  ArrowDown,
+  WorldFilled,
 };

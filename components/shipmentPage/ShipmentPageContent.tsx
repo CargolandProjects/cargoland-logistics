@@ -26,7 +26,7 @@ const ShipmentPageContent = () => {
     }
   };
   return (
-    <div className="margin-x text-brand-black pb-6">
+    <div className={`padding-x text-brand-black pb-6 ${isAuthenticated ? "mt-7.5" : "mt-10"} `}>
       <div className="max-w-[888.5px] mx-auto">
         {!isAuthenticated && <AuthPrompt />}
         {shipmentStage()}
