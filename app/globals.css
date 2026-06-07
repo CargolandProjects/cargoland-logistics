@@ -185,7 +185,7 @@ body {
 
   h1,
   h2 {
-    @apply font-montserrat
+    @apply font-roboto
   }
 
   p,
@@ -202,6 +202,16 @@ body {
 }
 
 @layer utilities {
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
   .padding-x {
     @apply px-4 sm:px-14 lg:px-28
   }
@@ -210,7 +220,7 @@ body {
     @apply my-18.75
   }
 
-  .sec-mt{
+  .sec-mt {
     @apply mt-15 md:mt-16.5
   }
 

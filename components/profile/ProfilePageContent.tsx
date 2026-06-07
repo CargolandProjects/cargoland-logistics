@@ -7,10 +7,16 @@ import UpdateProfile from "./UpdateProfile";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import UpdatePassword from "./UpdatePassword";
+import { useProtectedRoute } from "@/lib/hooks/useProtectedRoute";
 
 const ProfilePageContent = () => {
   const [tab, setTab] = useState<"profile" | "password" | null>(null);
   const [showMobile, setShowMobile] = useState(false);
+  const { isChecking } = useProtectedRoute();
+
+  if (isChecking) {
+    return null;
+  }
 
   return (
     <div className="mt-15 md:mt-16.5 relative">

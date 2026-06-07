@@ -4,22 +4,21 @@ import { ShipmentDataType } from "../schemas/shipmentSchema";
 import { FreightType, ShipmentType } from "../stores/useShipmentStore";
 import { APIResponse } from "./auth.service";
 
-export type Shipment = ShipmentDataType & {
-  id?: string;
-  totalShipmentWeight?: number;
-  trackingId?: string;
-  price?: string;
-  userId?: string;
-  paymentStatus?: string;
-  createdAt?: string;
-  updatedAt?: string;
-};
+export type ShipmentStatus =
+  | "PENDING"
+  | "IN_TRANSIT"
+  | "DELIVERED"
+  | "CANCELLED"
+  | "PICKED_UP"
+  | "AT_ORIGIN_HUB"
+  | "DESTINATION"
+  | "CUSTOM_CLEARANCE";
 
-interface TrackShipment {
+export type Shipment = {
   id: string;
   shipmentType: ShipmentType;
   freightType: FreightType;
-  status: "PENDING" | "IN_TRANSIT" | "DELIVERED" | "CANCELLED" | string;
+  status: ShipmentStatus;
   fullName: string;
   email: string;
   phoneNumber: string;
@@ -27,8 +26,6 @@ interface TrackShipment {
   stateOrCity: string;
   address: string;
   pickUpAddressType: "HOME" | "OFFICE" | "DROP_OFF";
-  pickupDate: string;
-  pickupTime: string;
   receiverName: string;
   receiverEmail: string;
   receiverCountry: string;
@@ -43,13 +40,85 @@ interface TrackShipment {
   height: number;
   descriptionOfGoods: string;
   totalShipmentWeight: number;
-  trackingId: string;
-  price: string;
   userId: string;
-  paymentStatus: "PENDING" | "PAID" | "FAILED" | string;
   createdAt: string;
   updatedAt: string;
-}
+  trackingId: string;
+  price: string;
+  pickupDate: string;
+  pickupTime: string;
+  bookingId: string | null;
+  carrierName: string | null;
+  currentLocation: string | null;
+  fuelLevel: number | null;
+  lastGpsPing: string | null;
+  speedKmh: number | null;
+  vehicleId: string | null;
+  driverId: string | null;
+  driverName: string | null;
+  driverPhoneNumber: string | null;
+  driverStatus: string | null;
+  vehicleName: string | null;
+  vehiclePlate: string | null;
+  gpsCoordinates: string | null;
+  packagesOnboard: number;
+  packageConfirmedOnboard: boolean;
+  vehicleOperatingNormally: boolean;
+  engineStatus: string | null;
+  fuelRangeKm: number | null;
+  completionRate: number;
+  estimatedTime: string | null;
+  routeOrigin: string | null;
+  routeDestination: string | null;
+  paymentStatus: "PENDING" | "PAID" | "FAILED";
+};
+
+// export type Shipment = ShipmentDataType & {
+//   id?: string;
+//   totalShipmentWeight?: number;
+//   trackingId?: string;
+//   price?: string;
+//   userId?: string;
+//   paymentStatus?: string;
+//   createdAt?: string;
+//   updatedAt?: string;
+// };
+
+// interface TrackShipment {
+//   id: string;
+//   shipmentType: ShipmentType;
+//   freightType: FreightType;
+//   status: "PENDING" | "IN_TRANSIT" | "DELIVERED" | "CANCELLED" | string;
+//   fullName: string;
+//   email: string;
+//   phoneNumber: string;
+//   country: string;
+//   stateOrCity: string;
+//   address: string;
+//   pickUpAddressType: "HOME" | "OFFICE" | "DROP_OFF";
+//   pickupDate: string;
+//   pickupTime: string;
+//   receiverName: string;
+//   receiverEmail: string;
+//   receiverCountry: string;
+//   receiverNumber: string;
+//   receiverStateOrCity: string;
+//   receiverAddress: string;
+//   packageType: string;
+//   numberOfItems: number;
+//   weight: number;
+//   length: number;
+//   breadth: number;
+//   height: number;
+//   descriptionOfGoods: string;
+//   totalShipmentWeight: number;
+//   trackingId: string;
+//   price: string;
+//   userId: string;
+//   paymentStatus: "PENDING" | "PAID" | "FAILED" | string;
+//   createdAt: string;
+//   updatedAt: string;
+// }
 
 interface DashboardStats {
   totalShipments: number;
@@ -59,7 +128,7 @@ interface DashboardStats {
 }
 
 interface AllShipments {
-  shipments: TrackShipment[];
+  shipments: Shipment[];
   pagination: {
     total: number;
     page: number;
@@ -81,9 +150,10 @@ interface Estimate {
 }
 
 type CreateShipment = APIResponse<Shipment>;
-type TrackShipmentRes = APIResponse<TrackShipment>;
+type TrackShipmentRes = APIResponse<Shipment>;
 type DashboardStatsRes = APIResponse<DashboardStats>;
 type AllShipmentsRes = APIResponse<AllShipments>;
+type MyShipmentsRes = APIResponse<Shipment[]>;
 type EstimateRes = APIResponse<Estimate>;
 
 export const shipment = {
@@ -128,6 +198,13 @@ export const shipment = {
     const res = await apiClient.post<EstimateRes>(
       API_ROUTES.shipment.estimateShipment,
       data
+    );
+    return res.data;
+  },
+
+  async myShipments(query: string) {
+    const res = await apiClient.post<MyShipmentsRes>(
+      `${API_ROUTES.shipment.myShipments}?status=${query}`
     );
     return res.data;
   },

@@ -16,3 +16,12 @@ export const useAllShipments = () => {
     select: (res) => res.data,
   });
 };
+
+export const useMyShipments = (query: string) => {
+  return useQuery({
+    queryKey: ["myShipments", query],
+    queryFn: () => shipment.myShipments(query),
+    select: (res) => res.data,
+    enabled: !!query
+  });
+};

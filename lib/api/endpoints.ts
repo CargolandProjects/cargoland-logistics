@@ -16,5 +16,6 @@ export const API_ROUTES = {
     dashboardStats: "/shipments/dashboard-stats",
     allShipments: "/shipments/all-shipments",
     estimateShipment: "/shipments/estimation",
+    myShipments: "/shipments/my-shipment"
   },
 };

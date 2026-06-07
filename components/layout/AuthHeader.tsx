@@ -15,6 +15,7 @@ import { usePathname } from "next/navigation";
 import { useSession } from "@/lib/hooks/useSession";
 import { ArrowDown } from "../icons";
 import { Button } from "../ui/button";
+import { useProtectedRoute } from "@/lib/hooks/useProtectedRoute";
 
 const authenticatedLinks = [
   {
@@ -40,8 +41,8 @@ const authenticatedLinks = [
 ];
 
 const AuthHeader = () => {
-  const pathName = usePathname();
   const { isAuthenticated, signOut } = useSession();
+  const pathName = usePathname();
 
   return (
     <header className="py-2 md:py-4 padding-x bg-white">
@@ -80,26 +81,50 @@ const AuthHeader = () => {
         </nav>
 
         <div className="flex items-center gap-6">
+          {/* Desktop nav links */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="flex gap-2 max-md:hidden p-0 text-black bg-transparent  hover:underline underline-offset-[1.5px]">
-                <UserCircleIcon className="size-6" />
-                <p className="leading-5">My Profile</p>
-                <ArrowDown className="size-5 text-black" />
-              </Button>
+              {isAuthenticated ? (
+                <Button className="flex gap-2 max-md:hidden p-0 text-black bg-transparent  hover:underline underline-offset-[1.5px]">
+                  <UserCircleIcon className="size-6" />
+                  <p className="leading-5">My Profile</p>
+                  <ArrowDown className="size-5 text-black" />
+                </Button>
+              ) : (
+                <Link href="/login" className="flex gap-2 max-md:hidden  ">
+                  <UserCircleIcon className="size-6" />
+                  <p className="leading-5 hover:text-primary duration-200 hover:underline underline-offset-[1.5px]">
+                    Login/Register
+                  </p>
+                </Link>
+              )}
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent className="gap-4 p-2">
-              <DropdownMenuItem className=" font-medium leading-5.5 hover:p-2 hover:bg-primary/8 duration-200">
-                <Link href="/profile">My Profile</Link>
-              </DropdownMenuItem>
+            {isAuthenticated && (
+              <DropdownMenuContent className="max-md:hidden space-y-2 p-2">
+                <DropdownMenuItem
+                  asChild
+                  className="p-0 font-medium leading-5.5 hover:p-2 hover:bg-primary/8 duration-200 cursor-pointer"
+                >
+                  <Link href="/profile">Profile</Link>
+                </DropdownMenuItem>
 
-              <DropdownMenuItem className=" font-medium leading-5.5 hover:p-2 hover:bg-primary/8 duration-200">
-                <Button onClick={signOut} className="p-0 h-fit text-black bg-transparent">Logout</Button>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
+                <DropdownMenuItem
+                  asChild
+                  className="font-medium leading-5.5 hover:p-2 hover:bg-primary/8 duration-200 cursor-pointer"
+                >
+                  <Button
+                    onClick={signOut}
+                    className="p-0 w-full justify-start  h-fit text-black hover:text-destructive hover:destructive/10 bg-transparent font-roboto"
+                  >
+                    Logout
+                  </Button>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            )}
           </DropdownMenu>
 
+          {/* Mobile nav links */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild className="md:hidden">
               <button className="p-0">
@@ -110,20 +135,48 @@ const AuthHeader = () => {
             <DropdownMenuContent
               onCloseAutoFocus={(e) => e.preventDefault()}
               align="end"
-              className="p-2"
+              className="space-y-2 p-2 md:hidden"
             >
-              {authenticatedLinks.map((link, idx) => (
+              {isAuthenticated &&
+                authenticatedLinks.map((link, idx) => (
+                  <DropdownMenuItem
+                    key={idx}
+                    asChild
+                    className="p-0 font-medium hover:p-2 leading-5.5 hover:bg-primary/8 duration-200 cursor-pointer"
+                  >
+                    <Link href={link.href}>{link.title}</Link>
+                  </DropdownMenuItem>
+                ))}
+
+              {isAuthenticated ? (
+                <>
+                  <DropdownMenuItem
+                    asChild
+                    className="p-0 font-medium leading-5.5 hover:p-2 hover:bg-primary/8 duration-200 cursor-pointer"
+                  >
+                    <Link href="/profile">Profile</Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem
+                    asChild
+                    className="font-medium leading-5.5 hover:p-2 hover:bg-primary/8 duration-200 cursor-pointer"
+                  >
+                    <Button
+                      onClick={signOut}
+                      className="p-0 w-full justify-start  h-fit text-black hover:text-destructive hover:destructive/10 bg-transparent font-roboto"
+                    >
+                      Logout
+                    </Button>
+                  </DropdownMenuItem>
+                </>
+              ) : (
                 <DropdownMenuItem
-                  key={idx}
                   asChild
-                  className="text-sm leading-5"
+                  className="p-0 font-medium leading-5.5 hover:p-2 hover:bg-primary/8 duration-200 "
                 >
-                  <Link href={link.href}>{link.title}</Link>
+                  <Link href="/profile">Login</Link>
                 </DropdownMenuItem>
-              ))}
-              <DropdownMenuItem asChild className="text-sm leading-5">
-                <Link href="/profile">Profile</Link>
-              </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

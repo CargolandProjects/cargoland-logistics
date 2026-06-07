@@ -1,16 +1,22 @@
 "use client";
 
-import { boxChecked } from "@/assets/images";
-import DashboardStat from "@/components/DashboardStat";
+import {
+  useAllShipments,
+  useDashboardStats,
+  useMyShipments,
+} from "@/lib/hooks/queries/useShipment";
+import DashboardStat from "./DashboardStat";
 import {
   ArrowRight,
   DeliveryTruckBolt,
   DeliveryTruckSpeed,
   Orders,
   PendingClipboard,
-} from "@/components/icons";
-import Loader from "@/components/Loader";
-import { Button } from "@/components/ui/button";
+} from "./icons";
+import { Button } from "./ui/button";
+import { ShipmentStatus } from "@/lib/services/shipment.service";
+import { useState } from "react";
+import { useProtectedRoute } from "@/lib/hooks/useProtectedRoute";
 import {
   Table,
   TableBody,
@@ -18,116 +24,44 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import {
-  useAllShipments,
-  useDashboardStats,
-} from "@/lib/hooks/queries/useShipment";
-import { useProtectedRoute } from "@/lib/hooks/useProtectedRoute";
-import { useSession } from "@/lib/hooks/useSession";
-import { ShipmentStatus } from "@/lib/services/shipment.service";
+} from "./ui/table";
 import { formatDate } from "@/lib/utils";
+import Loader from "./Loader";
 import { MoreVertical } from "lucide-react";
+import { statusStyles } from "@/app/(main)/dashboard/page";
 import Image from "next/image";
+import { boxChecked } from "@/assets/images";
+import { useRouter } from "next/navigation";
 
-// interface ShimentData {
-//   trackingId: string;
-//   origin: string;
-//   destination: string;
-//   shipingType: string;
-//   price: string;
-//   date: string;
-//   status: ShipmentStatus;
-// }
+const statuses: ShipmentStatus[] = [
+  "PENDING",
+  "IN_TRANSIT",
+  "DELIVERED",
+  "CANCELLED",
+  "PICKED_UP",
+  "AT_ORIGIN_HUB",
+  "DESTINATION",
+  "CUSTOM_CLEARANCE",
+];
 
-// const shipmentData: ShimentData[] = [
-//   {
-//     trackingId: "CLD-12345678",
-//     origin: "Nigeria",
-//     destination: "Ghana",
-//     shipingType: "Air Freight",
-//     price: "45,000",
-//     date: "2026-03-12T10:00:00Z",
-//     status: "pending",
-//   },
-//   {
-//     trackingId: "CLD-12345678",
-//     origin: "Nigeria",
-//     destination: "Ghana",
-//     shipingType: "Air Freight",
-//     price: "45,000",
-//     date: "2026-03-12T10:00:00Z",
-//     status: "in transit",
-//   },
-//   {
-//     trackingId: "CLD-12345678",
-//     origin: "Nigeria",
-//     destination: "Ghana",
-//     shipingType: "Ocean Freight",
-//     price: "45,000",
-//     date: "2026-03-12T10:00:00Z",
-//     status: "delivered",
-//   },
-//   {
-//     trackingId: "CLD-12345678",
-//     origin: "Nigeria",
-//     destination: "Ghana",
-//     shipingType: "Road Freight",
-//     price: "45,000",
-//     date: "2026-03-12T10:00:00Z",
-//     status: "cancelled",
-//   },
-//   {
-//     trackingId: "CLD-12345678",
-//     origin: "Nigeria",
-//     destination: "Ghana",
-//     shipingType: "Air Freight",
-//     price: "45,000",
-//     date: "2026-03-12T10:00:00Z",
-//     status: "delivered",
-//   },
-//   {
-//     trackingId: "CLD-12345678",
-//     origin: "Nigeria",
-//     destination: "Ghana",
-//     shipingType: "Road Freight",
-//     price: "45,000",
-//     date: "2026-03-12T10:00:00Z",
-//     status: "delivered",
-//   },
-// ];
-
-export const statusStyles: Partial<
-  Record<ShipmentStatus, { bgcolor: string; containerStyles: string }>
-> = {
-  PENDING: {
-    bgcolor: "bg-cargo-warning",
-    containerStyles:
-      "border-cargo-warning bg-cargo-warning/5 text-cargo-warning",
-  },
-  IN_TRANSIT: {
-    bgcolor: "bg-secondary",
-    containerStyles: "border-secondary bg-secondary/5 text-secondary",
-  },
-  DELIVERED: {
-    bgcolor: "bg-cargo-success",
-    containerStyles:
-      "border-cargo-success bg-cargo-success/5 text-cargo-success",
-  },
-  CANCELLED: {
-    bgcolor: "bg-primary",
-    containerStyles: "border-primary bg-primary/5 text-primary",
-  },
-};
-
-export default function DashboardPage() {
+const MyShipmentPageContent = () => {
   const { data, isLoading: isLoadingStats } = useDashboardStats();
-  const { data: shipments, isSuccess, isLoading, isError } = useAllShipments();
-  const { isAuthenticated, session, signOut } = useSession();
-  const { isChecking } = useProtectedRoute();
+  const {
+    data: shipments,
+    isSuccess: isSuccessAll,
+    isLoading: isLoadingAll,
+    isError: isErrorAll,
+  } = useAllShipments();
+  const [tblView, setTblView] = useState<ShipmentStatus | null>(null);
+  const {
+    data: myShipments,
+    isLoading,
+    isError,
+    isSuccess,
+  } = useMyShipments(tblView || "");
+  const router = useRouter();
 
-  console.log("DashboardStats", data);
-  console.log("session", session, isAuthenticated);
+  const { isChecking } = useProtectedRoute();
 
   const getDashboardStats = () => {
     const dashboardStats = [
@@ -157,9 +91,15 @@ export default function DashboardPage() {
   };
 
   const dashboardStats = getDashboardStats();
-  const allShipments = shipments?.shipments || [];
 
-  const fullName = `${session?.firstName || ""} ${session?.lastName || ""}`;
+  const isFiltered = tblView !== null;
+
+  const isLoadingActive = isFiltered ? isLoading : isLoadingAll;
+  const isErrorActive = isFiltered ? isError : isErrorAll;
+  const isSuccessActive = isFiltered ? isSuccess : isSuccessAll;
+
+  const allShipments = shipments?.shipments || [];
+  const activeData = isFiltered ? myShipments || [] : allShipments;
 
   if (isChecking) {
     return null;
@@ -167,16 +107,23 @@ export default function DashboardPage() {
 
   return (
     <div className="padding-x sec-mt">
-      <section className="">
-        <h1 className="font-bold text-[32px] leading-10 ">
-          Welcome, {fullName}
-        </h1>
-        <p className="text-base font-light leading-6">
-          Manage your shipments easily with fast tracking and reliable delivery.
-        </p>
+      <section className="flex max-md:flex-col gap-2 justify-between md:items-end">
+        <div>
+          <h1 className="font-bold text-[32px] leading-10 ">My Shipment</h1>
+          <p className="mt-2 text-base font-light leading-6">
+            Manage active deliveries, resume saved drafts, and complete pending
+            bookings across the continent.
+          </p>
+        </div>
+        <Button
+          onClick={() => router.push("/shipment")}
+          className="max-md:mt-5 w-fit text-base h-13.75 px-10.5 font-medium font-roboto py-4"
+        >
+          Book a Shipment
+        </Button>
       </section>
 
-      <section className="mt-6 grid sm:grid-cols-2 md:grid-cols-4 gap-6 ">
+      <section className="mt-5 md:mt-6 grid sm:grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6 ">
         {dashboardStats.map((shipment, idx) => (
           <DashboardStat
             key={idx}
@@ -188,31 +135,53 @@ export default function DashboardPage() {
         ))}
       </section>
 
-      <section className="mt-8">
-        <div className="flex justify-between items-center">
-          <h2 className="text-xl font-semibold leading-7">Recent Shipments</h2>
+      <section className="mt-5 md:mt-6">
+        <div className="overflow-x-auto max-w-[513px] flex hide-scrollbar border rounded-md ">
           <Button
-            onClick={() => signOut()}
-            variant="outline"
-            className="text-primary border-primary w-[81px]"
+            onClick={() => setTblView(null)}
+            className={` ${
+              !tblView ? "bg-neutral-200/50 " : "bg-white"
+            } px-4 h-13 text-black border-r border-r-border rounded-none capitalize font-roboto`}
           >
-            See All
+            All Shipment
           </Button>
+
+          {statuses.map((status, idx) => {
+            const isActive = status === tblView;
+
+            return (
+              <Button
+                onClick={() => setTblView(status)}
+                key={idx}
+                className={`${
+                  isActive ? "bg-neutral-200/50" : "bg-white"
+                } px-4 h-13 text-black border-r border-r-border rounded-none capitalize font-roboto`}
+              >
+                {status.replace("_", " ").toLowerCase()}
+              </Button>
+            );
+          })}
         </div>
 
-        {isLoading && (
-          <div className="h-20 flex items-center justify-center">
-            <Loader styles="size-9 sm:size-12 " />
+        {isLoadingActive && (
+          <div className="mt-3 min-h-[237px] md:min-h-[337px] flex flex-col rounded-lg bg-white">
+            <div className="flex-1 flex items-center justify-center">
+              <Loader styles="size-9 sm:size-12 " />
+            </div>
           </div>
         )}
 
-        {isError && (
-          <p className="text-red-600 font-roboto ">
-            Failed to fetch all shipments
-          </p>
+        {isErrorActive && (
+          <div className="mt-3 min-h-[237px] md:min-h-[337px] flex flex-col rounded-lg bg-white">
+            <p className="text-red-600 font-roboto p-4">
+              Failed to fetch{" "}
+              {isFiltered ? tblView.replace("_", " ").toLowerCase() : "all"}{" "}
+              shipments
+            </p>
+          </div>
         )}
 
-        {isSuccess && allShipments.length === 0 && (
+        {isSuccessActive && activeData.length === 0 && (
           <div className="mt-3 min-h-[437px] md:min-h-[537px] flex flex-col rounded-lg bg-white">
             <div className="flex-1 flex flex-col items-center justify-center">
               {/* Image */}
@@ -239,7 +208,7 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {isSuccess && allShipments.length > 0 && (
+        {isSuccessActive && activeData.length > 0 && (
           <Table className="mt-3 bg-white rounded-lg">
             <TableHeader>
               <TableRow className="h-[53px]">
@@ -265,7 +234,7 @@ export default function DashboardPage() {
             </TableHeader>
 
             <TableBody>
-              {allShipments.map((shipment, idx) => (
+              {activeData.map((shipment, idx) => (
                 <TableRow key={idx} className="h-15.5">
                   <TableCell className="pl-6 leading-5.5">
                     {shipment.trackingId}
@@ -311,8 +280,8 @@ export default function DashboardPage() {
           </Table>
         )}
       </section>
-
-      {/* <section></section> */}
     </div>
   );
-}
+};
+
+export default MyShipmentPageContent;
