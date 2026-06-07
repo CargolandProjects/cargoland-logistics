@@ -164,7 +164,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="padding-x mt-16.5">
+    <div className="padding-x sec-mt">
       <section className="">
         <h1 className="font-bold text-[32px] leading-10 ">
           Welcome, {fullName}

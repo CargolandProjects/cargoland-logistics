@@ -210,6 +210,10 @@ body {
     @apply my-18.75
   }
 
+  .sec-mt{
+    @apply mt-15 md:mt-16.5
+  }
+
   .container {
     @apply w-full max-w-[1440px] mx-auto
   }

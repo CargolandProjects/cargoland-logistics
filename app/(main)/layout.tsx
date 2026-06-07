@@ -1,5 +1,4 @@
 import AuthHeader from "@/components/layout/AuthHeader";
-import Footer from "@/components/layout/Footer";
 
 export default function MainLayout({
   children,

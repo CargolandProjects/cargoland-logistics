@@ -286,8 +286,8 @@ export default function SignupPage() {
                       onChange={field.onChange}
                       defaultCountry={selectedCountry?.alpha2}
                       onCountryChange={(country) => {
-                        setSelectedCountry(country as Country);
                         if (!country) return;
+                        setSelectedCountry(country as Country);
                         setValue("country", country?.alpha2);
                       }}
                       inline

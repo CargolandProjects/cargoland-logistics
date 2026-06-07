@@ -24,6 +24,8 @@ import Mail from "./Mail";
 import ArrowDown from "./ArrowDown";
 import CallOutline from "./CallOutline";
 import WorldFilled from "./WorldFilled";
+import LockOutline from "./LockOutline";
+import ArrowRight2 from "./ArrowRight2";
 
 export {
   Location,
@@ -52,4 +54,6 @@ export {
   CallOutline,
   ArrowDown,
   WorldFilled,
+  LockOutline,
+  ArrowRight2,
 };

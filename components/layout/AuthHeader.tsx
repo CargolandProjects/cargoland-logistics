@@ -14,6 +14,7 @@ import {
 import { usePathname } from "next/navigation";
 import { useSession } from "@/lib/hooks/useSession";
 import { ArrowDown } from "../icons";
+import { Button } from "../ui/button";
 
 const authenticatedLinks = [
   {
@@ -40,7 +41,7 @@ const authenticatedLinks = [
 
 const AuthHeader = () => {
   const pathName = usePathname();
-  const { isAuthenticated } = useSession();
+  const { isAuthenticated, signOut } = useSession();
 
   return (
     <header className="py-2 md:py-4 padding-x bg-white">
@@ -66,7 +67,9 @@ const AuthHeader = () => {
                   <li
                     key={idx}
                     className={` ${
-                      active ? "bg-primary/8 rounded-[4px] p-2 text-primary" : ""
+                      active
+                        ? "bg-primary/8 rounded-[4px] p-2 text-primary"
+                        : ""
                     } text-sm leading-5 flex items-center gap-1.5 hover:text-primary duration-200`}
                   >
                     <Link href={link.href}>{link.title}</Link>
@@ -77,11 +80,25 @@ const AuthHeader = () => {
         </nav>
 
         <div className="flex items-center gap-6">
-          <div className="flex gap-2 max-md:hidden">
-            <UserCircleIcon className="size-6" />
-            <p className="leading-5">My Profile</p>
-            <ArrowDown className="size-5 text-black" />
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="flex gap-2 max-md:hidden p-0 text-black bg-transparent  hover:underline underline-offset-[1.5px]">
+                <UserCircleIcon className="size-6" />
+                <p className="leading-5">My Profile</p>
+                <ArrowDown className="size-5 text-black" />
+              </Button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent className="gap-4 p-2">
+              <DropdownMenuItem className=" font-medium leading-5.5 hover:p-2 hover:bg-primary/8 duration-200">
+                <Link href="/profile">My Profile</Link>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem className=" font-medium leading-5.5 hover:p-2 hover:bg-primary/8 duration-200">
+                <Button onClick={signOut} className="p-0 h-fit text-black bg-transparent">Logout</Button>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild className="md:hidden">
@@ -95,22 +112,17 @@ const AuthHeader = () => {
               align="end"
               className="p-2"
             >
-              <DropdownMenuItem asChild>
-                <Link
-                  href="/#services"
-                  className="text-sm w-full leading-5 flex items-center justify-between"
+              {authenticatedLinks.map((link, idx) => (
+                <DropdownMenuItem
+                  key={idx}
+                  asChild
+                  className="text-sm leading-5"
                 >
-                  Services
-                </Link>
-              </DropdownMenuItem>
+                  <Link href={link.href}>{link.title}</Link>
+                </DropdownMenuItem>
+              ))}
               <DropdownMenuItem asChild className="text-sm leading-5">
-                <Link href="/#tracking">Tracking</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild className="text-sm leading-5">
-                <Link href="/#how-it-works">How It Works</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild className="text-sm leading-5">
-                <Link href="/contact">Contact</Link>
+                <Link href="/profile">Profile</Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

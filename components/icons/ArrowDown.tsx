@@ -1,4 +1,4 @@
-const CallOutline = (props: React.SVGProps<SVGSVGElement>) => {
+const ArrowDown = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       width={props.width ?? 24}
@@ -20,4 +20,4 @@ const CallOutline = (props: React.SVGProps<SVGSVGElement>) => {
   );
 };
 
-export default CallOutline;
+export default ArrowDown;
