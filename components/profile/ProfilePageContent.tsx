@@ -3,9 +3,10 @@
 import { Button } from "../ui/button";
 import { UserCircleIcon } from "lucide-react";
 import { ArrowRight2, LockOutline } from "../icons";
-import UpdateProfile from "./UpdaeProfile";
+import UpdateProfile from "./UpdateProfile";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import UpdatePassword from "./UpdatePassword";
 
 const ProfilePageContent = () => {
   const [tab, setTab] = useState<"profile" | "password" | null>(null);
@@ -57,7 +58,12 @@ const ProfilePageContent = () => {
           </div>
 
           <div className="max-sm:hidden">
-            <UpdateProfile setShowMobile={setShowMobile} />
+            {tab === "profile" && (
+              <UpdateProfile setShowMobile={setShowMobile} />
+            )}
+            {tab === "password" && (
+              <UpdatePassword setShowMobile={setShowMobile} />
+            )}
           </div>
         </div>
       </div>
@@ -76,6 +82,22 @@ const ProfilePageContent = () => {
             className="sm:hidden absolute top-0 w-full z-25 "
           >
             <UpdateProfile setShowMobile={setShowMobile} />
+          </motion.div>
+        )}
+
+        {tab === "password" && showMobile && (
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{
+              type: "tween",
+              ease: "easeOut",
+              duration: 0.2,
+            }}
+            className="sm:hidden absolute top-0 w-full z-25 "
+          >
+            <UpdatePassword setShowMobile={setShowMobile} />
           </motion.div>
         )}
       </AnimatePresence>
