@@ -1,0 +1,92 @@
+import { Shipment } from "@/lib/services/shipment.service";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
+import { statusStyles } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
+import { ArrowRight, MoreVertical } from "lucide-react";
+
+interface ShipmentTableProps {
+  shipments: Shipment[];
+}
+
+const ShipmentTable = ({ shipments }: ShipmentTableProps) => {
+  return (
+    <Table className="mt-3 bg-white rounded-lg">
+      <TableHeader>
+        <TableRow className="h-[53px] hover:bg-white">
+          <TableHead className="pl-6 text-sm font-normal leading-5.5 font-roboto text-neutral-600/90">
+            Tracking ID
+          </TableHead>
+          <TableHead className="text-sm font-normal leading-5.5 font-roboto text-neutral-600/90">
+            Route
+          </TableHead>
+          <TableHead className="text-sm font-normal leading-5.5 font-roboto text-neutral-600/90">
+            Shipping Type
+          </TableHead>
+          <TableHead className="text-sm font-normal leading-5.5 font-roboto text-neutral-600/90">
+            Price
+          </TableHead>
+          <TableHead className="text-sm font-normal leading-5.5 font-roboto text-neutral-600/90">
+            Date
+          </TableHead>
+          <TableHeader className="pr-6 text-sm font-normal leading-5.5 font-roboto text-neutral-600/90">
+            Status
+          </TableHeader>
+        </TableRow>
+      </TableHeader>
+
+      <TableBody>
+        {shipments.map((shipment, idx) => (
+          <TableRow key={idx} className="h-15.5">
+            <TableCell className="pl-6 leading-5.5">
+              {shipment.trackingId}
+            </TableCell>
+            <TableCell>
+              <div className="flex items-center gap-2 leading-5.5">
+                <p className="leading-5.5">{shipment.country}</p>
+                <ArrowRight className="size-4.5 text-primary" />
+                <p className="leading-5.5">{shipment.receiverCountry}</p>
+              </div>
+            </TableCell>
+            <TableCell className="leading-5.5 capitalize">
+              {shipment.freightType.replace("_", " ").toLowerCase()}
+            </TableCell>
+            <TableCell className="leading-5.5">
+              ₦{Number(shipment.price).toLocaleString()}
+            </TableCell>
+            <TableCell className="leading-5.5">
+              {formatDate(shipment.createdAt)}
+            </TableCell>
+            <TableCell className="">
+              <div
+                className={`px-2 py-0.5 size-fit ${
+                  statusStyles[shipment.status]?.containerStyles
+                } flex items-center justify-center gap-1 border rounded-full text-center leading-5.5 capitalize`}
+              >
+                <div
+                  className={` ${
+                    statusStyles[shipment.status]?.bgcolor
+                  } size-1.5 rounded-full`}
+                />
+                {shipment.status}
+              </div>
+            </TableCell>
+            <TableCell className="pr-6">
+              <button className="size-6 flex items-center justify-center border border-neutral-200 rounded-[4px]">
+                <MoreVertical className="size-4" />
+              </button>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+};
+
+export default ShipmentTable;

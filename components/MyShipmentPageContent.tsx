@@ -28,7 +28,7 @@ import {
 import { formatDate } from "@/lib/utils";
 import Loader from "./Loader";
 import { MoreVertical } from "lucide-react";
-import { statusStyles } from "@/app/(main)/dashboard/page";
+import { statusStyles } from "@/lib/utils";
 import Image from "next/image";
 import { boxChecked } from "@/assets/images";
 import { useRouter } from "next/navigation";
@@ -164,10 +164,8 @@ const MyShipmentPageContent = () => {
         </div>
 
         {isLoadingActive && (
-          <div className="mt-3 min-h-[237px] md:min-h-[337px] flex flex-col rounded-lg bg-white">
-            <div className="flex-1 flex items-center justify-center">
-              <Loader styles="size-9 sm:size-12 " />
-            </div>
+          <div className="mt-3 min-h-[237px] md:min-h-[337px] flex flex-col items-center justify-center rounded-lg bg-white">
+            <Loader styles="size-9 sm:size-12 " />
           </div>
         )}
 
@@ -182,7 +180,7 @@ const MyShipmentPageContent = () => {
         )}
 
         {isSuccessActive && activeData.length === 0 && (
-          <div className="mt-3 min-h-[437px] md:min-h-[537px] flex flex-col rounded-lg bg-white">
+          <div className="mt-3 min-h-[437px] flex flex-col rounded-lg bg-white">
             <div className="flex-1 flex flex-col items-center justify-center">
               {/* Image */}
               <div className="size-40 relative">
