@@ -32,14 +32,14 @@ const ShipmentDetailsForm = () => {
   const totalWeightInKg = Number(weightKg ?? 0) * Number(itemNumber ?? 0);
 
   return (
-    <div className="mt-7.5 px-6 py-8 bg-white rounded-lg">
-      <FieldSet className="gap-10">
-        <FieldLegend className="text-lg font-semibold leading-7 m-0">
+    <div>
+      <FieldSet className="gap-6 md:gap-10">
+        <FieldLegend className="text-lg font-semibold font-roboto leading-7 m-0">
           Please enter your shipment details
         </FieldLegend>
         <Separator className="mt-2 bg-brand-gray/35" />
 
-        <div className="grid md:grid-cols-2 gap-10">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-10">
           {/* package type */}
           <Controller
             name="packageType"
@@ -116,7 +116,7 @@ const ShipmentDetailsForm = () => {
           />
         </div>
 
-        <div className="grid md:grid-cols-2 gap-10">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-10">
           {/* weight (kg)*/}
           <Controller
             name="weight"
@@ -161,7 +161,7 @@ const ShipmentDetailsForm = () => {
                       aria-invalid={fieldState.invalid}
                       type="number"
                       placeholder="Length (cm)"
-                      className="form-input"
+                      className="form-input max-md:px-2!"
                     />
                     {fieldState.invalid && (
                       <FieldError
@@ -184,7 +184,7 @@ const ShipmentDetailsForm = () => {
                       aria-invalid={fieldState.invalid}
                       type="number"
                       placeholder="Breadth (cm)"
-                      className="form-input"
+                      className="form-input max-md:px-2!"
                     />
                     {fieldState.invalid && (
                       <FieldError
@@ -207,7 +207,7 @@ const ShipmentDetailsForm = () => {
                       aria-invalid={fieldState.invalid}
                       type="number"
                       placeholder="Height (cm)"
-                      className="form-input"
+                      className="form-input max-md:px-2!"
                     />
                     {fieldState.invalid && (
                       <FieldError
@@ -251,7 +251,7 @@ const ShipmentDetailsForm = () => {
         />
       </FieldSet>
 
-      <h3 className="text-sm font-bold leading-5 font-roboto mt-6">{`Total Shipment Weight: ${totalWeightInKg.toFixed(
+      <h3 className="mt-4 md:mt-6 text-sm font-bold leading-5 font-roboto ">{`Total Shipment Weight: ${totalWeightInKg.toFixed(
         2
       )} kg `}</h3>
     </div>

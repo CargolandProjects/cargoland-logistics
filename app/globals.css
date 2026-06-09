@@ -230,7 +230,7 @@ body {
 
 
   .form-label {
-    @apply font-medium text-sm font-roboto
+    @apply font-medium text-sm font-roboto text-[#475367]
   }
 
   .form-input {

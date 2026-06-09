@@ -10,6 +10,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { FreightType, useShipmentStore } from "@/lib/stores/useShipmentStore";
 
 import { useState } from "react";
+import { toast } from "sonner";
 
 const SelectFreight = () => {
   const [value, setValue] = useState<FreightType | null>(null);
@@ -18,14 +19,14 @@ const SelectFreight = () => {
 
   const handleNext = () => {
     if (!value) {
-      alert("Set a shipment type");
+      toast.error("Set a shipment type");
       return;
     }
 
     setFreightType(value);
   };
   return (
-    <section>
+    <section className="p-6 md:py-8 rounded-lg bg-white">
       <h2 className="text-lg font-semibold leading-7 font-roboto">
         Select a Freight?
       </h2>
@@ -36,7 +37,7 @@ const SelectFreight = () => {
       <RadioGroup
         value={value}
         onValueChange={(value: FreightType) => setValue(value)}
-        className="grid md:grid-cols-3 mt-8 gap-3 md:gap-6"
+        className="grid md:grid-cols-3 mt-6 md:mt-8 gap-3 md:gap-6"
       >
         <FieldLabel
           htmlFor="air-freight"

@@ -28,7 +28,7 @@ const WhereTo = () => {
   };
 
   return (
-    <section>
+    <section className="p-6 md:py-8 rounded-lg bg-white">
       <h2 className="text-lg font-semibold leading-7 font-roboto">Where to?</h2>
       <p className="text-sm font-light leading-5.5">
         Send your shipment with ease by following these simple steps
@@ -37,7 +37,7 @@ const WhereTo = () => {
       <RadioGroup
         value={value}
         onValueChange={(value: ShipmentType) => setValue(value)}
-        className="grid md:grid-cols-2 mt-8 gap-3 md:gap-6"
+        className="grid md:grid-cols-2 mt-6 md:mt-8 gap-3 md:gap-6"
       >
         <FieldLabel
           htmlFor="domestic-shipping"

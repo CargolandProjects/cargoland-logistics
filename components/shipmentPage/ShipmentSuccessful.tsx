@@ -18,8 +18,8 @@ const ShipmentSuccessful = () => {
   }, [clearShipmentData]);
 
   return (
-    <section className="padding-x flex justify-center bg-background-screen">
-      <div className="mt-10 mb-16.25 bg-white p-8.5 rounded-lg flex flex-col items-center">
+    <section className="padding-x mt-15 mb-16.25 flex justify-center bg-background-screen">
+      <div className="bg-white p-8.5 rounded-lg flex flex-col items-center">
         <div className="size-[90px] relative">
           <Image
             src={boxChecked}

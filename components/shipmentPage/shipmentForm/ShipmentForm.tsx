@@ -29,10 +29,11 @@ const ShipmentForm = () => {
   const shipmentType = useShipmentStore((s) => s.shipmentType);
   const saveShipmentData = useShipmentStore((s) => s.setFormData);
   const saveCreatedShipment = useShipmentStore((s) => s.setCreatedShipment);
+  const cancelShipment = useShipmentStore((s) => s.clearShipment);
   const { isAuthenticated } = useSession();
   const router = useRouter();
 
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(3);
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -68,13 +69,10 @@ const ShipmentForm = () => {
     if (!formData || hasHydrated.current) return;
 
     //Restore step
-    if (formData.step !== null) {
-      const step = () => setStep(formData.step ?? 0);
-      step();
-    }
+    const step = () => setStep(formData.step ?? 0);
+    step();
 
     // Restore form values
-
     form.reset({
       ...defaultShipmentValues,
       ...formData.data,
@@ -213,37 +211,50 @@ const ShipmentForm = () => {
       <FormStep currentStep={step} setStep={setStep} />
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          {shipmentForms()}
+          <div className="mt-5 md:mt-7.5 p-6 md:py-8 bg-white rounded-lg">
+            {shipmentForms()}
 
-          <div className="flex justify-end mt-12.5">
-            {step < 2 && (
+            <div className="flex max-md:flex-col justify-between gap-4 w-full mt-12 md:mt-12.5">
               <Button
-                onClick={handleNext}
+                onClick={cancelShipment}
+                variant="outline"
                 type="button"
-                className="w-[215px] h-13.75 rounded-md"
+                className="md:w-[215px] h-13.75 rounded-md border-brand-gray/40"
               >
-                Next Step
+                Cancel Shipment
               </Button>
-            )}
+              {step < 2 && (
+                <Button
+                  onClick={handleNext}
+                  type="button"
+                  className="w-full md:w-[215px] h-13.75 rounded-md"
+                >
+                  Next Step
+                </Button>
+              )}
 
-            {/* Separate button of type 'submit" to submit shipment details is needed rather than
+              {/* Separate button of type 'submit" to submit shipment details is needed rather than
             conditionally using step to assign button type due to some funny
             default form behaviour thereby introducing a bug */}
-            {step === 2 && (
-              <Button type="submit" className="w-[215px] h-13.75 rounded-md">
-                Next Step
-              </Button>
-            )}
+              {step === 2 && (
+                <Button
+                  type="submit"
+                  className="w-full md:w-[215px] h-13.75 rounded-md"
+                >
+                  Next Step
+                </Button>
+              )}
 
-            {step === 3 && (
-              <Button
-                onClick={handlePayment}
-                type="button"
-                className="w-[215px] h-13.75 rounded-md"
-              >
-                Make Payment
-              </Button>
-            )}
+              {step === 3 && (
+                <Button
+                  onClick={handlePayment}
+                  type="button"
+                  className="w-full md:w-[215px] h-13.75 rounded-md"
+                >
+                  Make Payment
+                </Button>
+              )}
+            </div>
           </div>
         </form>
       </FormProvider>

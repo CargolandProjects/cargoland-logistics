@@ -46,14 +46,14 @@ const ReceiverDetailsForm = () => {
   }, [selectedCountry?.value]);
 
   return (
-    <div className="mt-7.5 px-6 py-8 bg-white rounded-lg">
-      <FieldSet className="gap-10">
-        <FieldLegend className="text-lg font-semibold leading-7 m-0">
+    <div>
+      <FieldSet className="gap-6 md:gap-10">
+        <FieldLegend className="text-lg! font-semibold font-roboto leading-7 m-0">
           Please enter the receiver&apos;s details
         </FieldLegend>
-        <Separator className="mt-2 bg-brand-gray/35" />
+        <Separator className="mt-4 md:mt-2 bg-brand-gray/35" />
 
-        <div className="grid md:grid-cols-2 gap-10">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-10">
           <Controller
             name="receiverName"
             control={control}
@@ -105,7 +105,7 @@ const ReceiverDetailsForm = () => {
         </div>
 
         {/* country & phone number */}
-        <div className="grid md:grid-cols-2 gap-10">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-10">
           <Controller
             name="receiverCountry"
             control={control}
@@ -185,7 +185,7 @@ const ReceiverDetailsForm = () => {
         </div>
 
         {/* state/city & address */}
-        <div className="grid md:grid-cols-2 gap-10">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-10">
           <Controller
             name="receiverStateOrCity"
             control={control}

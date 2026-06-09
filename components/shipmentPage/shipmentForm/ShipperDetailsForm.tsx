@@ -27,7 +27,7 @@ import "intl-tel-input/styles";
 import { useEffect, useRef } from "react";
 import { Iso2 } from "intl-tel-input";
 
-const  ShipperDetailsForm = () => {
+const ShipperDetailsForm = () => {
   const { control, watch } = useFormContext<ShipmentDataType>();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const phoneInputRef = useRef<any>(null);
@@ -49,14 +49,14 @@ const  ShipperDetailsForm = () => {
   }, [selectedCountry?.value]);
 
   return (
-    <div className="mt-7.5 px-6 py-8 bg-white rounded-lg">
-      <FieldSet className="gap-10">
-        <FieldLegend className="text-lg font-semibold leading-7 m-0">
+    <div>
+      <FieldSet className="gap-6 md:gap-10">
+        <FieldLegend className="text-lg! font-semibold font-roboto leading-7 m-0">
           Please enter the shipper&apos;s details
         </FieldLegend>
-        <Separator className="mt-2 bg-brand-gray/35" />
+        <Separator className="mt-4 md:mt-2 bg-brand-gray/35" />
 
-        <div className="grid md:grid-cols-2 gap-10">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-10">
           <Controller
             name="fullName"
             control={control}
@@ -109,7 +109,7 @@ const  ShipperDetailsForm = () => {
         </div>
 
         {/* country & phone number */}
-        <div className="grid md:grid-cols-2 gap-10">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-10">
           <Controller
             name="country"
             control={control}
@@ -189,7 +189,7 @@ const  ShipperDetailsForm = () => {
         </div>
 
         {/* state/city & address */}
-        <div className="grid md:grid-cols-2 gap-10">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-10">
           <Controller
             name="stateOrCity"
             control={control}
@@ -254,17 +254,17 @@ const  ShipperDetailsForm = () => {
                   name={field.name}
                   value={field.value}
                   onValueChange={field.onChange}
-                  className="grid grid-cols-3 sm:gap-3.5 lg:gap-5.5 "
+                  className="grid grid-cols-3 gap-5.5 w-fit"
                 >
                   {/* home */}
                   <FieldLabel
                     htmlFor={`${field.name}-home`}
-                    className="form-label rounded-sm!"
+                    className="form-label rounded-sm! h-14"
                   >
                     <Field
                       data-invalid={fieldState.invalid}
                       orientation="horizontal"
-                      className="px-4! py-4.5! gap-[9.5px]"
+                      className="px-4! h-full gap-[9.5px]"
                     >
                       <FieldTitle className="font-normal text-sm text-brand-gray">
                         Home
@@ -280,12 +280,12 @@ const  ShipperDetailsForm = () => {
                   {/* office */}
                   <FieldLabel
                     htmlFor={`${field.name}-office`}
-                    className="form-label rounded-sm!"
+                    className="form-label rounded-sm! h-14"
                   >
                     <Field
                       data-invalid={fieldState.invalid}
                       orientation="horizontal"
-                      className="px-4! py-4.5! gap-[9.5px]"
+                      className="px-4! h-full gap-[9.5px]"
                     >
                       <FieldTitle className="font-normal text-sm text-brand-gray">
                         Office
@@ -301,12 +301,12 @@ const  ShipperDetailsForm = () => {
                   {/* drop off */}
                   <FieldLabel
                     htmlFor={`${field.name}-dropOff`}
-                    className="form-label rounded-sm!"
+                    className="form-label rounded-sm! h-14"
                   >
                     <Field
                       data-invalid={fieldState.invalid}
                       orientation="horizontal"
-                      className="px-4! py-4.5! gap-[9.5px]"
+                      className="px-4! h-full gap-[9.5px]"
                     >
                       <FieldTitle className="font-normal text-sm text-brand-gray ">
                         Drop Off
@@ -332,7 +332,7 @@ const  ShipperDetailsForm = () => {
         </div>
 
         {/* pickup date & time */}
-        <div className="grid md:grid-cols-2 gap-10">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-10">
           <Controller
             name="pickupDate"
             control={control}

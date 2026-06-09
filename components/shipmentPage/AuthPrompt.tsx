@@ -19,11 +19,11 @@ const AuthPrompt = () => {
     <div className="h-16 px-6 bg-primary/10 rounded-lg flex justify-between items-center">
       <p className="text-sm leading-5.5 text-primary">
         Please{" "}
-        <Link href="/login" className="underline underline-offset-[1.5px]">
+        <Link href="/login" className="leading-5.5 underline underline-offset-[1.5px]">
           log in{" "}
         </Link>
         or{" "}
-        <Link href="/signup" className="underline underline-offset-[1.5px]">
+        <Link href="/signup" className="leading-5.5 underline underline-offset-[1.5px]">
           create an account{" "}
         </Link>
         to continue.

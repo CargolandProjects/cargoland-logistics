@@ -14,20 +14,16 @@ const Payment = () => {
       <h2 className="text-lg font-semibold leading-7 font-poppins">
         Bill Payment
       </h2>
-      <Separator className="mt-2 bg-brand-gray/35" />
+      <Separator className="mt-4 md:mt-2 bg-brand-gray/35" />
 
-      <div className="mt-6 grid grid-cols-2 max-md:gap-y-6 md:grid-cols-4">
+      <div className="mt-6 grid sm:grid-cols-2 max-md:gap-y-6 md:grid-cols-4">
         <div>
           <h3 className="bill-sub-title">From</h3>
 
           <div className="mt-2 space-y-1.5">
-            <p className="text-sm font-normal">{shipmentData?.fullName}</p>
-            <p className="text-sm font-normal text-[#475367]">
-              {shipmentData?.address}
-            </p>
-            <p className="text-sm font-normal text-[#475367]">
-              {shipmentData?.phoneNumber}
-            </p>
+            <p>{shipmentData?.fullName}</p>
+            <p className="text-[#475367]">{shipmentData?.address}</p>
+            <p className="text-[#475367]">{shipmentData?.phoneNumber}</p>
           </div>
         </div>
 
@@ -35,30 +31,28 @@ const Payment = () => {
           <h3 className="bill-sub-title">To</h3>
 
           <div className="mt-2 space-y-1.5">
-            <p className="text-sm font-normal">{shipmentData?.receiverName}</p>
-            <p className="text-sm font-normal text-[#475367]">
-              {shipmentData?.receiverAddress}
-            </p>
-            <p className="text-sm font-normal text-[#475367]">
-              {shipmentData?.receiverNumber}
-            </p>
+            <p>{shipmentData?.receiverName}</p>
+            <p className="text-[#475367]">{shipmentData?.receiverAddress}</p>
+            <p className="text-[#475367]">{shipmentData?.receiverNumber}</p>
           </div>
         </div>
 
-        <div>
-          <h3 className="bill-sub-title">Invoice Date</h3>
+        <div className="grid grid-cols-2">
+          <div>
+            <h3 className="bill-sub-title">Invoice Date</h3>
 
-          <p className="mt-2 text-sm font-normal">
-            {formatDate(shipmentData?.createdAt ?? "")}
-          </p>
-        </div>
+            <p className="mt-2 text-sm font-normal">
+              {formatDate(shipmentData?.createdAt ?? "")}
+            </p>
+          </div>
 
-        <div>
-          <h3 className="bill-sub-title">Subject</h3>
+          <div>
+            <h3 className="bill-sub-title">Subject</h3>
 
-          <p className="mt-2 text-sm font-normal capitalize">
-            {freightType?.toLowerCase().replace("_", " ")}
-          </p>
+            <p className="mt-2 text-sm font-normal capitalize">
+              {freightType?.toLowerCase().replace("_", " ")}
+            </p>
+          </div>
         </div>
       </div>
 
@@ -102,14 +96,14 @@ const Payment = () => {
 
       {/* <Separator className="mt-10 mb-6" /> */}
 
-      <div className="mt-10">
+      <div className="mt-10 space-y-2">
         <h3 className="bill-sub-title">Shipment Weight</h3>
         <p className="text-sm font-medium leading-5.5">
           Total Shipment Weight: {shipmentData?.totalShipmentWeight} kg
         </p>
       </div>
 
-      <Separator className="mt-6 mb-2.5 bg-brand-gray/35" />
+      <Separator className="mt-6 mb-4 bg-brand-gray/35" />
       <p className="text-sm font-normal leading-5.5 text-primary">
         Please note that VAT is included in the total payment amount.
       </p>
