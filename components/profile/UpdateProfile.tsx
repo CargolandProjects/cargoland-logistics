@@ -65,8 +65,6 @@ const UpdateProfile = ({ setShowMobile }: ProfileUpdateFormProps) => {
   });
 
   const onSubmit = (data: ProfileUpdateData) => {
-    console.log("Update Data: ", data);
-
     mutate(data, {
       onSuccess: (res) => {
         toast.success(res.message);

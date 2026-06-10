@@ -5,6 +5,7 @@ import { LoginData } from "@/app/(auth)/login/page";
 import { createPasswordData } from "@/app/(auth)/create-password/page";
 import apiClient from "../api/client";
 import { ProfileUpdateData } from "@/components/profile/UpdateProfile";
+import { ChangePasswordData } from "@/components/profile/UpdatePassword";
 
 export type APIResponse<T> = {
   status: string;
@@ -103,7 +104,7 @@ export const auth = {
     return res.data;
   },
 
-  async changePassword(data: UpdatePasswordData) {
+  async changePassword(data: ChangePasswordData) {
     const res = await apiClient.post(API_ROUTES.auth.changePassword, data);
     return res.data;
   },

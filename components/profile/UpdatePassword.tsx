@@ -15,51 +15,62 @@ import { Button } from "../ui/button";
 import { ArrowLeft, EyeOff } from "../icons";
 import { Separator } from "../ui/separator";
 import { Check, Eye } from "lucide-react";
+import { useChangePassword } from "@/lib/hooks/mutation/useAuth";
+import { toast } from "sonner";
 
 interface UpdatePasswordProps {
   setShowMobile: (val: boolean) => void;
 }
 
-const signUpSchema = z.object({
-  oldPassword: z
-    .string()
-    .max(100, "Password must be more than 100 characters long"),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .max(20, "Password must not be more than 20 characters")
-    .regex(/(?=.*[a-z])/, "Password must contain at least one lowercase letter")
-    .regex(/(?=.*[A-Z])/, "Password must contain at least one uppercase letter")
-    .regex(/(?=.*\d)/, "Password must contain at least one number")
-    .regex(
-      /(?=.*[!@#$%^&*])/,
-      "Password must contain at least one special character"
-    ),
-  confirmPassword: z.string(),
-}).refine((val) => val.confirmPassword === val.password, {
-  path: ["confirmPassword"],
-  error: "password do not match"
-});
+const signUpSchema = z
+  .object({
+    oldPassword: z
+      .string()
+      .max(100, "Password must be more than 100 characters long"),
+    newPassword: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .max(20, "Password must not be more than 20 characters")
+      .regex(
+        /(?=.*[a-z])/,
+        "Password must contain at least one lowercase letter"
+      )
+      .regex(
+        /(?=.*[A-Z])/,
+        "Password must contain at least one uppercase letter"
+      )
+      .regex(/(?=.*\d)/, "Password must contain at least one number")
+      .regex(
+        /(?=.*[!@#$%^&*])/,
+        "Password must contain at least one special character"
+      ),
+    confirmPassword: z.string(),
+  })
+  .refine((val) => val.confirmPassword === val.newPassword, {
+    path: ["confirmPassword"],
+    error: "password do not match",
+  });
 
-export type UpdatePasswordData = z.infer<typeof signUpSchema>;
+export type ChangePasswordData = z.infer<typeof signUpSchema>;
 
 const UpdatePassword = ({ setShowMobile }: UpdatePasswordProps) => {
+  const { mutate, isPending } = useChangePassword();
   const [isVisible, setIsVisible] = useState({
     oldPassword: false,
     createPassword: false,
     confirmPassword: false,
   });
 
-  const { handleSubmit, control } = useForm<UpdatePasswordData>({
+  const { handleSubmit, control } = useForm<ChangePasswordData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       oldPassword: "",
-      password: "",
+      newPassword: "",
       confirmPassword: "",
     },
   });
 
-  const password = useWatch({ control: control, name: "password" }) || "";
+  const password = useWatch({ control: control, name: "newPassword" }) || "";
 
   const passwordReq = {
     letterAndNumber: /(?=.*[a-z])/.test(password) && /(?=.*\d)/.test(password),
@@ -67,8 +78,15 @@ const UpdatePassword = ({ setShowMobile }: UpdatePasswordProps) => {
     specialCharacter: /(?=.*[!@#$%^&*])/.test(password),
   };
 
-  const onSubmit = (data: UpdatePasswordData) => {
-    console.log("Update Data: ", data);
+  const onSubmit = (data: ChangePasswordData) => {
+    mutate(data, {
+      onSuccess: (res) => {
+        toast.success(res.message || "Password updated successfully");
+      },
+      onError: (res) => {
+        toast.error(res.message || "Failed to update password");
+      },
+    });
   };
 
   return (
@@ -137,7 +155,7 @@ const UpdatePassword = ({ setShowMobile }: UpdatePasswordProps) => {
             />
 
             <Controller
-              name="password"
+              name="newPassword"
               control={control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
@@ -291,7 +309,7 @@ const UpdatePassword = ({ setShowMobile }: UpdatePasswordProps) => {
           </div>
         </div>
         <Button
-          // disabled={isPending}
+          disabled={isPending}
           type="submit"
           className="mt-12 sm:mt-6 submit-button"
         >
