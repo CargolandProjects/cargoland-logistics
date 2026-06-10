@@ -36,7 +36,7 @@ type ProgressOrder =
   | "Destination"
   | "Custom Clearance";
 
-const status = "In Transit" as ProgressOrder;
+const status = "Custom Clearance" as ProgressOrder;
 
 export default function TrackShipmentPage() {
   const { mutate, isPending, data } = useTrackShipment();
@@ -130,7 +130,7 @@ export default function TrackShipmentPage() {
   };
 
   return (
-    <div className="py-16.5 padding-x">
+    <div className="sec-mt padding-x">
       <div>
         {/* Enter Tracking Number */}
         {!shipment && (
@@ -191,10 +191,10 @@ export default function TrackShipmentPage() {
         {shipment && (
           <div>
             <div>
-              <h1 className="text-[32px] font-bold leading-10 ">
+              <h1 className="text-2xl md:text-[32px] font-bold leading-8 md:leading-10 ">
                 Truck CLA-NGR-22
               </h1>
-              <p className="text-base font-light leading-6">
+              <p className="text-sm md:text-base font-light leading-5 md:leading-6">
                 Your shipment is currently in transit and progressing smoothly
                 to it&apos;s destination.
               </p>
@@ -213,7 +213,7 @@ export default function TrackShipmentPage() {
                 </p>
 
                 <div className="mt-2 flex items-center gap-3.75">
-                  <h2 className="text-[32px] font-bold leading-10">
+                  <h2 className="text-xl md:text-[32px] font-bold leading-7 md:leading-10">
                     {shipment.trackingId}
                   </h2>
 
@@ -221,7 +221,7 @@ export default function TrackShipmentPage() {
                 </div>
 
                 <div className="mt-2 flex items-center gap-3 text-slate-700">
-                  <p className="flex items-center">
+                  <p className="flex items-center leading-5.5">
                     {shipment.country}
                     <ArrowRight className="size-4.5 text-primary inline mx-2" />
                     {shipment.receiverCountry}
@@ -229,16 +229,16 @@ export default function TrackShipmentPage() {
 
                   <div className="size-1.5 bg-neutral-300 rounded-full" />
 
-                  <p className="">
+                  <p className="leading-5.5">
                     {shipment.numberOfItems} {shipment.packageType}
                   </p>
                   <div className="size-1.5 bg-neutral-300 rounded-full" />
 
-                  <p>{shipment.totalShipmentWeight} kg</p>
+                  <p className="leading-5.5">{shipment.totalShipmentWeight} kg</p>
                 </div>
               </div>
 
-              <div className="flex gap-2.5 bg-primary-light py-4 px-6 rounded-lg">
+              <div className="mt-5 md:mt-6 flex gap-2.5 bg-primary-light p-4 md:px-6 rounded-lg">
                 <div className="size-10 flex justify-center items-center shrink-0 rounded-full bg-primary/5">
                   <NoticeOutline className="size-6 text-primary" />
                 </div>
@@ -257,30 +257,31 @@ export default function TrackShipmentPage() {
                 </div>
               </div>
 
-              <div className="mt-6 p-6 bg-white rounded-lg">
+              <div className="mt-5 md:mt-6 p-6 bg-white rounded-lg">
                 <div className="flex justify-between">
                   <h3 className="text-5 font-bold leading-7 ">Live Progress</h3>
 
-                  <div className="flex items-end gap-2">
-                    <p className="text-[32px] font-bold leading-10  font-montserrat">
+                  <div className="flex items-center md:items-end gap-2">
+                    <p className="text-xl md:text-[32px] font-bold leading-7 md;leading-10  font-montserrat">
                       70%
                     </p>
                     <p className="text-xs leading-5 text-slate-600">complete</p>
                   </div>
                 </div>
 
-                <div className="relative mt-10 flex justify-between">
-                  <div className="h-1.5 absolute w-full left-0 top-3.5 translate-y-1/2 bg-primary-light " />
+                <div className="relative mt-10 flex max-sm:flex-col max-sm:gap-10 justify-between">
+                  {/* backgrounf unfilled  progress bar */}
+                  <div className="h-full sm:h-1.5 absolute w-1.5 sm:w-full max-sm:left-[16.75] sm:top-3.5 sm:translate-y-1/2 rounded-full bg-primary-light " />
 
                   {shipmentProgress.map((progress, idx) => {
                     const isCompleted = progress.status === "success";
                     const isIdle = progress.status === "idle";
                     return (
                       <div
-                        className="flex-1 flex flex-col items-center pr-1"
+                        className="flex-1 flex sm:flex-col sm:items-center max-sm:gap-3"
                         key={idx}
                       >
-                        <div className="relative flex justify-center w-full">
+                        <div className="relative flex max-sm:flex-col sm:justify-center sm:w-full">
                           {/* icon */}
                           <div
                             className={`${
@@ -297,35 +298,44 @@ export default function TrackShipmentPage() {
                           {/* Right hand side bar fill for the first status */}
                           {idx === 0 && !isIdle && (
                             <div
-                              className={`h-1.5 absolute w-1/2 right-1/2 top-1/2 transform -translate-y-1/2 bg-primary rounded-full`}
+                              className={`max-md:hidden h-1.5 absolute w-1/2 right-1/2 top-1/2 transform -translate-y-1/2 bg-primary rounded-full`}
                             />
                           )}
 
-                          {/* Progress bar */}
+                          {/*large screens Progress bar */}
                           {!isIdle && (
                             <div
-                              className={` h-1.5 absolute ${
+                              className={`max-sm:hidden h-1.5 absolute ${
                                 isCompleted ? "w-full" : "w-1/2"
                               }  left-1/2 top-1/2 transform -translate-y-1/2 bg-primary rounded-full `}
                             />
                           )}
+
+                          {/*mobile screens Progress bar */}
+                          {!isIdle && idx !== 0 && (
+                            <div
+                              className={`sm:hidden h-full max-md:w-1.5 md:h-1.5 absolute md:left-1/2 md:top-1/2 bottom-full transform left-1/2 -translate-x-1/2 md:-translate-y-1/2 bg-primary rounded-full`}
+                            />
+                          )}
                         </div>
 
-                        <div className="mt-3.5 flex flex-col items-center gap-1">
-                          <p className="text-base font-medium leading-5">
+                        <div className="mt-3.5 flex flex-col sm:items-center gap-1">
+                          <h3 className="text-base font-roboto font-medium leading-5 sm:text-center">
                             {progress.title}
-                          </p>
-                          <p className="text-xs leading-5 text-slate-700">
-                            {progress.location}
-                          </p>
-                          <div className="flex items-center gap-1 text-slate-700">
-                            <p className="text-xs leading-5">
-                              {formatDayOfWeek(progress.time)}
+                          </h3>
+                          <div className="flex sm:flex-col items-center gap-1">
+                            <p className="text-xs leading-5 text-slate-700 sm:text-center">
+                              {progress.location}
                             </p>
-                            <div className="size-1 bg-neutral-300/80 rounded-full" />
-                            <p className="text-xs leading-5">
-                              {formatTime(progress.time)}
-                            </p>
+                            <div className="flex items-center gap-1 text-slate-700">
+                              <p className="text-xs leading-5">
+                                {formatDayOfWeek(progress.time)}
+                              </p>
+                              <div className="size-1 bg-neutral-300/80 rounded-full" />
+                              <p className="text-xs leading-5">
+                                {formatTime(progress.time)}
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </div>
