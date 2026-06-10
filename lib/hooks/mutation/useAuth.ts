@@ -1,5 +1,6 @@
 import { auth } from "@/lib/services/auth.service";
 import { useMutation } from "@tanstack/react-query";
+import { useSession } from "../useSession";
 
 export const useSignUp = () => {
   return useMutation({
@@ -25,6 +26,24 @@ export const useLogIn = () => {
   });
 };
 
+export const useUpdateProfile = () => {
+  const { session, setUser } = useSession();
+  return useMutation({
+    mutationFn: auth.updateProfile,
+    onSuccess: async (res) => {
+      if (res.data) {
+        const {
+          otpExpiresAt: _otpExpiresAt,
+          verificationCode: _verificationCode,
+          password: _password,
+          ...userData
+        } = res.data;
+        await setUser({...session, ...userData});
+      }
+    },
+  });
+};
+
 export const useRequestPassword = () => {
   return useMutation({
     mutationFn: auth.requestPasswordReset,
@@ -34,5 +53,10 @@ export const useRequestPassword = () => {
 export const useUpdatePassword = () => {
   return useMutation({
     mutationFn: auth.updatePassword,
+  });
+};
+export const useChangePassword = () => {
+  return useMutation({
+    mutationFn: auth.changePassword,
   });
 };

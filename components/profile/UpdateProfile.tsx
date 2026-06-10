@@ -16,6 +16,8 @@ import { Separator } from "../ui/separator";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { ArrowLeft } from "../icons";
+import { useUpdateProfile } from "@/lib/hooks/mutation/useAuth";
+import { toast } from "sonner";
 
 interface ProfileUpdateFormProps {
   setShowMobile: (open: boolean) => void;
@@ -46,9 +48,10 @@ const profileSchema = z.object({
   phoneNumber: phoneSchema,
 });
 
-type ProfileUpdateData = z.infer<typeof profileSchema>;
+export type ProfileUpdateData = z.infer<typeof profileSchema>;
 
 const UpdateProfile = ({ setShowMobile }: ProfileUpdateFormProps) => {
+  const { mutate, isPending } = useUpdateProfile();
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
   const { control, handleSubmit, setValue } = useForm<ProfileUpdateData>({
     resolver: zodResolver(profileSchema),
@@ -63,6 +66,15 @@ const UpdateProfile = ({ setShowMobile }: ProfileUpdateFormProps) => {
 
   const onSubmit = (data: ProfileUpdateData) => {
     console.log("Update Data: ", data);
+
+    mutate(data, {
+      onSuccess: (res) => {
+        toast.success(res.message);
+      },
+      onError: (error) => {
+        toast.error(error.message || "Failed to update user");
+      },
+    });
   };
 
   return (
@@ -230,7 +242,7 @@ const UpdateProfile = ({ setShowMobile }: ProfileUpdateFormProps) => {
         </FieldSet>
 
         <Button
-          // disabled={isPending}
+          disabled={isPending}
           type="submit"
           className="mt-12 sm:mt-6 submit-button"
         >

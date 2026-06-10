@@ -7,6 +7,8 @@ export const API_ROUTES = {
     requestPasswordReset: "/users/request-reset-password",
     updatePassword: "/users/update-password",
     getUserById: (id: string) => `/users/${id}`,
+    updateProfile: "/users/update-profile",
+    changePassword: "/users/change-password",
   },
 
   shipment: {

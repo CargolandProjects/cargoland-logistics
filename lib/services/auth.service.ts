@@ -4,6 +4,7 @@ import { API_ROUTES } from "../api/endpoints";
 import { LoginData } from "@/app/(auth)/login/page";
 import { createPasswordData } from "@/app/(auth)/create-password/page";
 import apiClient from "../api/client";
+import { ProfileUpdateData } from "@/components/profile/UpdateProfile";
 
 export type APIResponse<T> = {
   status: string;
@@ -26,6 +27,12 @@ export interface User {
   updatedAt: string;
 }
 
+type UpdateProfile = User & {
+  verificationCode: string;
+  password: string;
+  otpExpiresAt: string | null;
+};
+
 export interface Tokens {
   accessToken: string;
   refreshToken: string;
@@ -46,6 +53,8 @@ type SignUpRes = APIResponse<User>;
 type LogInRes = APIResponse<LogIn>;
 
 type UpdatePasswordData = createPasswordData & { email: string };
+
+type UpdateProfileRes = APIResponse<UpdateProfile>;
 
 export const auth = {
   async SignUp(data: SignUpData) {
@@ -73,6 +82,14 @@ export const auth = {
     return res.data;
   },
 
+  async updateProfile(data: ProfileUpdateData) {
+    const res = await apiClient.post<UpdateProfileRes>(
+      API_ROUTES.auth.updateProfile,
+      data
+    );
+    return res.data;
+  },
+
   async requestPasswordReset(email: { email: string }) {
     const res = await apiClient.post(
       API_ROUTES.auth.requestPasswordReset,
@@ -83,6 +100,11 @@ export const auth = {
 
   async updatePassword(data: UpdatePasswordData) {
     const res = await apiClient.post(API_ROUTES.auth.updatePassword, data);
+    return res.data;
+  },
+
+  async changePassword(data: UpdatePasswordData) {
+    const res = await apiClient.post(API_ROUTES.auth.changePassword, data);
     return res.data;
   },
 };
