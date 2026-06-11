@@ -22,14 +22,34 @@ import {
 
 import { X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+import { useShipmentEstimate } from "@/lib/hooks/mutation/useMutateShipment";
+import { useEffect } from "react";
+import Loader from "@/components/Loader";
 
 const ShipmentDetailsForm = () => {
+  const { mutate, isPending, data: estimate } = useShipmentEstimate();
   const { control, watch } = useFormContext<ShipmentDataType>();
 
-  const weightKg = watch("weight");
-  const itemNumber = watch("numberOfItems");
+  const weight = watch("weight");
+  const length = watch("length");
+  const height = watch("height");
+  const breadth = watch("breadth");
 
-  const totalWeightInKg = Number(weightKg ?? 0) * Number(itemNumber ?? 0);
+  const totalWeight = estimate?.data.totalShipmentWeight || 0;
+
+  useEffect(() => {
+    console.log("Initiated");
+    if (isPending || !length || !breadth || !height || !weight) return;
+    console.log("Initiated, Will Execute");
+
+    const payload = {
+      weight: Number(weight),
+      length: Number(length),
+      breadth: Number(breadth),
+      height: Number(height),
+    };
+    mutate(payload, {});
+  }, [length, breadth, height, weight]);
 
   return (
     <div>
@@ -251,9 +271,10 @@ const ShipmentDetailsForm = () => {
         />
       </FieldSet>
 
-      <h3 className="mt-4 md:mt-6 text-sm font-bold leading-5 font-roboto ">{`Total Shipment Weight: ${totalWeightInKg.toFixed(
-        2
-      )} kg `}</h3>
+      <p className="mt-4 md:mt-6 text-sm font-bold leading-5 font-roboto  flex gap-2 items-center">
+        Total Shipment Weight:{" "}
+        {isPending ? <Loader size={16} /> : `${totalWeight.toFixed(2)} kg`}
+      </p>
     </div>
   );
 };

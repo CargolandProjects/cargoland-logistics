@@ -19,7 +19,7 @@ const SelectFreight = () => {
 
   const handleNext = () => {
     if (!value) {
-      toast.error("Set a shipment type");
+      toast.error("Set a freight type");
       return;
     }
 

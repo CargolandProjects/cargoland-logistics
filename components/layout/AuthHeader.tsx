@@ -15,7 +15,14 @@ import { usePathname } from "next/navigation";
 import { useSession } from "@/lib/hooks/useSession";
 import { ArrowDown } from "../icons";
 import { Button } from "../ui/button";
-import { useProtectedRoute } from "@/lib/hooks/useProtectedRoute";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
 
 const authenticatedLinks = [
   {
@@ -42,7 +49,13 @@ const authenticatedLinks = [
 
 const AuthHeader = () => {
   const { isAuthenticated, signOut } = useSession();
+  const [open, setOpen] = useState(false);
   const pathName = usePathname();
+
+  const handleSignout = () => {
+    signOut();
+    setOpen(false);
+  };
 
   return (
     <header className="py-2 md:py-4 padding-x bg-white">
@@ -148,6 +161,7 @@ const AuthHeader = () => {
                   </DropdownMenuItem>
                 ))}
 
+              {/* Additional Actions */}
               {isAuthenticated ? (
                 <>
                   <DropdownMenuItem
@@ -162,7 +176,7 @@ const AuthHeader = () => {
                     className="font-medium leading-5.5 hover:p-2 hover:bg-primary/8 duration-200 cursor-pointer"
                   >
                     <Button
-                      onClick={signOut}
+                      onClick={() => setOpen(true)}
                       className="p-0 w-full justify-start  h-fit text-black hover:text-destructive hover:destructive/10 bg-transparent font-roboto"
                     >
                       Logout
@@ -180,6 +194,34 @@ const AuthHeader = () => {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogContent className="px-8 pt-15 pb-10 gap-0">
+            <DialogHeader className="gap-4">
+              <DialogTitle className="text-2xl font-semibold leading-8">
+                Logout
+              </DialogTitle>
+              <DialogDescription className="text-base leading-5">
+                Are you sure you want to Log out of your account?{" "}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="mt-6 flex items-center justify-end gap-2 font-roboto ">
+              <Button
+                onClick={() => setOpen(false)}
+                variant="outline"
+                className="flex-1 h-13.75 border-[1.5px] border-slate-300 rounded-md text-base"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSignout}
+                className=" flex-1 h-13.75 rounded-md text-base"
+              >
+                Log Out
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </header>
   );

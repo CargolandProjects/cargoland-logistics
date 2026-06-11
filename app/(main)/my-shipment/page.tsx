@@ -14,7 +14,7 @@ import {
   PendingClipboard,
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
-import { ShipmentStatus } from "@/lib/services/shipment.service";
+import { Shipment, ShipmentStatus } from "@/lib/services/shipment.service";
 import { useState } from "react";
 import { useProtectedRoute } from "@/lib/hooks/useProtectedRoute";
 
@@ -25,6 +25,8 @@ import Image from "next/image";
 import { boxChecked } from "@/assets/images";
 import { useRouter } from "next/navigation";
 import ShipmentTable from "@/components/dashboard/ShipmentTable";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 
 const statuses: ShipmentStatus[] = [
   "PENDING",
@@ -46,6 +48,7 @@ export default function MyShipmentPage() {
     isError: isErrorAll,
   } = useAllShipments();
   const [tblView, setTblView] = useState<ShipmentStatus | null>(null);
+  const [search, setSearch] = useState("");
   const {
     data: myShipments,
     isLoading,
@@ -92,7 +95,54 @@ export default function MyShipmentPage() {
   const isSuccessActive = isFiltered ? isSuccess : isSuccessAll;
 
   const allShipments = shipments?.shipments || [];
-  const activeData = isFiltered ? myShipments || [] : allShipments;
+  const currentData = isFiltered ? myShipments || [] : allShipments;
+
+  const searchableFields: (keyof Shipment)[] = [
+    "shipmentType",
+    "freightType",
+    "status",
+    "fullName",
+    "email",
+    "phoneNumber",
+    "country",
+    "stateOrCity",
+    "address",
+    "receiverName",
+    "receiverEmail",
+    "receiverCountry",
+    "receiverNumber",
+    "receiverStateOrCity",
+    "receiverAddress",
+    "packageType",
+    "descriptionOfGoods",
+    "trackingId",
+    "price",
+    "pickupDate",
+    "pickupTime",
+    "bookingId",
+    "carrierName",
+    "currentLocation",
+    "driverName",
+    "driverPhoneNumber",
+    "vehicleName",
+    "vehiclePlate",
+    "routeOrigin",
+    "routeDestination",
+  ];
+
+  const getActiveData = () => {
+    const term = search.trim().toLowerCase();
+    if (!term) return currentData;
+
+    return currentData.filter((item) =>
+      searchableFields.some((field) => {
+        const value = item[field];
+        return value && String(value).toLowerCase().includes(term);
+      })
+    );
+  };
+
+  const activeData = getActiveData();
 
   if (isChecking) {
     return null;
@@ -127,33 +177,54 @@ export default function MyShipmentPage() {
           />
         ))}
       </section>
-
+      {/* Tabs and search section */}
       <section className="mt-5 md:mt-6">
-        <div className="overflow-x-auto max-w-[513px] flex hide-scrollbar border rounded-md ">
-          <Button
-            onClick={() => setTblView(null)}
-            className={` ${
-              !tblView ? "bg-neutral-200/50 " : "bg-white"
-            } px-4 h-13 text-black border-r border-r-border rounded-none capitalize font-roboto`}
-          >
-            All Shipment
-          </Button>
+        <div className="flex max-md:flex-col-reverse gap-4 md:justify-between">
+          <div className="overflow-x-auto md:max-w-[513px] flex hide-scrollbar border rounded-md ">
+            <Button
+              onClick={() => setTblView(null)}
+              className={` ${
+                !tblView ? "bg-neutral-200/50 " : "bg-white"
+              } px-4 h-13 text-black border-r border-r-border rounded-none capitalize font-roboto`}
+            >
+              All Shipment
+            </Button>
 
-          {statuses.map((status, idx) => {
-            const isActive = status === tblView;
+            {statuses.map((status, idx) => {
+              const isActive = status === tblView;
 
-            return (
-              <Button
-                onClick={() => setTblView(status)}
-                key={idx}
-                className={`${
-                  isActive ? "bg-neutral-200/50" : "bg-white"
-                } px-4 h-13 text-black border-r border-r-border rounded-none capitalize font-roboto`}
-              >
-                {status.replace("_", " ").toLowerCase()}
-              </Button>
-            );
-          })}
+              return (
+                <Button
+                  onClick={() => setTblView(status)}
+                  key={idx}
+                  className={`${
+                    isActive ? "bg-neutral-200/50" : "bg-white"
+                  } px-4 h-13 text-black border-r border-r-border rounded-none capitalize font-roboto`}
+                >
+                  {status.replace("_", " ").toLowerCase()}
+                </Button>
+              );
+            })}
+          </div>
+
+          <div className="flex gap-2">
+            {/* input */}
+            <div className="relative w-full">
+              <Input
+                onChange={(e) => setSearch(e.target.value)}
+                value={search}
+                placeholder="Search here"
+                className="form-input h-12.5! pl-10! min-w-[219px] placeholder:text-slate-600/90!"
+              />
+              <Search className="size-5 absolute top-1/2 -translate-y-1/2 left-3 text-slate-600/90" />
+            </div>
+            <Button
+              variant="outline"
+              className="h-12.5 w-[97px] font-roboto font-normal text-primary border-primary"
+            >
+              See all
+            </Button>
+          </div>
         </div>
 
         {isLoadingActive && (

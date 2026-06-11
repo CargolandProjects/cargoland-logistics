@@ -94,7 +94,6 @@ export default function DashboardPage() {
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold leading-7">Recent Shipments</h2>
           <Button
-            onClick={() => signOut()}
             variant="outline"
             className="text-primary border-primary w-[81px]"
           >

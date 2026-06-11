@@ -21,8 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useEstimateShipment } from "@/lib/hooks/mutation/useMutateShipment";
-import { packageType } from "@/lib/schemas/shipmentSchema";
+import { useShipmentEstimate } from "@/lib/hooks/mutation/useMutateShipment";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { X } from "lucide-react";
 import Image from "next/image";
@@ -70,7 +69,7 @@ const deliveryType = ["Domestic", "International"];
 const deliveryMode = ["Air Freight", "Road Freight", "Sea Freight"];
 
 export default function EstimatePage() {
-  const { mutate, isPending } = useEstimateShipment();
+  const { mutate, isPending } = useShipmentEstimate();
   const { handleSubmit, control, setValue } = useForm<EstimateData>({
     resolver: zodResolver(estimateSchema),
     defaultValues: {

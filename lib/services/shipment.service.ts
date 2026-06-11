@@ -194,9 +194,9 @@ export const shipment = {
     return res.data;
   },
 
-  async estimateShipment(data: EstimateData) {
+  async shipmentEstimate(data: EstimateData) {
     const res = await apiClient.post<EstimateRes>(
-      API_ROUTES.shipment.estimateShipment,
+      API_ROUTES.shipment.shipmentEstimate,
       data
     );
     return res.data;

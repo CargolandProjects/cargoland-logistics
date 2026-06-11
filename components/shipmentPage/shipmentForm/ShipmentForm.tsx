@@ -20,6 +20,8 @@ import {
 } from "@/lib/hooks/mutation/useMutateShipment";
 import { useSession } from "@/lib/hooks/useSession";
 import { toast } from "sonner";
+import AuthPrompt from "../AuthPrompt";
+import { ArrowLeft } from "@/components/icons";
 
 const ShipmentForm = () => {
   const { mutate: createShipment } = useCreateShipment();
@@ -140,6 +142,12 @@ const ShipmentForm = () => {
     setStep((step) => step + 1);
   };
 
+  const handleBack = () => {
+    if (step === 0) return;
+
+    setStep((prev) => prev - 1);
+  };
+
   const onSubmit = (data: ShipmentDataType) => {
     const payload = {
       ...data,
@@ -208,6 +216,15 @@ const ShipmentForm = () => {
 
   return (
     <div>
+      <Button
+        onClick={handleBack}
+        variant="ghost"
+        className="mb-5 p-0 h-fit hover:bg-transparent"
+      >
+        <ArrowLeft /> back
+      </Button>
+      {!isAuthenticated && <AuthPrompt />}
+
       <FormStep currentStep={step} setStep={setStep} />
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>

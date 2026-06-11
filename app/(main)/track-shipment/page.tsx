@@ -234,7 +234,9 @@ export default function TrackShipmentPage() {
                   </p>
                   <div className="size-1.5 bg-neutral-300 rounded-full" />
 
-                  <p className="leading-5.5">{shipment.totalShipmentWeight} kg</p>
+                  <p className="leading-5.5">
+                    {shipment.totalShipmentWeight} kg
+                  </p>
                 </div>
               </div>
 

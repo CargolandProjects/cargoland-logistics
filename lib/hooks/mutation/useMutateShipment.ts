@@ -18,8 +18,8 @@ export const useTrackShipment = () => {
   });
 };
 
-export const useEstimateShipment = () => {
+export const useShipmentEstimate = () => {
   return useMutation({
-    mutationFn: shipment.estimateShipment,
+    mutationFn: shipment.shipmentEstimate,
   });
 };

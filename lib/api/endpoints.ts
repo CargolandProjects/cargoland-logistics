@@ -17,7 +17,7 @@ export const API_ROUTES = {
     createShipmentUser: "/shipments/create-shipment-user",
     dashboardStats: "/shipments/dashboard-stats",
     allShipments: "/shipments/all-shipments",
-    estimateShipment: "/shipments/estimation",
+    shipmentEstimate: "/shipments/estimation",
     myShipments: "/shipments/my-shipment"
   },
 };

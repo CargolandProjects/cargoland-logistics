@@ -20,7 +20,7 @@ const WhereTo = () => {
 
   const handleNext = () => {
     if (!value) {
-      toast.error("Set a shipment Scope");
+      toast.error("Set a shipment type");
       return;
     }
 
