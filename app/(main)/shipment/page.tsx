@@ -10,10 +10,8 @@ import { useSession } from "@/lib/hooks/useSession";
 export default function ShipmentPage() {
   const shipmentStep = useShipmentStore((s) => s.step);
   const { isAuthenticated } = useSession();
-  //   const clearShipment = useShipmentStore((s) => s.clearShipment);
 
   console.log("Shipment Step: ", shipmentStep);
-  //   clearShipment();
 
   const shipmentStage = () => {
     switch (shipmentStep) {

@@ -139,7 +139,7 @@ const AuthHeader = () => {
 
           {/* Mobile nav links */}
           <DropdownMenu>
-            <DropdownMenuTrigger asChild className="md:hidden">
+            <DropdownMenuTrigger asChild className="md:hidden group">
               <button className="p-0">
                 <Menu className="hover:cursor-pointer block group-data-[state=open]:hidden" />
                 <X className="hover:cursor-pointer hidden group-data-[state=open]:block" />

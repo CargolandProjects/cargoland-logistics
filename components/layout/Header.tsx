@@ -94,32 +94,24 @@ const Header = () => {
             <DropdownMenuContent
               onCloseAutoFocus={(e) => e.preventDefault()}
               align="end"
-              className="p-2 md:hidden"
+              className="p-2 space-y-2 md:hidden"
             >
-              <DropdownMenuItem asChild>
-                <Link
-                  href="/#services"
-                  className="text-sm w-full leading-5 flex items-center justify-between"
+              {homeLinks.map((link, idx) => (
+                <DropdownMenuItem
+                  key={idx}
+                  asChild
+                  className="p-0 hover:p-2 hover:bg-primary/8 duration-200 cursor-pointer text-sm leading-5"
                 >
-                  Services
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild className="text-sm leading-5">
-                <Link href="/#tracking">Tracking</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild className="text-sm leading-5">
-                <Link href="/#how-it-works">How It Works</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild className="text-sm leading-5">
-                <Link href="/contact">Contact</Link>
-              </DropdownMenuItem>
+                  <Link href={link.href}>{link.title}</Link>
+                </DropdownMenuItem>
+              ))}
 
               {isAuthenticated ? (
-                <DropdownMenuItem asChild className="text-sm leading-5">
+                <DropdownMenuItem asChild className="p-0 hover:p-2 hover:bg-primary/8 duration-200 cursor-pointer text-sm leading-5">
                   <Link href="/dashboard">Dashboard</Link>
                 </DropdownMenuItem>
               ) : (
-                <DropdownMenuItem asChild className="text-sm leading-5">
+                <DropdownMenuItem asChild className="p-0 hover:p-2 hover:bg-primary/8 duration-200 cursor-pointer text-sm leading-5">
                   <Link href="/login">Login/Register</Link>
                 </DropdownMenuItem>
               )}
