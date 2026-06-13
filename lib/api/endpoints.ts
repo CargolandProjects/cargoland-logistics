@@ -4,6 +4,7 @@ export const API_ROUTES = {
     verifyEmail: "/users/verify-email",
     resendOtp: "/users/resend-otp",
     login: "/users/login",
+    refreshToken: "/users/refresh-token",
     requestPasswordReset: "/users/request-reset-password",
     updatePassword: "/users/update-password",
     getUserById: (id: string) => `/users/${id}`,
@@ -18,6 +19,6 @@ export const API_ROUTES = {
     dashboardStats: "/shipments/dashboard-stats",
     allShipments: "/shipments/all-shipments",
     shipmentEstimate: "/shipments/estimation",
-    myShipments: "/shipments/my-shipment"
+    myShipments: "/shipments/my-shipment",
   },
 };

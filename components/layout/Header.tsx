@@ -11,6 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { useSession } from "@/lib/hooks/useSession";
 
 const homeLinks = [
   {
@@ -36,6 +37,8 @@ const homeLinks = [
 ];
 
 const Header = () => {
+  const { isAuthenticated } = useSession();
+
   return (
     <header className="py-2 md:py-4 padding-x bg-white">
       <div className="container flex items-center justify-between">
@@ -65,14 +68,25 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center gap-6">
-          <Link href="/login" className="flex gap-2 max-md:hidden">
-            <UserCircleIcon className="size-6" />
-            <p className="leading-5 hover:text-primary duration-200">Login/Register</p>
-          </Link>
+          {isAuthenticated ? (
+            <Link href="/dashboard" className="flex gap-2 max-md:hidden">
+              <UserCircleIcon className="size-6" />
+              <p className="leading-5 hover:text-primary duration-200">
+                Dashboard
+              </p>
+            </Link>
+          ) : (
+            <Link href="/login" className="flex gap-2 max-md:hidden">
+              <UserCircleIcon className="size-6" />
+              <p className="leading-5 hover:text-primary duration-200">
+                Login/Register
+              </p>
+            </Link>
+          )}
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild className="md:hidden">
-              <button className="p-0">
+              <button className="p-0 group">
                 <Menu className="hover:cursor-pointer block group-data-[state=open]:hidden" />
                 <X className="hover:cursor-pointer hidden group-data-[state=open]:block" />
               </button>
@@ -80,7 +94,7 @@ const Header = () => {
             <DropdownMenuContent
               onCloseAutoFocus={(e) => e.preventDefault()}
               align="end"
-              className="p-2"
+              className="p-2 md:hidden"
             >
               <DropdownMenuItem asChild>
                 <Link
@@ -99,6 +113,16 @@ const Header = () => {
               <DropdownMenuItem asChild className="text-sm leading-5">
                 <Link href="/contact">Contact</Link>
               </DropdownMenuItem>
+
+              {isAuthenticated ? (
+                <DropdownMenuItem asChild className="text-sm leading-5">
+                  <Link href="/dashboard">Dashboard</Link>
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem asChild className="text-sm leading-5">
+                  <Link href="/login">Login/Register</Link>
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 export default function Footer() {
@@ -100,7 +99,7 @@ export default function Footer() {
               Shobo Busstop Lagos Nigeria
             </p>
             <p>
-              <strong>Address 3:-</strong> Adajudge Road River State,
+              <strong>Address 3:-</strong>  Ada-George Road River State,
               PortHacourt
             </p>
           </div>

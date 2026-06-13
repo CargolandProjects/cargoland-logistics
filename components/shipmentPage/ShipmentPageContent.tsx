@@ -17,11 +17,11 @@ const ShipmentPageContent = () => {
 
   const shipmentStage = () => {
     switch (shipmentStep) {
-      case "selectScope":
+      case "shipmentType":
         return <WhereTo />;
-      case "selectType":
+      case "freightType":
         return <SelectFreight />;
-      case "ShipmentForm":
+      case "shipmentForm":
         return <ShipmentForm />;
     }
   };

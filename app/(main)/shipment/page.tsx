@@ -19,9 +19,9 @@ export default function ShipmentPage() {
     switch (shipmentStep) {
       case "shipmentType":
         return <WhereTo />;
-      case "FreightType":
+      case "freightType":
         return <SelectFreight />;
-      case "ShipmentForm":
+      case "shipmentForm":
         return <ShipmentForm />;
     }
   };
@@ -33,7 +33,7 @@ export default function ShipmentPage() {
       } `}
     >
       <div className="max-w-[888.5px] mx-auto">
-        {!isAuthenticated && shipmentStep !== "ShipmentForm" && <AuthPrompt />}
+        {!isAuthenticated && shipmentStep !== "shipmentForm" && <AuthPrompt />}
         <div className="mt-5">{shipmentStage()}</div>
       </div>
     </div>

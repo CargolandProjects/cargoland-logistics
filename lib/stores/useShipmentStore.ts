@@ -6,7 +6,7 @@ import { Shipment } from "../services/shipment.service";
 
 export type FreightType = "AIR_FREIGHT" | "OCEAN_FREIGHT" | "ROAD_FREIGHT";
 export type ShipmentType = "DOMESTIC" | "INTERNATIONAL";
-type Step = "shipmentType" | "FreightType" | "ShipmentForm" | "successful";
+type Step = "shipmentType" | "freightType" | "shipmentForm" | "successful";
 
 // Create a type that matches react-hook-form's watch return type
 // export type DeepPartial<T> = {
@@ -47,11 +47,11 @@ export const useShipmentStore = create(
       },
 
       setShipmentType: (shipmentType) => {
-        set({ shipmentType, step: "FreightType" });
+        set({ shipmentType, step: "freightType" });
         // alert("SHipment type set to: " + shipmentScope);
       },
       setFreightType: (freightType) =>
-        set({ freightType, step: "ShipmentForm" }),
+        set({ freightType, step: "shipmentForm" }),
 
       setShipmentFlow: (shipmentFlow) => {
         set({

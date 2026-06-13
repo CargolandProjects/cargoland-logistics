@@ -63,15 +63,16 @@ apiClient.interceptors.response.use(
         if (!isRefreshing) {
           isRefreshing = true;
           refreshPromise = apiClient
-            .post(API_ROUTES.auth.refresh, { refreshToken })
+            .post(API_ROUTES.auth.refreshToken, { refreshToken })
             .then((res) => {
               // Expecting { token: { accessToken, refreshToken } }
               const tokens = res?.data;
-              const newAccess = tokens?.accessToken;
-              const newRefresh = tokens?.refreshToken;
+              const newAccess = tokens?.data.accessToken;
+              const newRefresh = tokens?.data.refreshToken;
               if (newAccess) localStorage.setItem(`${process.env.NEXT_PUBLIC_ACCESS_KEY}`, newAccess);
               if (newRefresh) localStorage.setItem(`${process.env.NEXT_PUBLIC_REFRESH_KEY}`, newRefresh);
               return newAccess as string;
+
             })
             .finally(() => {
               isRefreshing = false;
