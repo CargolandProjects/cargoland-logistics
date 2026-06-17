@@ -23,3 +23,9 @@ export const useShipmentEstimate = () => {
     mutationFn: shipment.shipmentEstimate,
   });
 };
+
+export const useMakePayment = () => {
+  return useMutation({
+    mutationFn: shipment.makePayment,
+  });
+};

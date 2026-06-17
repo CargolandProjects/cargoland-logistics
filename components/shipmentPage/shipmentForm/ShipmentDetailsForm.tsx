@@ -169,7 +169,7 @@ const ShipmentDetailsForm = () => {
             <FieldLegend className="form-label text-sm!">
               Dimensions
             </FieldLegend>
-            <FieldGroup className="flex-row items-center gap-2.5">
+            <FieldGroup className="flex-row items-center gap-1 md:gap-2.5">
               <Controller
                 name="length"
                 control={control}

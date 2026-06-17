@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import {
   useCreateShipment,
   useCreateShipmentUser,
+  useMakePayment,
 } from "@/lib/hooks/mutation/useMutateShipment";
 import { useSession } from "@/lib/hooks/useSession";
 import { toast } from "sonner";
@@ -26,7 +27,9 @@ import { ArrowLeft } from "@/components/icons";
 const ShipmentForm = () => {
   const { mutate: createShipment } = useCreateShipment();
   const { mutate: createShipmentUser } = useCreateShipmentUser();
+  const { mutate: makePayment, isPending: isPaying } = useMakePayment();
   const formData = useShipmentStore((s) => s.formData);
+  const createdShipment = useShipmentStore((s) => s.createdShipment);
   const freightType = useShipmentStore((s) => s.freightType);
   const shipmentType = useShipmentStore((s) => s.shipmentType);
   const saveShipmentData = useShipmentStore((s) => s.setFormData);
@@ -56,7 +59,7 @@ const ShipmentForm = () => {
       if (!value) return;
       saveShipmentData(value);
     },
-    [saveShipmentData]
+    [saveShipmentData],
   );
 
   const cancel = () => {
@@ -196,9 +199,22 @@ const ShipmentForm = () => {
     if (!isAuthenticated) {
       toast.error("Please login to make payment");
       router.push("/login");
-    } else {
-      router.push("/payment-successful");
     }
+
+    if (!createdShipment?.id) return;
+
+    makePayment(createdShipment.id, {
+      onSuccess: (res) => {
+        const authUrl = res.data.authorization_url;
+
+        if (!authUrl) {
+          toast.error("Payment initiation failed");
+          return;
+        }
+
+        window.location.href = authUrl;
+      },
+    });
   };
 
   const shipmentForms = () => {

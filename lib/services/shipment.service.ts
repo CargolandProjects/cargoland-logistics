@@ -160,7 +160,7 @@ export const shipment = {
   async createShipment(data: ShipmentDataType) {
     const res = await apiClient.post<CreateShipment>(
       API_ROUTES.shipment.createShipment,
-      data
+      data,
     );
     return res.data;
   },
@@ -168,28 +168,28 @@ export const shipment = {
   async createShipmentUser(data: ShipmentDataType) {
     const res = await apiClient.post<CreateShipment>(
       API_ROUTES.shipment.createShipmentUser,
-      data
+      data,
     );
     return res.data;
   },
 
   async trackShipment(trackingId: string) {
     const res = await apiClient.get<TrackShipmentRes>(
-      `${API_ROUTES.shipment.trackShipment}?trackingId=${trackingId}`
+      `${API_ROUTES.shipment.trackShipment}?trackingId=${trackingId}`,
     );
     return res.data;
   },
 
   async dashboardStats() {
     const res = await apiClient.get<DashboardStatsRes>(
-      API_ROUTES.shipment.dashboardStats
+      API_ROUTES.shipment.dashboardStats,
     );
     return res.data;
   },
 
   async allShipments() {
     const res = await apiClient.get<AllShipmentsRes>(
-      API_ROUTES.shipment.allShipments
+      API_ROUTES.shipment.allShipments,
     );
     return res.data;
   },
@@ -197,14 +197,21 @@ export const shipment = {
   async shipmentEstimate(data: EstimateData) {
     const res = await apiClient.post<EstimateRes>(
       API_ROUTES.shipment.shipmentEstimate,
-      data
+      data,
     );
     return res.data;
   },
 
   async myShipments(query: string) {
     const res = await apiClient.post<MyShipmentsRes>(
-      `${API_ROUTES.shipment.myShipments}?status=${query}`
+      `${API_ROUTES.shipment.myShipments}?status=${query}`,
+    );
+    return res.data;
+  },
+
+  async makePayment(shipmentId: string) {
+    const res = await apiClient.post(
+      API_ROUTES.shipment.makePayment(shipmentId),
     );
     return res.data;
   },
