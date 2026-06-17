@@ -26,7 +26,7 @@ const SelectFreight = () => {
     setFreightType(value);
   };
   return (
-    <section className="p-6 md:py-8 rounded-lg bg-white">
+    <section className="p-4 md:p-6 md:py-8 rounded-lg bg-white">
       <h2 className="text-lg font-semibold leading-7 font-roboto">
         Select a Freight?
       </h2>

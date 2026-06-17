@@ -10,7 +10,7 @@ const Payment = () => {
   console.log("Shipment Data", shipmentData);
 
   return (
-    <div className="mt-7.5 px-6 py-8 bg-white rounded-lg">
+    <div className="mt-7.5 px-4 md:px-6 md:py-8 bg-white rounded-lg">
       <h2 className="text-lg font-semibold leading-7 font-poppins">
         Bill Payment
       </h2>

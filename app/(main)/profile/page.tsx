@@ -85,7 +85,7 @@ export default function ProfilePage () {
               ease: "easeOut",
               duration: 0.2,
             }}
-            className="sm:hidden absolute top-0 w-full z-25 "
+            className="sm:hidden absolute top-0 w-full z-25"
           >
             <UpdateProfile setShowMobile={setShowMobile} />
           </motion.div>
@@ -101,7 +101,7 @@ export default function ProfilePage () {
               ease: "easeOut",
               duration: 0.2,
             }}
-            className="sm:hidden absolute top-0 w-full z-25 "
+            className="sm:hidden absolute top-0 w-full z-25"
           >
             <UpdatePassword setShowMobile={setShowMobile} />
           </motion.div>

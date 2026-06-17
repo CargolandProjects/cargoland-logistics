@@ -254,7 +254,7 @@ const ShipperDetailsForm = () => {
                   name={field.name}
                   value={field.value}
                   onValueChange={field.onChange}
-                  className="grid grid-cols-3 gap-5.5 w-fit"
+                  className="grid grid-cols-3 gap-2 md:gap-5.5 w-fit"
                 >
                   {/* home */}
                   <FieldLabel
@@ -264,7 +264,7 @@ const ShipperDetailsForm = () => {
                     <Field
                       data-invalid={fieldState.invalid}
                       orientation="horizontal"
-                      className="px-4! h-full gap-[9.5px]"
+                      className="md:px-4! h-full gap-[9.5px]"
                     >
                       <FieldTitle className="font-normal text-sm text-brand-gray">
                         Home
@@ -277,6 +277,7 @@ const ShipperDetailsForm = () => {
                       />
                     </Field>
                   </FieldLabel>
+
                   {/* office */}
                   <FieldLabel
                     htmlFor={`${field.name}-office`}
@@ -285,7 +286,7 @@ const ShipperDetailsForm = () => {
                     <Field
                       data-invalid={fieldState.invalid}
                       orientation="horizontal"
-                      className="px-4! h-full gap-[9.5px]"
+                      className="md:px-4! h-full gap-[9.5px]"
                     >
                       <FieldTitle className="font-normal text-sm text-brand-gray">
                         Office
@@ -298,6 +299,7 @@ const ShipperDetailsForm = () => {
                       />
                     </Field>
                   </FieldLabel>
+
                   {/* drop off */}
                   <FieldLabel
                     htmlFor={`${field.name}-dropOff`}
@@ -306,7 +308,7 @@ const ShipperDetailsForm = () => {
                     <Field
                       data-invalid={fieldState.invalid}
                       orientation="horizontal"
-                      className="px-4! h-full gap-[9.5px]"
+                      className="pmd:x-4! h-full gap-[9.5px]"
                     >
                       <FieldTitle className="font-normal text-sm text-brand-gray ">
                         Drop Off
@@ -320,6 +322,7 @@ const ShipperDetailsForm = () => {
                     </Field>
                   </FieldLabel>
                 </RadioGroup>
+                
                 {fieldState.invalid && (
                   <FieldError
                     errors={[fieldState.error]}

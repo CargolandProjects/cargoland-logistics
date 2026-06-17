@@ -28,7 +28,7 @@ const WhereTo = () => {
   };
 
   return (
-    <section className="p-6 md:py-8 rounded-lg bg-white">
+    <section className="p-4 md:p-6 md:py-8 rounded-lg bg-white">
       <h2 className="text-lg font-semibold leading-7 font-roboto">Where to?</h2>
       <p className="text-sm font-light leading-5.5">
         Send your shipment with ease by following these simple steps

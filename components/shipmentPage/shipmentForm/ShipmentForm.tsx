@@ -228,7 +228,7 @@ const ShipmentForm = () => {
       <FormStep currentStep={step} setStep={setStep} />
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="mt-5 md:mt-7.5 p-6 md:py-8 bg-white rounded-lg">
+          <div className="mt-5 md:mt-7.5 p-4 md:p-6 md:py-8 bg-white rounded-lg">
             {shipmentForms()}
 
             <div className="flex max-md:flex-col justify-between gap-4 w-full mt-12 md:mt-12.5">

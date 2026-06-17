@@ -119,366 +119,355 @@ export default function EstimatePage() {
       <div className="bg-primary/8 absolute top-0 h-[449px] w-full" />
       <div className="padding-x">
         <div className="max-w-[758px] mx-auto relative">
-          <h1 className="text-[60px] font-extrabold leading-[72px] text-center">
+          <h1 className="text-[32px] md:text-[60px] font-extrabold md:leading-[72px] text-center">
             Get Shipping Estimate
           </h1>
-          <p className="text-lg font-light leading-7 text-center mt-2 max-w-[682px]">
+          <p className="text-lg font-light leading-6 md:leading-7 text-center mt-2 max-w-[682px]">
             Get an instant estimate for your shipment based on your cargo,
             destination, and preferred shipping method.
           </p>
 
-          <div className="mt-15 px-25 py-20 bg-white rounded-[16px]">
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <FieldSet className="gap-0">
-                <FieldTitle className="font-heading text-2xl font-bold leading-8 ">
-                  Enter the following details
-                </FieldTitle>
+          <form onSubmit={handleSubmit(onSubmit)} className="mt-10 md:mt-15 mb-10 md:mb-18.75 p-4 sm:p-6 md:px-25 md:py-20 bg-white rounded-[16px]">
+            <FieldSet className="gap-0">
+              <FieldTitle className="font-heading text-lg md:text-2xl font-semibold md:font-bold leading-8 ">
+                Enter the following details
+              </FieldTitle>
 
-                <FieldGroup className="mt-6 gap-6">
-                  <Controller
-                    name="deliveryType"
-                    control={control}
-                    render={({ field, fieldState }) => (
-                      <Field
-                        data-invalid={fieldState.invalid}
-                        className="gap-1"
+              <FieldGroup className="mt-6 gap-6">
+                <Controller
+                  name="deliveryType"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid} className="gap-1">
+                      <FieldLabel htmlFor={field.name} className="form-label">
+                        Select Delivery Type
+                      </FieldLabel>
+
+                      <Select
+                        name={field.name}
+                        value={field.value}
+                        onValueChange={field.onChange}
                       >
-                        <FieldLabel htmlFor={field.name} className="form-label">
-                          Select Delivery Type
-                        </FieldLabel>
-
-                        <Select
-                          name={field.name}
-                          value={field.value}
-                          onValueChange={field.onChange}
-                        >
-                          <SelectTrigger
-                            id={field.name}
-                            aria-invalid={fieldState.invalid}
-                            className="form-input !h-14 relative"
-                          >
-                            <SelectValue
-                              placeholder={field.value || "Domestic deliveries"}
-                            />
-                          </SelectTrigger>
-
-                          <SelectContent position="popper">
-                            {deliveryType.map((type) => (
-                              <SelectItem key={type} value={type}>
-                                {type}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-
-                        {fieldState.invalid && (
-                          <FieldError
-                            errors={[fieldState.error]}
-                            className="form-error"
-                          />
-                        )}
-                      </Field>
-                    )}
-                  />
-
-                  <Controller
-                    name="deliveryMode"
-                    control={control}
-                    render={({ field, fieldState }) => (
-                      <Field
-                        data-invalid={fieldState.invalid}
-                        className="gap-1"
-                      >
-                        <FieldLabel htmlFor={field.name} className="form-label">
-                          Select Delivery Mode
-                        </FieldLabel>
-
-                        <Select
-                          name={field.name}
-                          value={field.value}
-                          onValueChange={field.onChange}
-                        >
-                          <SelectTrigger
-                            id={field.name}
-                            aria-invalid={fieldState.invalid}
-                            className="form-input !h-14 "
-                          >
-                            <SelectValue
-                              placeholder={field.value || "Air Freight"}
-                            />
-                          </SelectTrigger>
-
-                          <SelectContent position="popper">
-                            {deliveryMode.map((type) => (
-                              <SelectItem key={type} value={type}>
-                                {type}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-
-                        {fieldState.invalid && (
-                          <FieldError
-                            errors={[fieldState.error]}
-                            className="form-error"
-                          />
-                        )}
-                      </Field>
-                    )}
-                  />
-
-                  {/* pickup zone */}
-                  <div>
-                    <h2 className="form-label">Select Pickup Zone</h2>
-
-                    <div className="flex gap-4.5 mt-1">
-                      <Controller
-                        name="pickup"
-                        control={control}
-                        render={({ field, fieldState }) => (
-                          <Field
-                            data-invalid={fieldState.invalid}
-                            className="min-w-20 md:min-w-[108px] flex-1"
-                          >
-                            <CountryDropdown
-                              defaultValue={field.value}
-                              onChange={(country) => {
-                                field.onChange(country.alpha2);
-
-                                setValue("pickupText", country.name);
-                              }}
-                              className="form-input gap-3"
-                              slim
-                            />
-                            {fieldState.invalid && (
-                              <FieldError
-                                errors={[fieldState.error]}
-                                className="form-error"
-                              />
-                            )}
-                          </Field>
-                        )}
-                      />
-
-                      <Controller
-                        name="pickupText"
-                        control={control}
-                        render={({ field, fieldState }) => (
-                          <Field
-                            data-invalid={fieldState.invalid}
-                            className="gap-1 self-end"
-                          >
-                            {/* <FieldLabel
-                          htmlFor={field.name}
-                          className="form-label"
-                        ></FieldLabel> */}
-                            <Input
-                              {...field}
-                              value={field.value}
-                              onChange={field.onChange}
-                              aria-invalid={fieldState.invalid}
-                              className="form-input border"
-                            />
-                            {fieldState.invalid && (
-                              <FieldError
-                                errors={[fieldState.error]}
-                                className="form-error"
-                              />
-                            )}
-                          </Field>
-                        )}
-                      />
-                    </div>
-                  </div>
-
-                  {/* delivery zone */}
-                  <div>
-                    <h2 className="form-label">Select Pickup Zone</h2>
-
-                    <div className="flex gap-4.5 mt-1">
-                      <Controller
-                        name="destination"
-                        control={control}
-                        render={({ field, fieldState }) => (
-                          <Field
-                            data-invalid={fieldState.invalid}
-                            className="min-w-20 md:min-w-[108px] flex-1"
-                          >
-                            <CountryDropdown
-                              defaultValue={field.value}
-                              onChange={(country) => {
-                                field.onChange(country.alpha2);
-                                setValue("destinationText", country.name);
-                              }}
-                              className="form-input gap-3"
-                              slim
-                            />
-                            {fieldState.invalid && (
-                              <FieldError
-                                errors={[fieldState.error]}
-                                className="form-error"
-                              />
-                            )}
-                          </Field>
-                        )}
-                      />
-
-                      <Controller
-                        name="destinationText"
-                        control={control}
-                        render={({ field, fieldState }) => (
-                          <Field
-                            data-invalid={fieldState.invalid}
-                            className="gap-1 self-end"
-                          >
-                            {/* <FieldLabel
-                          htmlFor={field.name}
-                          className="form-label"
-                        ></FieldLabel> */}
-                            <Input
-                              {...field}
-                              value={field.value}
-                              onChange={field.onChange}
-                              aria-invalid={fieldState.invalid}
-                              className="form-input border"
-                            />
-                            {fieldState.invalid && (
-                              <FieldError
-                                errors={[fieldState.error]}
-                                className="form-error"
-                              />
-                            )}
-                          </Field>
-                        )}
-                      />
-                    </div>
-                  </div>
-
-                  <Controller
-                    name="weight"
-                    control={control}
-                    render={({ field, fieldState }) => (
-                      <Field
-                        data-invalid={fieldState.invalid}
-                        className="gap-1"
-                      >
-                        <FieldLabel htmlFor={field.name} className="form-label">
-                          Weight (kg)
-                        </FieldLabel>
-                        <Input
-                          {...field}
+                        <SelectTrigger
                           id={field.name}
                           aria-invalid={fieldState.invalid}
-                          type="number"
-                          placeholder="Weight must be between 0.1kg - 10,000kg"
-                          className="form-input"
-                        />
-                        {fieldState.invalid && (
-                          <FieldError
-                            errors={[fieldState.error]}
-                            className="form-error"
+                          className="form-input !h-14 relative"
+                        >
+                          <SelectValue
+                            placeholder={field.value || "Domestic deliveries"}
                           />
-                        )}
-                      </Field>
-                    )}
-                  />
-                  {/* length, breadth and height */}
-                  <FieldSet>
-                    <FieldLegend className="form-label text-sm!">
-                      Dimensions
-                    </FieldLegend>
-                    <FieldGroup className="flex-row items-center gap-2.5">
-                      <Controller
-                        name="length"
-                        control={control}
-                        render={({ field, fieldState }) => (
-                          <Field
-                            data-invalid={fieldState.invalid}
-                            className="gap-1"
-                          >
-                            <Input
-                              {...field}
-                              id={field.name}
-                              aria-invalid={fieldState.invalid}
-                              type="number"
-                              placeholder="Length (cm)"
-                              className="form-input"
-                            />
-                            {fieldState.invalid && (
-                              <FieldError
-                                errors={[fieldState.error]}
-                                className="form-error"
-                              />
-                            )}
-                          </Field>
-                        )}
-                      />
-                      <X className="size-5 shrink-0" />
-                      <Controller
-                        name="breadth"
-                        control={control}
-                        render={({ field, fieldState }) => (
-                          <Field
-                            data-invalid={fieldState.invalid}
-                            className="gap-1"
-                          >
-                            <Input
-                              {...field}
-                              id={field.name}
-                              aria-invalid={fieldState.invalid}
-                              type="number"
-                              placeholder="Breadth (cm)"
-                              className="form-input"
-                            />
-                            {fieldState.invalid && (
-                              <FieldError
-                                errors={[fieldState.error]}
-                                className="form-error"
-                              />
-                            )}
-                          </Field>
-                        )}
-                      />
-                      <X className="size-5 shrink-0" />
-                      <Controller
-                        name="height"
-                        control={control}
-                        render={({ field, fieldState }) => (
-                          <Field
-                            data-invalid={fieldState.invalid}
-                            className="gap-1"
-                          >
-                            <Input
-                              {...field}
-                              id={field.name}
-                              aria-invalid={fieldState.invalid}
-                              type="number"
-                              placeholder="Height (cm)"
-                              className="form-input"
-                            />
-                            {fieldState.invalid && (
-                              <FieldError
-                                errors={[fieldState.error]}
-                                className="form-error"
-                              />
-                            )}
-                          </Field>
-                        )}
-                      />
-                    </FieldGroup>
-                  </FieldSet>
-                </FieldGroup>
-              </FieldSet>
+                        </SelectTrigger>
 
-              <Button
-                disabled={isPending}
-                type="submit"
-                className="mt-6 submit-button"
-              >
-                Submit
-              </Button>
-            </form>
-          </div>
+                        <SelectContent position="popper">
+                          {deliveryType.map((type) => (
+                            <SelectItem key={type} value={type}>
+                              {type}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      {fieldState.invalid && (
+                        <FieldError
+                          errors={[fieldState.error]}
+                          className="form-error"
+                        />
+                      )}
+                    </Field>
+                  )}
+                />
+
+                <Controller
+                  name="deliveryMode"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid} className="gap-1">
+                      <FieldLabel htmlFor={field.name} className="form-label">
+                        Select Delivery Mode
+                      </FieldLabel>
+
+                      <Select
+                        name={field.name}
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger
+                          id={field.name}
+                          aria-invalid={fieldState.invalid}
+                          className="form-input !h-14 "
+                        >
+                          <SelectValue
+                            placeholder={field.value || "Air Freight"}
+                          />
+                        </SelectTrigger>
+
+                        <SelectContent position="popper">
+                          {deliveryMode.map((type) => (
+                            <SelectItem key={type} value={type}>
+                              {type}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      {fieldState.invalid && (
+                        <FieldError
+                          errors={[fieldState.error]}
+                          className="form-error"
+                        />
+                      )}
+                    </Field>
+                  )}
+                />
+
+                {/* pickup zone */}
+                <div>
+                  <h2 className="form-label">Select Pickup Zone</h2>
+
+                  <div className="flex gap-4.5 mt-1">
+                    <Controller
+                      name="pickup"
+                      control={control}
+                      render={({ field, fieldState }) => (
+                        <Field
+                          data-invalid={fieldState.invalid}
+                          className="min-w-20 md:min-w-[108px] flex-1"
+                        >
+                          <CountryDropdown
+                            defaultValue={field.value}
+                            onChange={(country) => {
+                              field.onChange(country.alpha2);
+
+                              setValue("pickupText", country.name);
+                            }}
+                            className="form-input gap-3"
+                            slim
+                          />
+                          {fieldState.invalid && (
+                            <FieldError
+                              errors={[fieldState.error]}
+                              className="form-error"
+                            />
+                          )}
+                        </Field>
+                      )}
+                    />
+
+                    <Controller
+                      name="pickupText"
+                      control={control}
+                      render={({ field, fieldState }) => (
+                        <Field
+                          data-invalid={fieldState.invalid}
+                          className="gap-1 self-end"
+                        >
+                          {/* <FieldLabel
+                          htmlFor={field.name}
+                          className="form-label"
+                        ></FieldLabel> */}
+                          <Input
+                            {...field}
+                            value={field.value}
+                            onChange={field.onChange}
+                            aria-invalid={fieldState.invalid}
+                            className="form-input border"
+                          />
+                          {fieldState.invalid && (
+                            <FieldError
+                              errors={[fieldState.error]}
+                              className="form-error"
+                            />
+                          )}
+                        </Field>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                {/* delivery zone */}
+                <div>
+                  <h2 className="form-label">Select Pickup Zone</h2>
+
+                  <div className="flex gap-4.5 mt-1">
+                    <Controller
+                      name="destination"
+                      control={control}
+                      render={({ field, fieldState }) => (
+                        <Field
+                          data-invalid={fieldState.invalid}
+                          className="min-w-20 md:min-w-[108px] flex-1"
+                        >
+                          <CountryDropdown
+                            defaultValue={field.value}
+                            onChange={(country) => {
+                              field.onChange(country.alpha2);
+                              setValue("destinationText", country.name);
+                            }}
+                            className="form-input gap-3"
+                            slim
+                          />
+                          {fieldState.invalid && (
+                            <FieldError
+                              errors={[fieldState.error]}
+                              className="form-error"
+                            />
+                          )}
+                        </Field>
+                      )}
+                    />
+
+                    <Controller
+                      name="destinationText"
+                      control={control}
+                      render={({ field, fieldState }) => (
+                        <Field
+                          data-invalid={fieldState.invalid}
+                          className="gap-1 self-end"
+                        >
+                          {/* <FieldLabel
+                          htmlFor={field.name}
+                          className="form-label"
+                        ></FieldLabel> */}
+                          <Input
+                            {...field}
+                            value={field.value}
+                            onChange={field.onChange}
+                            aria-invalid={fieldState.invalid}
+                            className="form-input border"
+                          />
+                          {fieldState.invalid && (
+                            <FieldError
+                              errors={[fieldState.error]}
+                              className="form-error"
+                            />
+                          )}
+                        </Field>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                <Controller
+                  name="weight"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid} className="gap-1">
+                      <FieldLabel htmlFor={field.name} className="form-label">
+                        Weight (kg)
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id={field.name}
+                        aria-invalid={fieldState.invalid}
+                        type="number"
+                        placeholder="Weight must be between 0.1kg - 10,000kg"
+                        className="form-input"
+                      />
+                      {fieldState.invalid && (
+                        <FieldError
+                          errors={[fieldState.error]}
+                          className="form-error"
+                        />
+                      )}
+                    </Field>
+                  )}
+                />
+                {/* length, breadth and height */}
+                <FieldSet>
+                  <FieldLegend className="form-label text-sm!">
+                    Dimensions
+                  </FieldLegend>
+                  <FieldGroup className="flex-row items-center gap-2.5">
+                    <Controller
+                      name="length"
+                      control={control}
+                      render={({ field, fieldState }) => (
+                        <Field
+                          data-invalid={fieldState.invalid}
+                          className="gap-1"
+                        >
+                          <Input
+                            {...field}
+                            id={field.name}
+                            aria-invalid={fieldState.invalid}
+                            type="number"
+                            placeholder="Length (cm)"
+                            className="form-input"
+                          />
+                          {fieldState.invalid && (
+                            <FieldError
+                              errors={[fieldState.error]}
+                              className="form-error"
+                            />
+                          )}
+                        </Field>
+                      )}
+                    />
+                    <X className="size-5 shrink-0" />
+                    <Controller
+                      name="breadth"
+                      control={control}
+                      render={({ field, fieldState }) => (
+                        <Field
+                          data-invalid={fieldState.invalid}
+                          className="gap-1"
+                        >
+                          <Input
+                            {...field}
+                            id={field.name}
+                            aria-invalid={fieldState.invalid}
+                            type="number"
+                            placeholder="Breadth (cm)"
+                            className="form-input"
+                          />
+                          {fieldState.invalid && (
+                            <FieldError
+                              errors={[fieldState.error]}
+                              className="form-error"
+                            />
+                          )}
+                        </Field>
+                      )}
+                    />
+                    <X className="size-5 shrink-0" />
+                    <Controller
+                      name="height"
+                      control={control}
+                      render={({ field, fieldState }) => (
+                        <Field
+                          data-invalid={fieldState.invalid}
+                          className="gap-1"
+                        >
+                          <Input
+                            {...field}
+                            id={field.name}
+                            aria-invalid={fieldState.invalid}
+                            type="number"
+                            placeholder="Height (cm)"
+                            className="form-input"
+                          />
+                          {fieldState.invalid && (
+                            <FieldError
+                              errors={[fieldState.error]}
+                              className="form-error"
+                            />
+                          )}
+                        </Field>
+                      )}
+                    />
+                  </FieldGroup>
+                </FieldSet>
+              </FieldGroup>
+            </FieldSet>
+
+            <Button
+              disabled={isPending}
+              type="submit"
+              className="mt-6 submit-button"
+            >
+              Submit
+            </Button>
+          </form>
         </div>
       </div>
 
