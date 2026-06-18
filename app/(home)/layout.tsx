@@ -5,7 +5,7 @@ export default function HomeLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <div className="bg-white">
+    <div className="max-w-[1554px] mx-auto bg-white">
       <Header />
       {children}
       <Footer />

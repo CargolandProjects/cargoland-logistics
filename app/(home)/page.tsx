@@ -1,4 +1,5 @@
 import ChooseFreight from "@/components/home/ChooseFreight";
+import Faqs from "@/components/home/Faqs";
 import Hero from "@/components/home/Hero";
 import HowItWorks from "@/components/home/HowItWorks";
 import LivePrices from "@/components/home/LivePrices";
@@ -14,6 +15,7 @@ export default function HomePage() {
       <ShippingPrices />
       <LivePrices />
       <HowItWorks />
+      <Faqs />
     </div>
   );
 }
