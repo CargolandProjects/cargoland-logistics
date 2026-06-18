@@ -7,7 +7,7 @@ import { heroImg } from "@/assets/images";
 
 const Hero = () => {
   return (
-    <section className="max-md:px-4 md:pl-[97px] pb-[82px] md:pb-15">
+    <section className="max-md:px-4 md:pl-14 lg:pl-[97px] pb-[82px] md:pb-15">
       <div className="grid md:grid-cols-2 gap-13.75">
         <div className="max-md:mt-15 flex flex-col justify-center">
           <h1 className="text-2xl md:text-[60px] font-extrabold leading-8 md:leading-[72px]">

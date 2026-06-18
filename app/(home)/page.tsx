@@ -1,5 +1,6 @@
 import ChooseFreight from "@/components/home/ChooseFreight";
 import Hero from "@/components/home/Hero";
+import ShippingPrices from "@/components/home/ShippingPrices";
 import Stats from "@/components/home/Stats";
 
 export default function HomePage() {
@@ -8,6 +9,7 @@ export default function HomePage() {
       <Hero />
       <Stats />
       <ChooseFreight />
+      <ShippingPrices />
     </div>
   );
 }

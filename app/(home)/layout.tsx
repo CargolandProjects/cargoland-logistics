@@ -5,7 +5,7 @@ export default function HomeLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <div className="bg-background-screen">
+    <div className="bg-white">
       <Header />
       {children}
       <Footer />
