@@ -24,7 +24,7 @@ const freights = [
 
 const ChooseFreight = () => {
   return (
-    <section className="py-20 px-4 md:px-6 lg:px-28">
+    <section className="padding-y px-4 md:px-6 lg:px-28">
       <div>
         <h2 className="sec-heading">
           Choose Your Freight

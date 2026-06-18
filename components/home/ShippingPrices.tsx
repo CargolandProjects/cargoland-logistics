@@ -26,13 +26,13 @@ const prices = [
 ];
 const ShippingPrices = () => {
   return (
-    <section className="padding-x py-20 md:py-25">
+    <section className="padding-x padding-y">
       <div className="grid md:grid-cols-2 gap-6 md:gap-4 lg:gap-15">
         <div className="max-md:flex flex-col">
-          <h2 className="sec-heading">
+          <h2 className="sec-heading md:text-left!">
             Shipping Prices Today
           </h2>
-          <p className="sec-paragraph">
+          <p className="sec-paragraph md:text-left!">
             Real-time shipping rates per kilogram across popular international
             routes.
           </p>
@@ -71,7 +71,7 @@ const ShippingPrices = () => {
               {/* price + action */}
               <div className="max-md:mt-6 flex flex-col max-md:gap-6 justify-between">
                 <p className="text-2xl font-bold leading-8">{price.price}</p>
-                <Button variant="outline" className="py-3 px-5 h-auto rounded-lg border-primary">Book Now</Button>
+                <Button variant="outline" className="py-3 px-5 h-auto text-base font-normal text-primary rounded-lg border-primary ">Book Now</Button>
               </div>
             </div>
           ))}

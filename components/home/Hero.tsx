@@ -27,7 +27,7 @@ const Hero = () => {
               placeholder="Enter your tracking number"
               className="form-input border-gray-400/90! bg-neutral-100"
             />
-            <Button className=" absolute top-1/2 -translate-y-1/2 right-1 h-12 w-[106px] rounded-lg gap-2 ">
+            <Button className=" absolute top-1/2 -translate-y-1/2 active:-translate-y-6! active:scale-98 right-1 h-12 w-[106px] rounded-lg gap-2 ">
               Track <ArrowRight />{" "}
             </Button>
           </div>

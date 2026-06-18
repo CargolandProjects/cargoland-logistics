@@ -217,6 +217,10 @@ body {
     @apply px-4 sm:px-14 lg:px-28
   }
 
+  .padding-y {
+    @apply py-20 md:py-25
+  }
+
   .margin-y {
     @apply my-18.75
   }

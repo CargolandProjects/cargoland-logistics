@@ -2,7 +2,7 @@
 
 import { boxChecked } from "@/assets/images";
 import { Button } from "@/components/ui/button";
-import { Country, CountryDropdown } from "@/components/ui/country-dropdown";
+import { CountryDropdown } from "@/components/ui/country-dropdown";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import {
   Field,
