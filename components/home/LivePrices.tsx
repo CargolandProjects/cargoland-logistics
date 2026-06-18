@@ -92,7 +92,7 @@ const LivePrices = () => {
       </div>
 
       <div className="mt-6 flex justify-between items-end text-white">
-        <div className="flex max-md:flex-col items-center gap-3">
+        <div className="flex max-md:flex-col md:items-center gap-3">
           <p className="">Filter by origin</p>
 
           <Select defaultValue="all">
