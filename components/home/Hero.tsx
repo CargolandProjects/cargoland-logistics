@@ -7,9 +7,9 @@ import { heroImg } from "@/assets/images";
 
 const Hero = () => {
   return (
-    <section className="max-md:px-4 md:pl-14 lg:pl-[97px] pb-[82px] md:pb-15">
+    <section className="max-md:px-4 md:pl-14 lg:pl-[97px] pb-[82px] md:pb-15 max-md:mt-15">
       <div className="grid md:grid-cols-2 gap-13.75">
-        <div className="max-md:mt-15 flex flex-col justify-center">
+        <div className="flex flex-col justify-center">
           <h1 className="text-2xl md:text-[60px] font-extrabold leading-8 md:leading-[72px]">
             Fast & Reliable <br className="sm:hidden" />
             <span className="font-montserrat text-2xl md:text-[60px] font-extrabold leading-8 md:leading-[72px] text-primary">
@@ -25,7 +25,7 @@ const Hero = () => {
           <div className="relative mt-10">
             <Input
               placeholder="Enter your tracking number"
-              className="form-input border-gray-400/90! bg-neutral-100"
+              className="form-input pr-29! border-gray-400/90! bg-neutral-100"
             />
             <Button className=" absolute top-1/2 -translate-y-1/2 active:-translate-y-6! active:scale-98 right-1 h-12 w-[106px] rounded-lg gap-2 ">
               Track <ArrowRight />{" "}

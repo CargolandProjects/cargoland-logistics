@@ -20,7 +20,7 @@ const TrackShipment = () => {
           <div className="relative mt-10 md:max-w-[462px]">
             <Input
               placeholder="Enter your tracking number"
-              className="form-input border-gray-400/90! bg-neutral-100"
+              className="form-input pr-29! border-gray-400/90! bg-neutral-100 text-black"
             />
             <Button className=" absolute top-1/2 -translate-y-1/2 active:-translate-y-6! active:scale-98 right-1 h-12 w-[106px] rounded-lg gap-2 ">
               Track <ArrowRight />{" "}
