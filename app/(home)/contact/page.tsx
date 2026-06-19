@@ -66,13 +66,13 @@ export default function ContactPage() {
     console.log(data);
   };
   return (
-    <div className="">
+    <div>
       <div className="padding-x bg-primary-light ">
-        <div className="max-w-[880px] mx-auto pt-30 pb-25">
-          <h1 className="text-[24px] md:text-[60px] font-extrabold md:leading-[72px] text-center">
+        <div className="max-w-[386px] md:max-w-[880px] mx-auto pt-30 pb-25 ">
+          <h1 className="text-2xl md:text-[60px] font-extrabold leading-8 md:leading-[72px] text-center">
             Contact Support
           </h1>
-          <p className="mt-2 text-sm md:text-lg font-light md:leading-7 max-w-[695px] mx-auto text-center">
+          <p className="mt-2 text-sm md:text-lg font-light leading-5.5 md:leading-7 max-w-[695px] mx-auto text-center">
             Our support team is always ready to assist you with any questions,
             concerns, or shipping needs anytime.
           </p>
@@ -82,7 +82,7 @@ export default function ContactPage() {
       <div className="padding-x py-10 md:py-20">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="p-4 pb-6 md:p-6 rounded-lg max-w-[864px] mx-auto bg-white"
+          className="rounded-lg max-w-[864px] mx-auto bg-white"
         >
           <FieldSet className="gap-6">
             <div className="grid sm:grid-cols-2 gap-2.5 md:gap-4.5">
