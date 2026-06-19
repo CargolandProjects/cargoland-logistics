@@ -1,104 +1,96 @@
-"use client";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { ChevronDown } from "lucide-react";
 
-import { useState } from 'react';
+const faqs = [
+  {
+    question: "How can I track my shipment on Cargoland Africa?",
+    answer:
+      "You can track your shipment by entering your tracking ID on the tracking page of the platform. This provides real-time updates on the status and location of your shipment.",
+  },
+  {
+    question:
+      "What shipping options are available (Air, Land, or Ocean freight)?",
+    answer:
+      "Cargoland Africa offers multiple shipping options including air freight for speed, ocean freight for cost efficiency, and land freight for regional deliveries.",
+  },
+  {
+    question: "How is the shipping cost calculated for my package?",
+    answer:
+      "Shipping costs are calculated based on factors like weight, dimensions, destination, shipping method, and any additional services such as insurance or express delivery.",
+  },
+  {
+    question: "Which countries does Cargoland Africa deliver to?",
+    answer:
+      "Cargoland Africa delivers to multiple countries across Africa and internationally, depending on the selected shipping route and service availability.",
+  },
+  {
+    question: "How long does it take for a shipment to be delivered?",
+    answer:
+      "Delivery time depends on the shipping method and destination. Air freight is typically the fastest, while ocean and land freight may take longer depending on distance and logistics.",
+  },
+  {
+    question: "Can I get a real-time quote before booking a shipment?",
+    answer:
+      "Yes, you can get a real-time shipping quote by entering your shipment details such as origin, destination, weight, and dimensions before confirming your booking.",
+  },
+  {
+    question: "What should I do if my shipment is delayed or lost?",
+    answer:
+      "If your shipment is delayed or lost, you should contact customer support immediately with your tracking ID so they can investigate and provide updates or initiate a resolution process.",
+  },
+];
 
-export default function FAQPage() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  const faqs = [
-    {
-      question: "How can I track my shipment on Cargoland Africa?",
-      answer: "You can track your shipment by entering your tracking ID on our tracking page. You'll receive real-time updates on your package's location and delivery status."
-    },
-    {
-      question: "What shipping options are available (Air, Land, or Ocean freight)?",
-      answer: "We offer three main shipping options: Air Freight for fast delivery, Ocean Freight for cost-effective international shipping, and Road Freight for reliable land transportation."
-    },
-    {
-      question: "How is the shipping cost calculated for my package?",
-      answer: "Shipping costs are calculated based on the weight of your package, the shipping method chosen, the destination country, and current market rates."
-    },
-    {
-      question: "Which countries does Cargoland Africa deliver to?",
-      answer: "Cargoland Africa delivers to multiple countries across Africa and internationally. Check our network page or contact our support team for a complete list."
-    },
-    {
-      question: "How long does it take for a shipment to be delivered?",
-      answer: "Delivery times vary depending on the shipping method: Air Freight (2-4 days), Ocean Freight (18-25 days), and Road Freight (5-10 days)."
-    },
-    {
-      question: "Can I get a real-time quote before booking a shipment?",
-      answer: "Yes! You can get a real-time quote by entering your shipment details on our platform. Our pricing is transparent and updated regularly."
-    },
-    {
-      question: "What should I do if my shipment is delayed or lost?",
-      answer: "If your shipment is delayed or lost, please contact our support team immediately with your tracking ID. We'll investigate and work to resolve the issue."
-    }
-  ];
-
-  const toggleAccordion = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
-
+export default function FaqPage() {
   return (
-    <div className="w-full bg-white font-montserrat">
-      {/* Header Section */}
-      <section className="bg-[#FCE9E9] py-24 px-6 text-center">
-        <h1 className="font-extrabold text-[48px] md:text-[56px] text-[#0B112B] mb-4">
-          Frequently Asked Questions
-        </h1>
-        <p className="font-normal text-[16px] md:text-[18px] text-[#878FA4] max-w-2xl mx-auto leading-relaxed">
-          Everything you need to know about our shipping, pricing and platform.
-        </p>
-      </section>
-
-      {/* FAQ Items with simple divider lines */}
-      <section className="py-20 px-6 md:px-32">
-        <div className="max-w-4xl mx-auto">
-          <div className="divide-y divide-gray-200">
-            {faqs.map((faq, index) => (
-              <div key={index} className="py-2">
-                <button
-                  onClick={() => toggleAccordion(index)}
-                  className="w-full py-6 flex items-center justify-between bg-white transition-colors"
-                >
-                  <h3 className="font-bold text-[18px] md:text-[20px] text-[#0B112B] text-left pr-4">
-                    {faq.question}
-                  </h3>
-                  <div className="flex-shrink-0 w-10 h-10 bg-[#FDF2F2] rounded-lg flex items-center justify-center">
-                    <svg
-                      width="14"
-                      height="8"
-                      viewBox="0 0 14 8"
-                      fill="none"
-                      className={`text-[#E32027] transition-transform duration-300 ${
-                        openIndex === index ? 'rotate-180' : ''
-                      }`}
-                    >
-                      <path
-                        d="M1 1L7 7L13 1"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
-                </button>
-
-                {/* Answer Content */}
-                {openIndex === index && (
-                  <div className="pb-6 bg-white">
-                    <p className="font-normal text-[16px] text-[#878FA4] leading-relaxed">
-                      {faq.answer}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+    <div>
+      <div className="padding-x bg-primary-light ">
+        <div className="max-md:max-w-[386px] mx-auto pt-30 pb-25 ">
+          <h1 className="text-2xl md:text-[60px] font-extrabold leading-8 md:leading-[72px] text-center">
+            Frequently Asked Questions
+          </h1>
+          <p className="mt-2 text-sm md:text-lg font-light leading-5.5 md:leading-7 max-w-[695px] mx-auto text-center">
+            Everything you need to know about our shipping, pricing and
+            platform.
+          </p>
         </div>
-      </section>
+      </div>
+
+      <div className="padding-x py-20 md:py-25 ">
+        <Accordion
+          type="single"
+          collapsible
+          className="max-w-[630px] mx-auto"
+        >
+          {faqs.map((faq, idx) => (
+            <AccordionItem
+              value={faq.question}
+              key={idx}
+              className=" border-0!"
+            >
+              <AccordionTrigger className="group p-0 text-xl font-normal leading-8 [&>svg]:hidden! gap-8 md:gap-3">
+                {faq.question}
+                <div className="size-10 shrink-0 rounded-lg bg-primary-light flex items-center justify-center">
+                  <ChevronDown className="size-6 text-primary-dark group-data-[state=open]:rotate-180 transition-transform duration-200" />
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-1 leading-5 font-roboto font-light">
+                {faq.answer}
+              </AccordionContent>
+
+              <div
+                className={`${
+                  idx !== faqs.length - 1 ? "" : "hidden"
+                } h-px w-full bg-neutral-300 mt-4 mb-10 `}
+              />
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
     </div>
   );
 }
