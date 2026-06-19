@@ -219,7 +219,7 @@ const LivePrices = () => {
                 <div className="size-1 rounded-full bg-neutral-200" />
                 <p className="text-gray-400">{price.routeOcean}</p>
               </div>
-              <div className="mt-4.5 flex gap-6">
+              <div className="mt-4.5 flex gap-2 max-xs:justify-between xs:gap-6">
                 <div className="space-y-2">
                   <p className="text-lg font-semibold leading-6.5 uppercase">
                     Air/kg
@@ -228,13 +228,13 @@ const LivePrices = () => {
                 </div>
                 <div className="space-y-2">
                   <p className="text-lg font-semibold leading-6.5 uppercase">
-                    Air/kg
+                    Land/kg
                   </p>
                   <p className="text-base font-bold">{price.priceLandKg}</p>
                 </div>
                 <div className="space-y-2">
                   <p className="text-lg font-semibold leading-6.5 uppercase">
-                    Air/kg
+                    Ocean/kg
                   </p>
                   <p className="text-base font-bold">{price.priceOceanKg}</p>
                 </div>
