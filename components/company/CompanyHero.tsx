@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const CompanyHero = () => {
   return (
-    <div className="padding-x pb-[80px] mt-15 md:mt-11.5 md:pb-15">
+    <section className="padding-x pb-[80px] mt-15 md:mt-11.5 md:pb-15">
       <div className="grid md:grid-cols-2 gap-6">
         <div className="p-4 max-md:py-6 flex flex-col justify-center">
           <h1 className="text-2xl md:text-[60px] font-extrabold leading-8 md:leading-[72px]">
@@ -27,7 +27,7 @@ const CompanyHero = () => {
           </p>
         </div>
 
-        <div className="h-[372px] md:h-[569px] max-md:rounded-lg overflow-hidden">
+        <div className="max-md:h-[372px] lg:max-h-[569px] max-md:rounded-lg overflow-hidden bg-amber-100">
           <Image
             src={howItWorks}
             alt="company page hero image"
@@ -35,7 +35,7 @@ const CompanyHero = () => {
           />
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
