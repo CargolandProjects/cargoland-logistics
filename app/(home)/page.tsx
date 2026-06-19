@@ -5,7 +5,6 @@ import HowItWorks from "@/components/home/HowItWorks";
 import LivePrices from "@/components/home/LivePrices";
 import ShippingPrices from "@/components/home/ShippingPrices";
 import Stats from "@/components/home/Stats";
-import TrackShipment from "@/components/home/TrackShipment";
 
 export default function HomePage() {
   return (
@@ -17,7 +16,6 @@ export default function HomePage() {
       <LivePrices />
       <HowItWorks />
       <Faqs />
-      <TrackShipment />   
     </div>
   );
 }

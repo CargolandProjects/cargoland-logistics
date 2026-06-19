@@ -1,3 +1,4 @@
+import TrackShipment from "@/components/home/TrackShipment";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 
@@ -8,6 +9,7 @@ export default function HomeLayout({
     <div className="max-w-[1554px] mx-auto bg-white">
       <Header />
       {children}
+      <TrackShipment />
       <Footer />
     </div>
   );
