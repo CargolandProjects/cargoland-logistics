@@ -11,13 +11,13 @@ const Hero = () => {
       <div className="grid md:grid-cols-2 gap-13.75">
         <div className="flex flex-col justify-center">
           <h1 className="text-2xl md:text-[60px] font-extrabold leading-8 md:leading-[72px]">
-            Fast & Reliable <br className="sm:hidden" />
+            Fast & Reliable <br className="xs:hidden" />
             <span className="font-montserrat text-2xl md:text-[60px] font-extrabold leading-8 md:leading-[72px] text-primary">
               Global
             </span>{" "}
             Shipping
           </h1>
-          <p className="mt-2 md:mt-4 text-sm md:text-lg font-light leading-5 md:leading-7 max-sm:max-w-[321px] max-md:max-w-[450px]">
+          <p className="mt-2 md:mt-4 text-sm md:text-lg font-light leading-5 md:leading-7 max-xs:max-w-[321px] max-md:max-w-[450px]">
             Ship packages across countries via Air, Ocean, or Road freight with
             real-time tracking and transparent pricing.
           </p>

@@ -49,7 +49,7 @@ export default function FaqPage() {
   return (
     <div>
       <div className="padding-x bg-primary-light ">
-        <div className="max-md:max-w-[386px] mx-auto pt-30 pb-25 ">
+        <div className="max-md:max-w-[386px] mx-auto py-15 md:pt-30 md:pb-31.25 ">
           <h1 className="text-2xl md:text-[60px] font-extrabold leading-8 md:leading-[72px] text-center">
             Frequently Asked Questions
           </h1>

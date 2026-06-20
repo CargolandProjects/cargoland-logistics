@@ -27,7 +27,7 @@ const CompanyHero = () => {
           </p>
         </div>
 
-        <div className="max-md:h-[372px] lg:max-h-[569px] max-md:rounded-lg overflow-hidden bg-amber-100">
+        <div className="max-md:h-[372px] lg:max-h-[569px] max-md:rounded-lg overflow-hidden">
           <Image
             src={howItWorks}
             alt="company page hero image"

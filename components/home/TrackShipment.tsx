@@ -27,9 +27,13 @@ const TrackShipment = () => {
             </Button>
           </div>
         </div>
-        
-        <div className="md:flex-1 h-[343px] w-full md:max-w-[492px] bg-amber-200">
-            <Image src={heroImg} alt="track shipment image" className="size-full object-cover" />
+
+        <div className="md:flex-1 h-[343px] w-full md:max-w-[492px]">
+          <Image
+            src={heroImg}
+            alt="track shipment image"
+            className="size-full object-cover"
+          />
         </div>
       </div>
     </section>

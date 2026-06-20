@@ -155,21 +155,9 @@
 
 
 body {
-  font-family: var(--font-montserrat), Arial, Helvetica, sans-serif;
+  font-family: var(--font-roboto), Arial, Helvetica, sans-serif;
 }
 
-/* Montserrat font weights */
-.font-montserrat {
-  font-family: var(--font-montserrat);
-}
-
-.font-extrabold {
-  font-weight: 800;
-}
-
-.font-light {
-  font-weight: 300;
-}
 
 @layer base {
   * {
