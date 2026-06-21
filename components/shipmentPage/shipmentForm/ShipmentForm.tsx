@@ -30,6 +30,7 @@ const ShipmentForm = () => {
   const { mutate: makePayment, isPending: isPaying } = useMakePayment();
   const formData = useShipmentStore((s) => s.formData);
   const createdShipment = useShipmentStore((s) => s.createdShipment);
+  const setShipmentFlow = useShipmentStore((s) => s.setShipmentFlow);
   const freightType = useShipmentStore((s) => s.freightType);
   const shipmentType = useShipmentStore((s) => s.shipmentType);
   const saveShipmentData = useShipmentStore((s) => s.setFormData);
@@ -146,7 +147,10 @@ const ShipmentForm = () => {
   };
 
   const handleBack = () => {
-    if (step === 0) return;
+    if (step === 0) {
+      setShipmentFlow("freightType");
+      return
+    }
 
     setStep((prev) => prev - 1);
   };
@@ -235,7 +239,7 @@ const ShipmentForm = () => {
       <Button
         onClick={handleBack}
         variant="ghost"
-        className="mb-5 p-0 h-fit hover:bg-transparent"
+        className="mb-2.5 md:mb-5 p-0 h-fit hover:bg-transparent"
       >
         <ArrowLeft /> back
       </Button>
@@ -243,7 +247,7 @@ const ShipmentForm = () => {
 
       <FormStep currentStep={step} setStep={setStep} />
       <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={form.handleSubmit(onSubmit)} autoComplete="off">
           <div className="mt-5 md:mt-7.5 p-4 md:p-6 md:py-8 bg-white rounded-lg">
             {shipmentForms()}
 

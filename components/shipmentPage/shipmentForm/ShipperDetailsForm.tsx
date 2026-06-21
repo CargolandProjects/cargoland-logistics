@@ -34,7 +34,7 @@ const ShipperDetailsForm = () => {
 
   const selectedCountryLabel = watch("country");
   const selectedCountry = countryOptions.find(
-    (c) => c.label === selectedCountryLabel
+    (c) => c.label === selectedCountryLabel,
   );
 
   // Update phone input country when country selector changes
@@ -120,12 +120,18 @@ const ShipperDetailsForm = () => {
                 </FieldLabel>
 
                 <Combobox
+                  autoComplete="new-country"
                   items={countryOptions}
                   name={field.name}
                   value={field.value}
-                  onValueChange={field.onChange}
+                  onValueChange={(val) => {
+                    console.log("Country Value:", val, typeof val);
+                    field.onChange(val);
+                  }}
                 >
                   <ComboboxInput
+                    autoComplete="new-country"
+                    onFocus={(e) => e.target.removeAttribute("autoComplete")}
                     id={field.name}
                     aria-invalid={fieldState.invalid}
                     className="form-input h-14!"
@@ -322,7 +328,7 @@ const ShipperDetailsForm = () => {
                     </Field>
                   </FieldLabel>
                 </RadioGroup>
-                
+
                 {fieldState.invalid && (
                   <FieldError
                     errors={[fieldState.error]}

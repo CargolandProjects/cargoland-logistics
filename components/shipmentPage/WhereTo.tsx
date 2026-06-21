@@ -11,12 +11,20 @@ import {
 } from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ShipmentType, useShipmentStore } from "@/lib/stores/useShipmentStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const WhereTo = () => {
   const [value, setValue] = useState<ShipmentType | null>(null);
   const setShipmentType = useShipmentStore((s) => s.setShipmentType);
+  const shipmentType = useShipmentStore((s) => s.shipmentType);
+
+  useEffect(() => {
+    if (!shipmentType) return;
+
+    const setSType = () => setValue(shipmentType);
+    setSType();
+  }, [shipmentType]);
 
   const handleNext = () => {
     if (!value) {
