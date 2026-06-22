@@ -3,7 +3,12 @@
 import { boxChecked } from "@/assets/images";
 import { Button } from "@/components/ui/button";
 import { CountryDropdown } from "@/components/ui/country-dropdown";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import {
   Field,
   FieldError,
@@ -22,12 +27,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useShipmentEstimate } from "@/lib/hooks/mutation/useMutateShipment";
+import { FreightType } from "@/lib/stores/useShipmentStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { X } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
+
+const deliveryType = ["Domestic", "International"];
+const freightType: FreightType[] = [
+  "AIR_FREIGHT",
+  "OCEAN_FREIGHT",
+  "ROAD_FREIGHT",
+];
 
 const estimateSchema = z.object({
   weight: z
@@ -54,34 +68,36 @@ const estimateSchema = z.object({
     .max(500, "Height cannot exceed 500 cm")
     .regex(/^\d+(\.\d+)?$/, "Must be a valid number"),
 
-  deliveryType: z.string("Please select a package type"),
-  deliveryMode: z.string("Please select a delivery type"),
+  deliveryType: z.string("Please select a delivery type"),
+  freightType: z.enum(freightType, "Please select a freight type"),
 
-  pickup: z.string("must provid a valid country"),
-  pickupText: z.string("must provid a valid country"),
-  destination: z.string("must provid a valid country"),
-  destinationText: z.string("must provid a valid country"),
+  fromCountry: z.string("must provid a valid country"),
+  fromCountryText: z
+    .string("must provid a valid country")
+    .min(2, "Country of origin is required"),
+  toCountry: z.string("must provid a valid country"),
+  toCountryText: z
+    .string("must provid a valid country")
+    .min(2, "Destination Country is required"),
 });
 
 type EstimateData = z.infer<typeof estimateSchema>;
 
-const deliveryType = ["Domestic", "International"];
-const deliveryMode = ["Air Freight", "Road Freight", "Sea Freight"];
-
 const EstimatePageContent = () => {
   const { mutate, isPending } = useShipmentEstimate();
+  const router = useRouter();
   const { handleSubmit, control, setValue } = useForm<EstimateData>({
     resolver: zodResolver(estimateSchema),
     defaultValues: {
-      breadth: "",
       deliveryType: "",
-      deliveryMode: "",
-      destination: "",
-      destinationText: "",
+      freightType: undefined,
+      fromCountry: "",
+      fromCountryText: "",
+      toCountry: "",
+      toCountryText: "",
       height: "",
       length: "",
-      pickup: "",
-      pickupText: "",
+      breadth: "",
       weight: "",
     },
   });
@@ -97,6 +113,9 @@ const EstimatePageContent = () => {
     console.log("Estimate Data: ", data);
 
     const payload = {
+      fromCountry: data.fromCountry,
+      toCountry: data.toCountry,
+      freightType: data.freightType,
       weight: Number(data.weight),
       length: Number(data.length),
       breadth: Number(data.breadth),
@@ -181,7 +200,7 @@ const EstimatePageContent = () => {
                 />
 
                 <Controller
-                  name="deliveryMode"
+                  name="freightType"
                   control={control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid} className="gap-1">
@@ -205,9 +224,13 @@ const EstimatePageContent = () => {
                         </SelectTrigger>
 
                         <SelectContent position="popper">
-                          {deliveryMode.map((type) => (
-                            <SelectItem key={type} value={type}>
-                              {type}
+                          {freightType.map((type) => (
+                            <SelectItem
+                              key={type}
+                              value={type}
+                              className="capitalize"
+                            >
+                              {type.replace("_", " ").toLowerCase()}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -229,7 +252,7 @@ const EstimatePageContent = () => {
 
                   <div className="flex gap-4.5 mt-1">
                     <Controller
-                      name="pickup"
+                      name="fromCountry"
                       control={control}
                       render={({ field, fieldState }) => (
                         <Field
@@ -241,7 +264,7 @@ const EstimatePageContent = () => {
                             onChange={(country) => {
                               field.onChange(country.alpha2);
 
-                              setValue("pickupText", country.name);
+                              setValue("fromCountryText", country.name);
                             }}
                             className="form-input gap-3"
                             slim
@@ -257,7 +280,7 @@ const EstimatePageContent = () => {
                     />
 
                     <Controller
-                      name="pickupText"
+                      name="fromCountryText"
                       control={control}
                       render={({ field, fieldState }) => (
                         <Field
@@ -270,6 +293,7 @@ const EstimatePageContent = () => {
                         ></FieldLabel> */}
                           <Input
                             {...field}
+                            readOnly
                             value={field.value}
                             onChange={field.onChange}
                             aria-invalid={fieldState.invalid}
@@ -293,7 +317,7 @@ const EstimatePageContent = () => {
 
                   <div className="flex gap-4.5 mt-1">
                     <Controller
-                      name="destination"
+                      name="toCountry"
                       control={control}
                       render={({ field, fieldState }) => (
                         <Field
@@ -304,7 +328,7 @@ const EstimatePageContent = () => {
                             defaultValue={field.value}
                             onChange={(country) => {
                               field.onChange(country.alpha2);
-                              setValue("destinationText", country.name);
+                              setValue("toCountryText", country.name);
                             }}
                             className="form-input gap-3"
                             slim
@@ -320,7 +344,7 @@ const EstimatePageContent = () => {
                     />
 
                     <Controller
-                      name="destinationText"
+                      name="toCountryText"
                       control={control}
                       render={({ field, fieldState }) => (
                         <Field
@@ -333,6 +357,7 @@ const EstimatePageContent = () => {
                         ></FieldLabel> */}
                           <Input
                             {...field}
+                            readOnly
                             value={field.value}
                             onChange={field.onChange}
                             aria-invalid={fieldState.invalid}
@@ -499,15 +524,22 @@ const EstimatePageContent = () => {
               Book by 09/03/2026 by 05:00 pm for a pick-up today
             </p>
           </div>
-          <div className="flex flex-col gap-4 mt-6 w-full">
-            <Button className="submit-button">Continue Shipment</Button>
+          <DialogFooter className="flex flex-col gap-4 mt-6 w-full">
             <Button
-              variant="outline"
-              className="submit-button border-primary text-primary! hover:border-primary hover:text-primary"
+              onClick={() => router.push("/shipment")}
+              className="submit-button"
             >
-              Cancel
+              Continue Shipment
             </Button>
-          </div>
+            <DialogClose>
+              <Button
+                variant="outline"
+                className="submit-button border-primary text-primary! hover:border-primary hover:text-primary"
+              >
+                Cancel
+              </Button>
+            </DialogClose>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

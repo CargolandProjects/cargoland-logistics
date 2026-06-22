@@ -21,7 +21,7 @@ const enquiryType = ["Local delivery", "International shipment"] as const;
 
 const contactSchema = z.object({
   enquiryType: z.enum(enquiryType, {
-    error: "Please select a package type",
+    error: "Please select an enquiry type",
   }),
   name: z
     .string()
