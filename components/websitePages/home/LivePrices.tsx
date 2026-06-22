@@ -1,13 +1,12 @@
-"use client";
-
-import { useState } from "react";
+import { TrendingDown, TrendingUp } from "lucide-react";
+import { ArrowRight } from "../../icons";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "../../ui/select";
 import {
   Table,
   TableBody,
@@ -15,157 +14,104 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../ui/table";
-import { Button } from "../ui/button";
-import { TrendingDown, TrendingUp } from "lucide-react";
-import { ArrowRight } from "../icons";
+} from "../../ui/table";
+import { Button } from "../../ui/button";
 
-interface LivePrice {
-  origin: string;
-  destination: string;
-  routeAir: string;
-  routeOcean: string;
-  priceAirKg: string;
-  priceLandKg: "$10.5";
-  priceOceanKg: "$10.5";
-  trend: number;
-}
-const livePrices: LivePrice[] = Array.from({ length: 10 }, () => ({
-  origin: "Nigeria",
-  destination: "Ghana",
-  routeAir: "Air: 2-4 days",
-  routeOcean: "Ocean: 18-25 days",
-  priceAirKg: "$10.5",
-  priceLandKg: "$10.5",
-  priceOceanKg: "$10.5",
-  trend: 3.2,
-}));
+const livePrices = [
+  {
+    origin: "Nigeria",
+    destination: "Ghana",
+    routeAir: "Air: 2-4 days",
+    routeOcean: "Ocean: 18-25 days",
+    priceAirKg: "$10.5",
+    priceLandKg: "$10.5",
+    priceOceanKg: "$10.5",
+    trend: -3.2,
+  },
+  {
+    origin: "Nigeria",
+    destination: "Ghana",
+    routeAir: "Air: 2-4 days",
+    routeOcean: "Ocean: 18-25 days",
+    priceAirKg: "$10.5",
+    priceLandKg: "$10.5",
+    priceOceanKg: "$10.5",
+    trend: 3.2,
+  },
+  {
+    origin: "Nigeria",
+    destination: "Ghana",
+    routeAir: "Air: 2-4 days",
+    routeOcean: "Ocean: 18-25 days",
+    priceAirKg: "$10.5",
+    priceLandKg: "$10.5",
+    priceOceanKg: "$10.5",
+    trend: 3.2,
+  },
+  {
+    origin: "Nigeria",
+    destination: "Ghana",
+    routeAir: "Air: 2-4 days",
+    routeOcean: "Ocean: 18-25 days",
+    priceAirKg: "$10.5",
+    priceLandKg: "$10.5",
+    priceOceanKg: "$10.5",
+    trend: 3.2,
+  },
+  {
+    origin: "Nigeria",
+    destination: "Ghana",
+    routeAir: "Air: 2-4 days",
+    routeOcean: "Ocean: 18-25 days",
+    priceAirKg: "$10.5",
+    priceLandKg: "$10.5",
+    priceOceanKg: "$10.5",
+    trend: -3.2,
+  },
+  {
+    origin: "Nigeria",
+    destination: "Ghana",
+    routeAir: "Air: 2-4 days",
+    routeOcean: "Ocean: 18-25 days",
+    priceAirKg: "$10.5",
+    priceLandKg: "$10.5",
+    priceOceanKg: "$10.5",
+    trend: 3.2,
+  },
+];
 
-const PricingLivePrices = () => {
-  const [filters, setFilters] = useState({
-    origin: "",
-    destination: "",
-    method: "",
-    trend: "",
-  });
-
-  console.log("Filters: ", filters);
-
-  const filterprices = () => {
-    return livePrices.filter((item) => {
-      const matchOrigin = filters.origin
-        ? item.origin.toLowerCase() === filters.origin.toLowerCase()
-        : true;
-
-      const matchDestination = filters.destination
-        ? item.destination.toLowerCase() === filters.destination.toLowerCase()
-        : true;
-
-      const matchMethod = filters.method
-        ? item.routeAir.toLowerCase().includes(filters.method.toLowerCase()) ||
-          item.routeOcean.toLowerCase().includes(filters.method.toLowerCase())
-        : true;
-
-      const matchTrend = filters.trend
-        ? filters.trend === "High"
-          ? item.trend > 0
-          : item.trend < 0
-        : true;
-
-      return matchOrigin && matchDestination && matchMethod && matchTrend;
-    });
-  };
-
-  const filteredPrices = filterprices();
-
+const LivePrices = () => {
   return (
-    <div className="padding-x pt-20 pb-20.5 ">
-      <div>
-        <h2 className="sec-heading md:text-start!">Live Prices Today</h2>
-        <p className="sec-paragraph md:max-w-none! md:text-start!">
+    <section className="padding-y padding-x bg-primary">
+      <div className="max-w-[402px] mx-auto text-white">
+        <h2 className="sec-heading">Live Prices Today</h2>
+        <p className="sec-paragraph">
           Real-time shipping rates per kilogram across popular international
           routes.
         </p>
       </div>
 
-      <div className="mt-2.5 md:mt-6 flex max-md:flex-col justify-between md:items-end gap-6">
-        <div className="flex max-md:flex-col max-md:w-full md:items-center gap-3">
-          <p className="text-lg leading-6">Filter by:</p>
-          <div className="flex max-md:flex-col max-md:w-full  gap-4">
-            <Select
-              onValueChange={(val) =>
-                setFilters((prev) => ({ ...prev, origin: val }))
-              }
-            >
-              <SelectTrigger className="max-md:w-full py-3 h-auto! px-4 text-primary-dark! bg-primary-light">
-                <SelectValue placeholder="Origin" />
-              </SelectTrigger>
+      <div className="mt-6 flex justify-between items-end text-white">
+        <div className="flex max-md:flex-col md:items-center gap-3">
+          <p className="">Filter by origin</p>
 
-              <SelectContent position="popper">
-                <SelectItem value="Nigeria">Nigeria</SelectItem>
-                <SelectItem value="United Kingdom">United Kingdom</SelectItem>
-                <SelectItem value="Ghana">Ghana</SelectItem>
-                <SelectItem value="Germany">Germany</SelectItem>
-                <SelectItem value="Canada">Canada</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select
-              onValueChange={(val) =>
-                setFilters((prev) => ({ ...prev, destination: val }))
-              }
-            >
-              <SelectTrigger className="max-md:w-full py-3 h-auto! px-4 text-primary-dark! bg-primary-light">
-                <SelectValue placeholder="Destination" />
-              </SelectTrigger>
-
-              <SelectContent position="popper">
-                <SelectItem value="Nigeria">Nigeria</SelectItem>
-                <SelectItem value="United Kingdom">United Kingdom</SelectItem>
-                <SelectItem value="Ghana">Ghana</SelectItem>
-                <SelectItem value="Germany">Germany</SelectItem>
-                <SelectItem value="Canada">Canada</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select
-              onValueChange={(val) =>
-                setFilters((prev) => ({ ...prev, method: val }))
-              }
-            >
-              <SelectTrigger className="max-md:w-full py-3 h-auto! px-4 text-primary-dark! bg-primary-light">
-                <SelectValue placeholder="Method" />
-              </SelectTrigger>
-
-              <SelectContent position="popper">
-                <SelectItem value="Air">Air</SelectItem>
-                <SelectItem value="Ocean">Ocean</SelectItem>
-                <SelectItem value="Land">Land</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select
-              onValueChange={(val) =>
-                setFilters((prev) => ({ ...prev, trend: val }))
-              }
-            >
-              <SelectTrigger className="max-md:w-full py-3 h-auto! px-4 text-primary-dark! bg-primary-light">
-                <SelectValue placeholder="Trend" />
-              </SelectTrigger>
-
-              <SelectContent position="popper">
-                <SelectItem value="High">High</SelectItem>
-                <SelectItem value="Low">Low</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <Select defaultValue="all">
+            <SelectTrigger className="md:min-w-[186px] bg-primary-light text-primary-dark!">
+              <SelectValue placeholder="Select a value" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="NG">Nigeria</SelectItem>
+              <SelectItem value="GB">Great Britain</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-        <p className="leading-6 font-light ">Updated: 10:40:57 PM</p>
+        <p className="leading-6 text-primary-light">Updated: 10:40:57 PM</p>
       </div>
 
       <Table
         className="max-md:hidden bg-white"
-        containerClassName="max-md:hidden mt-6 rounded-t-lg overflow-hidden hide-scrollbar"
+        containerClassName="mt-6 rounded-t-lg overflow-hidden hide-scrollbar"
       >
         <TableHeader className="rounded-lg! bg-primary-light">
           <TableRow className="">
@@ -182,14 +128,14 @@ const PricingLivePrices = () => {
               Ocean/kg
             </TableHead>
             <TableHead className="text-base font-normal uppercase text-primary-dark">
-              Trend
+              Tread
             </TableHead>
             <TableHead className="text-base font-normal uppercase text-primary-dark" />
           </TableRow>
         </TableHeader>
 
         <TableBody>
-          {filteredPrices.map((price, idx) => (
+          {livePrices.map((price, idx) => (
             <TableRow key={idx} className="border hover:bg-muted">
               <TableCell className="pl-4 py-3">
                 <div className="flex gap-3.5">
@@ -238,13 +184,13 @@ const PricingLivePrices = () => {
         </TableBody>
       </Table>
 
-      <div className="mt-2.5 md:hidden bg-white rounded-lg overflow-hidden">
-        <h3 className="py-3 px-4 bg-primary-light uppercase font-roboto">
+      <div className="md:hidden bg-white rounded-lg  overflow-hidden">
+        <h3 className="py-3 px-4 bg-primary-light  uppercase font-roboto">
           Route
         </h3>
 
         <div>
-          {filteredPrices.map((price, idx) => (
+          {livePrices.map((price, idx) => (
             <div
               key={idx}
               className={`${idx !== livePrices.length - 1 && "border-b"} p-6 `}
@@ -293,7 +239,7 @@ const PricingLivePrices = () => {
                   <p className="text-base font-bold">{price.priceOceanKg}</p>
                 </div>
               </div>
-              <Button
+              <Button 
                 variant="outline"
                 className="mt-6 py-3 h-auto w-full border-primary text-base font-normal text-primary hover:text-primary"
               >
@@ -303,14 +249,13 @@ const PricingLivePrices = () => {
           ))}
         </div>
       </div>
-
-      {filteredPrices.length === 0 && (
-        <div className="mt-4 px-6 py-3 bg-muted/80 rounded-lg">
-          <p className="">No prices data for the filter selection </p>
-        </div>
-      )}
-    </div>
+      <div className="flex justify-center">
+        <Button className="mt-6 py-3 h-auto text-base font-normal border-white ">
+          See more
+        </Button>
+      </div>
+    </section>
   );
 };
 
-export default PricingLivePrices;
+export default LivePrices;

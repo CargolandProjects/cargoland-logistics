@@ -1,4 +1,4 @@
-import TrackShipment from "@/components/home/TrackShipment";
+import TrackShipment from "@/components/websitePages/home/TrackShipment";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 

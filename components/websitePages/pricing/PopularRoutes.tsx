@@ -1,4 +1,4 @@
-import { ArrowRight } from "../icons";
+import { ArrowRight } from "../../icons";
 
 const popularRoutes = [
   {

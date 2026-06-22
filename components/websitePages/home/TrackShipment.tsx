@@ -1,7 +1,7 @@
 import React from "react";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { ArrowRight } from "../icons";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
+import { ArrowRight } from "../../icons";
 import Image from "next/image";
 import { heroImg } from "@/assets/images";
 

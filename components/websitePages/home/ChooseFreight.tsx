@@ -1,5 +1,5 @@
-import { ArrowRight, DeliveryTruck, Plane, Ship } from "../icons";
-import { Button } from "../ui/button";
+import { ArrowRight, DeliveryTruck, Plane, Ship } from "../../icons";
+import { Button } from "../../ui/button";
 
 const freights = [
   {

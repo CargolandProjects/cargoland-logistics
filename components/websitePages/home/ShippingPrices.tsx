@@ -1,5 +1,5 @@
-import { ArrowRight } from "../icons";
-import { Button } from "../ui/button";
+import { ArrowRight } from "../../icons";
+import { Button } from "../../ui/button";
 
 const prices = [
   {

@@ -1,96 +1,103 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { ChevronDown } from "lucide-react";
+  import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+  } from "@/components/ui/accordion";
+  import { ChevronDown } from "lucide-react";
 
-const faqs = [
-  {
-    question: "How can I track my shipment on Cargoland Africa?",
-    answer:
-      "You can track your shipment by entering your tracking ID on the tracking page of the platform. This provides real-time updates on the status and location of your shipment.",
-  },
-  {
-    question:
-      "What shipping options are available (Air, Land, or Ocean freight)?",
-    answer:
-      "Cargoland Africa offers multiple shipping options including air freight for speed, ocean freight for cost efficiency, and land freight for regional deliveries.",
-  },
-  {
-    question: "How is the shipping cost calculated for my package?",
-    answer:
-      "Shipping costs are calculated based on factors like weight, dimensions, destination, shipping method, and any additional services such as insurance or express delivery.",
-  },
-  {
-    question: "Which countries does Cargoland Africa deliver to?",
-    answer:
-      "Cargoland Africa delivers to multiple countries across Africa and internationally, depending on the selected shipping route and service availability.",
-  },
-  {
-    question: "How long does it take for a shipment to be delivered?",
-    answer:
-      "Delivery time depends on the shipping method and destination. Air freight is typically the fastest, while ocean and land freight may take longer depending on distance and logistics.",
-  },
-  {
-    question: "Can I get a real-time quote before booking a shipment?",
-    answer:
-      "Yes, you can get a real-time shipping quote by entering your shipment details such as origin, destination, weight, and dimensions before confirming your booking.",
-  },
-  {
-    question: "What should I do if my shipment is delayed or lost?",
-    answer:
-      "If your shipment is delayed or lost, you should contact customer support immediately with your tracking ID so they can investigate and provide updates or initiate a resolution process.",
-  },
-];
+  export const metadata = {
+    title: "Frequently Asked Questions",
+    description:
+      "Find answers to common questions about shipping times, tracking, customs clearance, and freight documentation.",
+    keywords: [
+      "shipping FAQs",
+      "cargo questions Nigeria",
+      "freight documentation",
+    ],
+  };
 
-export default function FaqPage() {
-  return (
-    <div>
-      <div className="padding-x bg-primary-light ">
-        <div className="max-md:max-w-[386px] mx-auto py-15 md:pt-30 md:pb-31.25 ">
-          <h1 className="text-2xl md:text-[60px] font-extrabold leading-8 md:leading-[72px] text-center">
-            Frequently Asked Questions
-          </h1>
-          <p className="mt-2 text-sm md:text-lg font-light leading-5.5 md:leading-7 max-w-[695px] mx-auto text-center">
-            Everything you need to know about our shipping, pricing and
-            platform.
-          </p>
+  const faqs = [
+    {
+      question: "How can I track my shipment on Cargoland Africa?",
+      answer:
+        "You can track your shipment by entering your tracking ID on the tracking page of the platform. This provides real-time updates on the status and location of your shipment.",
+    },
+    {
+      question:
+        "What shipping options are available (Air, Land, or Ocean freight)?",
+      answer:
+        "Cargoland Africa offers multiple shipping options including air freight for speed, ocean freight for cost efficiency, and land freight for regional deliveries.",
+    },
+    {
+      question: "How is the shipping cost calculated for my package?",
+      answer:
+        "Shipping costs are calculated based on factors like weight, dimensions, destination, shipping method, and any additional services such as insurance or express delivery.",
+    },
+    {
+      question: "Which countries does Cargoland Africa deliver to?",
+      answer:
+        "Cargoland Africa delivers to multiple countries across Africa and internationally, depending on the selected shipping route and service availability.",
+    },
+    {
+      question: "How long does it take for a shipment to be delivered?",
+      answer:
+        "Delivery time depends on the shipping method and destination. Air freight is typically the fastest, while ocean and land freight may take longer depending on distance and logistics.",
+    },
+    {
+      question: "Can I get a real-time quote before booking a shipment?",
+      answer:
+        "Yes, you can get a real-time shipping quote by entering your shipment details such as origin, destination, weight, and dimensions before confirming your booking.",
+    },
+    {
+      question: "What should I do if my shipment is delayed or lost?",
+      answer:
+        "If your shipment is delayed or lost, you should contact customer support immediately with your tracking ID so they can investigate and provide updates or initiate a resolution process.",
+    },
+  ];
+
+  export default function FaqPage() {
+    return (
+      <div>
+        <section className="padding-x bg-primary-light ">
+          <div className="max-md:max-w-[386px] mx-auto py-15 md:pt-30 md:pb-31.25 ">
+            <h1 className="text-2xl md:text-[60px] font-extrabold leading-8 md:leading-[72px] text-center">
+              Frequently Asked Questions
+            </h1>
+            <p className="mt-2 text-sm md:text-lg font-light leading-5.5 md:leading-7 max-w-[695px] mx-auto text-center">
+              Everything you need to know about our shipping, pricing and
+              platform.
+            </p>
+          </div>
+        </section>
+
+        <div className="padding-x py-20 md:py-25 ">
+          <Accordion type="single" collapsible className="max-w-[630px] mx-auto">
+            {faqs.map((faq, idx) => (
+              <AccordionItem
+                value={faq.question}
+                key={idx}
+                className=" border-0!"
+              >
+                <AccordionTrigger className="group p-0 text-xl font-normal leading-8 [&>svg]:hidden! gap-8 md:gap-3">
+                  {faq.question}
+                  <div className="size-10 shrink-0 rounded-lg bg-primary-light flex items-center justify-center">
+                    <ChevronDown className="size-6 text-primary-dark group-data-[state=open]:rotate-180 transition-transform duration-200" />
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="pt-1 leading-5 font-roboto font-light">
+                  {faq.answer}
+                </AccordionContent>
+
+                <div
+                  className={`${
+                    idx !== faqs.length - 1 ? "" : "hidden"
+                  } h-px w-full bg-neutral-300 mt-4 mb-10 `}
+                />
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
       </div>
-
-      <div className="padding-x py-20 md:py-25 ">
-        <Accordion
-          type="single"
-          collapsible
-          className="max-w-[630px] mx-auto"
-        >
-          {faqs.map((faq, idx) => (
-            <AccordionItem
-              value={faq.question}
-              key={idx}
-              className=" border-0!"
-            >
-              <AccordionTrigger className="group p-0 text-xl font-normal leading-8 [&>svg]:hidden! gap-8 md:gap-3">
-                {faq.question}
-                <div className="size-10 shrink-0 rounded-lg bg-primary-light flex items-center justify-center">
-                  <ChevronDown className="size-6 text-primary-dark group-data-[state=open]:rotate-180 transition-transform duration-200" />
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="pt-1 leading-5 font-roboto font-light">
-                {faq.answer}
-              </AccordionContent>
-
-              <div
-                className={`${
-                  idx !== faqs.length - 1 ? "" : "hidden"
-                } h-px w-full bg-neutral-300 mt-4 mb-10 `}
-              />
-            </AccordionItem>
-          ))}
-        </Accordion>
-      </div>
-    </div>
-  );
-}
+    );
+  }
