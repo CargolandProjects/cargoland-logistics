@@ -124,10 +124,7 @@ const ShipperDetailsForm = () => {
                   items={countryOptions}
                   name={field.name}
                   value={field.value}
-                  onValueChange={(val) => {
-                    console.log("Country Value:", val, typeof val);
-                    field.onChange(val);
-                  }}
+                  onValueChange={field.onChange}
                 >
                   <ComboboxInput
                     autoComplete="new-country"

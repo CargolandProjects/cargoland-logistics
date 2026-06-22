@@ -31,7 +31,7 @@ const ReceiverDetailsForm = () => {
 
   const selectedCountryLabel = watch("receiverCountry");
   const selectedCountry = countryOptions.find(
-    (c) => c.label === selectedCountryLabel
+    (c) => c.label === selectedCountryLabel,
   );
 
   // Update phone input country when country selector changes
@@ -116,12 +116,14 @@ const ReceiverDetailsForm = () => {
                 </FieldLabel>
 
                 <Combobox
+                  autoComplete="new-country"
                   items={countryOptions}
                   name={field.name}
                   value={field.value}
                   onValueChange={field.onChange}
                 >
                   <ComboboxInput
+                    autoComplete="new-country"
                     id={field.name}
                     aria-invalid={fieldState.invalid}
                     className="form-input h-14!"
