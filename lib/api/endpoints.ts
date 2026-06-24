@@ -20,6 +20,12 @@ export const API_ROUTES = {
     allShipments: "/shipments/all-shipments",
     shipmentEstimate: "/shipments/estimation",
     myShipments: "/shipments/my-shipment",
-    makePayment: (shipmentId: string) => `/shipments/make-payment/${shipmentId}`
+    makePayment: (shipmentId: string) =>
+      `/shipments/make-payment/${shipmentId}`,
+  },
+
+  image: {
+    upload: "/upload",
+    delete: (publicId: string) => `/upload/${publicId}`,
   },
 };

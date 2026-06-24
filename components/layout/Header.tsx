@@ -11,13 +11,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "@/lib/hooks/useSession";
 import { ArrowDown } from "../icons";
 import { Button } from "../ui/button";
-import React, { useState } from "react";
-
-import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
+import { Fragment, useState } from "react";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
 import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 import SignOutModal from "../SignOutModal";
 
@@ -70,7 +70,7 @@ const homeLinks = [
 const Header = () => {
   const { isAuthenticated, signOut } = useSession();
   const [open, setOpen] = useState(false);
-  const isMobile = useMediaQuery("(max-width: 767px)");
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const router = useRouter();
   const pathName = usePathname();
 
@@ -170,18 +170,20 @@ const Header = () => {
 
               <SheetContent
                 side="left"
-                className="p-5 max-w-[277] flex flex-col justify-between"
+                className="p-5 max-w-[277px] flex flex-col justify-between"
               >
+                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+
                 <ul>
                   {displayLinks.map((link, idx) => (
-                    <React.Fragment key={idx}>
+                    <Fragment key={idx}>
                       <li className="text-base font-normal leading-6 hover:text-primary duration-200">
                         <Link href={link.href}>{link.title}</Link>
                       </li>
-                      {idx !== homeLinks.length - 1 && (
+                      {idx !== displayLinks.length - 1 && (
                         <div className="my-4 w-full h-px bg-border" />
                       )}
-                    </React.Fragment>
+                    </Fragment>
                   ))}
                 </ul>
 

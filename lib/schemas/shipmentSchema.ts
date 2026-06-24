@@ -39,7 +39,7 @@ export const shipmentSchema = z
       .max(100, "Full name must be less than 100 characters")
       .regex(
         /^[a-zA-Z\s'-]+$/,
-        "Full name can only contain letters, spaces, hyphens, and apostrophes"
+        "Full name can only contain letters, spaces, hyphens, and apostrophes",
       ),
     email: z.email("Enter a valid email address"),
     country: z.string().min(1, "Country is required"),
@@ -56,7 +56,7 @@ export const shipmentSchema = z
 
     pickUpAddressType: z.enum(
       ["HOME", "OFFICE", "DROP_OFF"],
-      "Select a pickup address type"
+      "Select a pickup address type",
     ),
 
     pickupDate: z
@@ -69,7 +69,7 @@ export const shipmentSchema = z
       .min(1, "Pickup time is required")
       .refine(
         isValidPickupTime,
-        "Pickup time must be between 8:00 AM and 8:00 PM"
+        "Pickup time must be between 8:00 AM and 8:00 PM",
       ),
 
     //  Receiver's Details Starts Here
@@ -79,7 +79,7 @@ export const shipmentSchema = z
       .max(100, "Full name must be less than 100 characters")
       .regex(
         /^[a-zA-Z\s'-]+$/,
-        "Full name can only contain letters, spaces, hyphens, and apostrophes"
+        "Full name can only contain letters, spaces, hyphens, and apostrophes",
       ),
     receiverEmail: z.email("Enter a valid email address"),
     receiverCountry: z.string().min(1, "Country is required"),
@@ -129,6 +129,16 @@ export const shipmentSchema = z
       .max(500, "Height cannot exceed 500 cm")
       .regex(/^\d+(\.\d+)?$/, "Must be a valid number"),
 
+    imageUrls: z
+      .array(
+        z.object({
+          url: z.string().url(),
+          publicId: z.string(),
+        }),
+      )
+      .optional()
+      .default([]),
+
     descriptionOfGoods: z
       .string()
       .min(5, "Description must be at least 5 characters")
@@ -147,7 +157,7 @@ export const shipmentSchema = z
     {
       message: "Pickup date and time must be in the future",
       path: ["pickupTime", "pickupDate"], // Error shows on pickupTime field
-    }
+    },
   );
 
 export type ShipmentDataType = z.infer<typeof shipmentSchema>;
@@ -179,5 +189,7 @@ export const defaultShipmentValues = {
   length: "",
   breadth: "",
   height: "",
+  imageUrls: [],
+
   descriptionOfGoods: "",
 };

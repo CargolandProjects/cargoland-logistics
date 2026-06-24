@@ -25,10 +25,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { useShipmentEstimate } from "@/lib/hooks/mutation/useMutateShipment";
 import { useEffect } from "react";
 import Loader from "@/components/Loader";
+import { ImageUploadField } from "./ImageUploadField";
 
 const ShipmentDetailsForm = () => {
   const { mutate, isPending, data: estimate } = useShipmentEstimate();
-  const { control, watch } = useFormContext<ShipmentDataType>();
+  const { control, watch, setValue } = useFormContext<ShipmentDataType>();
+
+  const shipperEmail = watch("email");
+  const imageAssets = watch("imageUrls") || [];
 
   const weight = watch("weight");
   const length = watch("length");
@@ -242,8 +246,16 @@ const ShipmentDetailsForm = () => {
           </FieldSet>
         </div>
 
-        {/* description */}
+        {/* image upload */}
+        <ImageUploadField
+          value={imageAssets}
+          onChange={(assets) =>
+            setValue("imageUrls", assets, { shouldValidate: false })
+          }
+          email={shipperEmail}
+        />
 
+        {/* description */}
         <Controller
           name="descriptionOfGoods"
           control={control}
