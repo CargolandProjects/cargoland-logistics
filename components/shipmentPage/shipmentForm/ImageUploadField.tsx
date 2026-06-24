@@ -31,9 +31,9 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const generateId = () => crypto.randomUUID?.() || Date.now().toString();
 
 interface ImageUploadFieldProps {
-  value: ImageAsset[]; // current image assets from form state
-  onChange: (assets: ImageAsset[]) => void; // function to update form state
-  email: string; // shipper email for upload
+  value: ImageAsset[];
+  onChange: (assets: ImageAsset[]) => void;
+  email: string;
   disabled?: boolean;
 }
 
@@ -50,8 +50,9 @@ export const ImageUploadField = ({
   const [deletingPublicIds, setDeletingPublicIds] = useState<Set<string>>(
     new Set(),
   );
+  const [isDraggingOver, setIsDraggingOver] = useState(false);
 
-  // ----- Upload (using mutate with callbacks) -----
+  // ----- Upload (mutate with callbacks) -----
   const uploadFile = (item: FileItem) => {
     if (!email) {
       setFileItems((prev) =>
@@ -77,9 +78,7 @@ export const ImageUploadField = ({
             url: data.url,
             publicId: data.publicId,
           };
-          // Add to form state
           onChange([...imageAssets, newAsset]);
-          // Remove from local state
           setFileItems((prev) => prev.filter((f) => f.id !== item.id));
         },
         onError: (error) => {
@@ -96,8 +95,8 @@ export const ImageUploadField = ({
     );
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
+  // Process files (validation + add to queue)
+  const processFiles = (files: File[]) => {
     if (fileItems.length + imageAssets.length + files.length > MAX_IMAGES) {
       toast.warning(`Maximum ${MAX_IMAGES} images allowed`);
       return;
@@ -124,6 +123,39 @@ export const ImageUploadField = ({
     newItems.forEach((item) => uploadFile(item));
   };
 
+  // File input change
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    processFiles(files);
+    // Reset input so same file can be re‑uploaded if needed
+    e.target.value = "";
+  };
+
+  // ----- Drag & Drop -----
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!disabled && !isUploading) {
+      setIsDraggingOver(true);
+    }
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingOver(false);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingOver(false);
+
+    if (disabled || isUploading) return;
+    const files = Array.from(e.dataTransfer.files);
+    processFiles(files);
+  };
+
   // ----- Delete (mutate with callbacks) -----
   const handleDeleteImage = (asset: ImageAsset) => {
     if (deletingPublicIds.has(asset.publicId)) return;
@@ -138,9 +170,7 @@ export const ImageUploadField = ({
         onChange(updatedAssets);
         toast.success("Image deleted");
       },
-      onError: () => {
-        toast.error("Failed to delete image");
-      },
+
       onSettled: () => {
         setDeletingPublicIds((prev) => {
           const newSet = new Set(prev);
@@ -220,8 +250,15 @@ export const ImageUploadField = ({
         />
 
         <div
-          className="relative mt-1 p-6 flex flex-col justify-center items-center rounded-sm cursor-pointer border-2 border-dashed border-gray-300 hover:border-primary transition-colors"
+          className={`relative mt-1 p-6 flex flex-col justify-center items-center rounded-sm cursor-pointer border-2 border-dashed transition-colors ${
+            isDraggingOver
+              ? "border-primary bg-primary/5"
+              : "border-gray-300 hover:border-primary"
+          }`}
           onClick={() => document.getElementById("image-upload")?.click()}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
         >
           <Upload className="size-9.5 text-gray-400" />
           <p className="mt-2 text-xs leading-4.5 text-gray-500 text-center">

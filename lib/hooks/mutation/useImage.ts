@@ -20,8 +20,8 @@ export const useDeleteImage = () => {
     onSuccess: () => {
       toast.success("Image deleted successfully");
     },
-    onError: (error) => {
-      toast.error(error.message || "failed to delete image");
+    onError: () => {
+      toast.error("failed to delete image");
     },
   });
 };
