@@ -237,6 +237,59 @@ const ReceiverDetailsForm = () => {
             )}
           />
         </div>
+
+        <div className="grid md:grid-cols-2 gap-6 md:gap-10">
+          <Controller
+            name="recieverPostalCode"
+            control={control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid} className="gap-1">
+                <FieldLabel htmlFor={field.name} className="form-label">
+                  Postal Code
+                </FieldLabel>
+                <Input
+                  {...field}
+                  id={field.name}
+                  aria-invalid={fieldState.invalid}
+                  // placeholder=""
+                  className="form-input"
+                />
+                {fieldState.invalid && (
+                  <FieldError
+                    errors={[fieldState.error]}
+                    className="form-error"
+                  />
+                )}
+              </Field>
+            )}
+          />
+
+          <Controller
+            name="recieverCityCode"
+            control={control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid} className="gap-1">
+                <FieldLabel htmlFor={field.name} className="form-label">
+                  City Code{" "}
+                  <span className="form-label text-gray-400!">(Optional)</span>
+                </FieldLabel>
+                <Input
+                  {...field}
+                  id={field.name}
+                  aria-invalid={fieldState.invalid}
+                  // placeholder="First Name and Last Name"
+                  className="form-input"
+                />
+                {fieldState.invalid && (
+                  <FieldError
+                    errors={[fieldState.error]}
+                    className="form-error"
+                  />
+                )}
+              </Field>
+            )}
+          />
+        </div>
       </FieldSet>
     </div>
   );

@@ -33,6 +33,7 @@ export default function ProfilePage () {
                 setTab("profile");
                 setShowMobile(true);
               }}
+              variant="ghost"
               className="p-3 w-full h-14 flex items-center justify-between text-black rounded-[12px] bg-white"
             >
               <div className="flex gap-3.75 items-center">
@@ -49,6 +50,7 @@ export default function ProfilePage () {
                 setTab("password");
                 setShowMobile(true);
               }}
+              variant="ghost"
               className="p-3 w-full h-14 flex items-center justify-between text-black rounded-[12px] bg-white"
             >
               <div className="flex gap-3.75 items-center">

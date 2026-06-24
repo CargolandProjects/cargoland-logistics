@@ -32,7 +32,7 @@ const ShipmentDetailsForm = () => {
   const { control, watch, setValue } = useFormContext<ShipmentDataType>();
 
   const shipperEmail = watch("email");
-  const imageAssets = watch("imageUrls") || [];
+  const imageAssets = watch("imageUrl") || [];
 
   const weight = watch("weight");
   const length = watch("length");
@@ -250,7 +250,7 @@ const ShipmentDetailsForm = () => {
         <ImageUploadField
           value={imageAssets}
           onChange={(assets) =>
-            setValue("imageUrls", assets, { shouldValidate: false })
+            setValue("imageUrl", assets, { shouldValidate: false })
           }
           email={shipperEmail}
         />

@@ -49,6 +49,13 @@ export const shipmentSchema = z
       .max(15, "Phone number is too long")
       .regex(/^\+?\d+$/, "Phone number must contain only digits"),
     stateOrCity: z.string().min(2, "State/City is required").max(100),
+    postalCode: z.string().min(2, "Postal code is required").max(100),
+    cityCode: z
+      .string()
+      .min(5, "Description must be at least 5 characters")
+      .max(500, "Description is too long")
+      .optional()
+      .or(z.literal("")),
     address: z
       .string()
       .min(5, "Address is too short")
@@ -93,6 +100,13 @@ export const shipmentSchema = z
       .string()
       .min(5, "Address is too short")
       .max(200, "Address is too long"),
+    recieverPostalCode: z.string().min(2, "Postal code is required").max(100),
+    recieverCityCode: z
+      .string()
+      .min(5, "Description must be at least 5 characters")
+      .max(500, "Description is too long")
+      .optional()
+      .or(z.literal("")),
 
     //  Package Details Starts Here
     packageType: z.enum(packageType, {
@@ -129,10 +143,10 @@ export const shipmentSchema = z
       .max(500, "Height cannot exceed 500 cm")
       .regex(/^\d+(\.\d+)?$/, "Must be a valid number"),
 
-    imageUrls: z
+    imageUrl: z
       .array(
         z.object({
-          url: z.string().url(),
+          imageUrl: z.string().url(),
           publicId: z.string(),
         }),
       )
@@ -169,6 +183,8 @@ export const defaultShipmentValues = {
   country: "",
   phoneNumber: "",
   stateOrCity: "",
+  postalCode: "",
+  cityCode: "",
   address: "",
   pickUpAddressType: undefined,
   pickupDate: "",
@@ -181,6 +197,8 @@ export const defaultShipmentValues = {
   receiverNumber: "",
   receiverStateOrCity: "",
   receiverAddress: "",
+  recieverCityCode: "",
+  recieverPostalCode: "",
 
   // Package Details
   packageType: undefined,
@@ -189,7 +207,7 @@ export const defaultShipmentValues = {
   length: "",
   breadth: "",
   height: "",
-  imageUrls: [],
+  imageUrl: [],
 
   descriptionOfGoods: "",
 };

@@ -33,16 +33,16 @@ const signUpSchema = z
       .max(20, "Password must not be more than 20 characters")
       .regex(
         /(?=.*[a-z])/,
-        "Password must contain at least one lowercase letter"
+        "Password must contain at least one lowercase letter",
       )
       .regex(
         /(?=.*[A-Z])/,
-        "Password must contain at least one uppercase letter"
+        "Password must contain at least one uppercase letter",
       )
       .regex(/(?=.*\d)/, "Password must contain at least one number")
       .regex(
         /(?=.*[!@#$%^&*])/,
-        "Password must contain at least one special character"
+        "Password must contain at least one special character",
       ),
     confirmPassword: z.string(),
   })
@@ -93,8 +93,9 @@ const UpdatePassword = ({ setShowMobile }: UpdatePasswordProps) => {
     <div className="bg-background-screen max-sm:px-4">
       <Button
         onClick={() => setShowMobile(false)}
+        variant="ghost"
         type="button"
-        className="sm:hidden gap-1 p-0 h-5 bg-transparent text-black"
+        className="sm:hidden gap-1 p-0 h-5 bg-transparent text-black hover:bg-transparent"
       >
         <ArrowLeft className="size-4" /> Back
       </Button>
@@ -103,7 +104,7 @@ const UpdatePassword = ({ setShowMobile }: UpdatePasswordProps) => {
         className="p-4 pb-6 md:p-6 max-sm:mt-5 rounded-lg bg-white"
       >
         <FieldSet className="gap-0">
-          <FieldTitle className="font-heading text-lg sm:text-base font-semibold sm:font-bold leading-7 sm:leading-6">
+          <FieldTitle className="text-lg sm:text-base font-semibold sm:font-bold leading-7 sm:leading-6">
             Reset Password
           </FieldTitle>
 

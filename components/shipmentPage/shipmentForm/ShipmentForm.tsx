@@ -107,6 +107,9 @@ const ShipmentForm = () => {
       "phoneNumber",
       "stateOrCity",
       "address",
+      "postalCode",
+      "cityCode",
+
       "pickUpAddressType",
       "pickupDate",
       "pickupTime",
@@ -118,6 +121,8 @@ const ShipmentForm = () => {
       "receiverNumber",
       "receiverStateOrCity",
       "receiverAddress",
+      "recieverCityCode",
+      "recieverPostalCode",
     ],
     [
       "packageType",
@@ -149,7 +154,7 @@ const ShipmentForm = () => {
   const handleBack = () => {
     if (step === 0) {
       setShipmentFlow("freightType");
-      return
+      return;
     }
 
     setStep((prev) => prev - 1);

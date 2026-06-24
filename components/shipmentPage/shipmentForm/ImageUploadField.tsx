@@ -6,9 +6,10 @@ import { AlertCircle, Loader2, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { useUploadImage, useDeleteImage } from "@/lib/hooks/mutation/useImage";
+import { Button } from "@/components/ui/button";
 
 export type ImageAsset = {
-  url: string;
+  imageUrl: string;
   publicId: string;
 };
 
@@ -75,7 +76,7 @@ export const ImageUploadField = ({
       {
         onSuccess: (data) => {
           const newAsset: ImageAsset = {
-            url: data.url,
+            imageUrl: data.url,
             publicId: data.publicId,
           };
           onChange([...imageAssets, newAsset]);
@@ -185,51 +186,56 @@ export const ImageUploadField = ({
   const renderExistingImage = (asset: ImageAsset) => (
     <div key={asset.publicId} className="relative size-15 shrink-0">
       <Image
-        src={asset.url}
+        src={asset.imageUrl}
         alt="uploaded"
         className="size-full object-cover rounded"
         width={60}
         height={60}
       />
-      <button
+      <Button
         type="button"
         onClick={() => handleDeleteImage(asset)}
         disabled={deletingPublicIds.has(asset.publicId)}
-        className="absolute -top-2 -right-2 size-5 flex justify-center items-center bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors disabled:opacity-50"
+        className="absolute -top-2 -right-2 size-5 flex justify-center items-center bg-primary-light text-primary rounded-full hover:bg-primary-light"
       >
         {deletingPublicIds.has(asset.publicId) ? (
           <Loader2 className="size-3 animate-spin" />
         ) : (
           <X className="size-3 stroke-[2.5]" />
         )}
-      </button>
+      </Button>
     </div>
   );
 
   const renderLocalFileItem = (item: FileItem) => (
     <div
       key={item.id}
-      className="relative size-15 shrink-0 bg-gray-100 rounded flex items-center justify-center"
+      className={`${item.status === "uploading" && "animate-pulse"} relative size-15 shrink-0 bg-gray-100 rounded flex items-center justify-center`}
     >
-      {item.status === "uploading" ? (
+      {item.status === "uploading" && (
         <Loader2 className="size-5 animate-spin text-primary" />
-      ) : item.status === "error" ? (
+      )}
+
+      {item.status === "error" && (
         <div className="text-red-500 text-xs text-center">
           <AlertCircle className="size-4 mx-auto" />
           Error
         </div>
-      ) : (
+      )}
+
+      {item.status === "idle" && (
         <span className="text-gray-400 text-xs">Pending</span>
       )}
-      <button
+
+      <Button
         type="button"
         onClick={() =>
           setFileItems((prev) => prev.filter((f) => f.id !== item.id))
         }
-        className="absolute -top-2 -right-2 size-5 flex justify-center items-center bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+        className="absolute -top-2 -right-2 size-5 flex justify-center items-center bg-primary-light text-primary rounded-full hover:bg-primary-light"
       >
         <X className="size-3 stroke-[2.5]" />
-      </button>
+      </Button>
     </div>
   );
 
@@ -255,7 +261,6 @@ export const ImageUploadField = ({
               ? "border-primary bg-primary/5"
               : "border-gray-300 hover:border-primary"
           }`}
-          onClick={() => document.getElementById("image-upload")?.click()}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
