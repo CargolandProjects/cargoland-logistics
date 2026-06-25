@@ -42,6 +42,10 @@ const authenticatedLinks = [
     title: "Get Quote",
     href: "/estimate",
   },
+  {
+    title: "Profile",
+    href: "/profile",
+  },
 ];
 
 const homeLinks = [
@@ -80,6 +84,7 @@ const Header = () => {
   };
 
   const displayLinks = isAuthenticated ? authenticatedLinks : homeLinks; // check if user is a
+  const desktopLinks = displayLinks.filter((link) => link.title !== "Profile");
 
   return (
     <header className="py-2 md:py-4 padding-x bg-white">
@@ -96,9 +101,10 @@ const Header = () => {
           />
         </Link>
 
+        {/* Desktop nav links */}
         <nav className="max-md:hidden">
           <ul className="flex gap-6 lg:gap-10.5">
-            {displayLinks.map((link, idx) => {
+            {desktopLinks.map((link, idx) => {
               const active = link.href === pathName;
               return (
                 <li
@@ -115,7 +121,7 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center gap-6">
-          {/* Desktop nav links */}
+          {/*  Desktop dropdown menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               {isAuthenticated ? (
@@ -177,8 +183,13 @@ const Header = () => {
                 <ul>
                   {displayLinks.map((link, idx) => (
                     <Fragment key={idx}>
-                      <li className="text-base font-normal leading-6 hover:text-primary duration-200">
-                        <Link href={link.href}>{link.title}</Link>
+                      <li className="text-base font-normal hover:text-primary duration-200 cursor-pointer">
+                        <Link
+                          href={link.href}
+                          className="leading-6 w-full! block"
+                        >
+                          {link.title}
+                        </Link>
                       </li>
                       {idx !== displayLinks.length - 1 && (
                         <div className="my-4 w-full h-px bg-border" />

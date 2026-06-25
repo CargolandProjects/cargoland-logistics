@@ -1,13 +1,54 @@
 import ArrowRight from "@/components/icons/ArrowRight";
 import { Separator } from "@/components/ui/separator";
+import { useDeleteImage } from "@/lib/hooks/mutation/useImage";
 import { useShipmentStore } from "@/lib/stores/useShipmentStore";
 import { formatDate } from "@/lib/utils";
+import { useState } from "react";
+import { ImageAsset, RenderExistingImage } from "./ImageUploadField";
+import { toast } from "sonner";
 
 const Payment = () => {
   const freightType = useShipmentStore((s) => s.freightType);
   const shipmentData = useShipmentStore((s) => s.createdShipment);
+  const formData = useShipmentStore((s) => s.formData);
+  const setData = useShipmentStore((s) => s.setFormData);
+  const [deletingPublicIds, setDeletingPublicIds] = useState<Set<string>>(
+    new Set(),
+  );
+  const { mutateAsync: deleteImage } = useDeleteImage();
 
-  console.log("Shipment Data", shipmentData);
+  // console.log("Shipment Data", shipmentData);  
+  
+  // ----- Delete (mutate with callbacks) -----
+  const handleDeleteImage = async (asset: ImageAsset) => {
+    if (deletingPublicIds.has(asset.publicId)) return;
+
+    setDeletingPublicIds((prev) => new Set(prev).add(asset.publicId));
+
+    try {
+      await deleteImage(asset.publicId);
+      const updatedAssets = shipmentData?.imageUrl.filter(
+        (a) => a.publicId !== asset.publicId,
+      );
+
+      setData({
+        ...formData,
+        data: { ...formData.data, imageUrl: updatedAssets },
+      });
+
+      toast.success("Image deleted");
+    } catch (error) {
+      console.error(
+        error instanceof Error ? error.message : "Failed to delete image",
+      );
+    } finally {
+      setDeletingPublicIds((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(asset.publicId);
+        return newSet;
+      });
+    }
+  };
 
   return (
     <div className="bg-white rounded-lg">
@@ -95,12 +136,24 @@ const Payment = () => {
       </div>
 
       {/* <Separator className="mt-10 mb-6" /> */}
+      <div className="mt-10 grid md:grid-cols-2">
+        <div className="space-y-2">
+          <h3 className="bill-sub-title">Shipment Weight</h3>
+          <p className="text-sm font-medium leading-5.5">
+            Total Shipment Weight: {shipmentData?.totalShipmentWeight} kg
+          </p>
+        </div>
 
-      <div className="mt-10 space-y-2">
-        <h3 className="bill-sub-title">Shipment Weight</h3>
-        <p className="text-sm font-medium leading-5.5">
-          Total Shipment Weight: {shipmentData?.totalShipmentWeight} kg
-        </p>
+        <div className="mt-2 mt-3 md:mt-2 flex flex-wrap gap-3">
+          {shipmentData?.imageUrl.map((img) => (
+            <RenderExistingImage
+              key={img.publicId}
+              asset={img}
+              handleDeleteImage={handleDeleteImage}
+              deletingPublicIds={deletingPublicIds}
+            />
+          ))}
+        </div>
       </div>
 
       <Separator className="mt-6 mb-4 bg-brand-gray/35" />

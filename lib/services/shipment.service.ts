@@ -38,6 +38,10 @@ export type Shipment = {
   length: number;
   breadth: number;
   height: number;
+  imageUrl: {
+    imageUrl: string;
+    publicId: string;
+  }[];
   descriptionOfGoods: string;
   totalShipmentWeight: number;
   userId: string;

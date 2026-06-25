@@ -150,8 +150,7 @@ export const shipmentSchema = z
           publicId: z.string(),
         }),
       )
-      .optional()
-      .default([]),
+      .min(1, "At least one image is required"),
 
     descriptionOfGoods: z
       .string()
@@ -208,6 +207,5 @@ export const defaultShipmentValues = {
   breadth: "",
   height: "",
   imageUrl: [],
-
   descriptionOfGoods: "",
 };

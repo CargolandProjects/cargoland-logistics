@@ -38,6 +38,41 @@ interface ImageUploadFieldProps {
   disabled?: boolean;
 }
 
+// ----- Render helpers -----
+export const RenderExistingImage = ({
+  asset,
+  handleDeleteImage,
+  deletingPublicIds,
+}: {
+  asset: ImageAsset;
+  handleDeleteImage?: (asset: ImageAsset) => void;
+  deletingPublicIds?: Set<string>;
+}) => (
+  <div key={asset.publicId} className="relative size-15 shrink-0">
+    <Image
+      src={asset.imageUrl}
+      alt="uploaded"
+      className="size-full object-cover rounded"
+      width={60}
+      height={60}
+    />
+    <Button
+      type="button"
+      onClick={() => {
+        if (handleDeleteImage) handleDeleteImage(asset);
+      }}
+      disabled={deletingPublicIds && deletingPublicIds.has(asset.publicId)}
+      className="absolute -top-2 -right-2 size-5 flex justify-center items-center bg-primary-light text-primary rounded-full hover:bg-primary-light"
+    >
+      {deletingPublicIds && deletingPublicIds.has(asset.publicId) ? (
+        <Loader2 className="size-3 animate-spin" />
+      ) : (
+        <X className="size-3 stroke-[2.5]" />
+      )}
+    </Button>
+  </div>
+);
+
 export const ImageUploadField = ({
   value: imageAssets,
   onChange,
@@ -45,13 +80,15 @@ export const ImageUploadField = ({
   disabled = false,
 }: ImageUploadFieldProps) => {
   const { mutate: uploadImage, isPending: isUploading } = useUploadImage();
-  const { mutate: deleteImage } = useDeleteImage();
+  const { mutateAsync: deleteImage } = useDeleteImage();
 
   const [fileItems, setFileItems] = useState<FileItem[]>([]);
   const [deletingPublicIds, setDeletingPublicIds] = useState<Set<string>>(
     new Set(),
   );
   const [isDraggingOver, setIsDraggingOver] = useState(false);
+
+  const isPreview = imageAssets.length > 0 || fileItems.length > 0;
 
   // ----- Upload (mutate with callbacks) -----
   const uploadFile = (item: FileItem) => {
@@ -158,56 +195,32 @@ export const ImageUploadField = ({
   };
 
   // ----- Delete (mutate with callbacks) -----
-  const handleDeleteImage = (asset: ImageAsset) => {
+  const handleDeleteImage = async (asset: ImageAsset) => {
     if (deletingPublicIds.has(asset.publicId)) return;
 
     setDeletingPublicIds((prev) => new Set(prev).add(asset.publicId));
 
-    deleteImage(asset.publicId, {
-      onSuccess: () => {
-        const updatedAssets = imageAssets.filter(
-          (a) => a.publicId !== asset.publicId,
-        );
-        onChange(updatedAssets);
-        toast.success("Image deleted");
-      },
-
-      onSettled: () => {
-        setDeletingPublicIds((prev) => {
-          const newSet = new Set(prev);
-          newSet.delete(asset.publicId);
-          return newSet;
-        });
-      },
-    });
+    try {
+      await deleteImage(asset.publicId);
+      const updatedAssets = imageAssets.filter(
+        (a) => a.publicId !== asset.publicId,
+      );
+      onChange(updatedAssets);
+      toast.success("Image deleted");
+    } catch (error) {
+      console.error(
+        error instanceof Error ? error.message : "Failed to delete image",
+      );
+    } finally {
+      setDeletingPublicIds((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(asset.publicId);
+        return newSet;
+      });
+    }
   };
 
-  // ----- Render helpers -----
-  const renderExistingImage = (asset: ImageAsset) => (
-    <div key={asset.publicId} className="relative size-15 shrink-0">
-      <Image
-        src={asset.imageUrl}
-        alt="uploaded"
-        className="size-full object-cover rounded"
-        width={60}
-        height={60}
-      />
-      <Button
-        type="button"
-        onClick={() => handleDeleteImage(asset)}
-        disabled={deletingPublicIds.has(asset.publicId)}
-        className="absolute -top-2 -right-2 size-5 flex justify-center items-center bg-primary-light text-primary rounded-full hover:bg-primary-light"
-      >
-        {deletingPublicIds.has(asset.publicId) ? (
-          <Loader2 className="size-3 animate-spin" />
-        ) : (
-          <X className="size-3 stroke-[2.5]" />
-        )}
-      </Button>
-    </div>
-  );
-
-  const renderLocalFileItem = (item: FileItem) => (
+  const RenderLocalFileItem = ({ item }: { item: FileItem }) => (
     <div
       key={item.id}
       className={`${item.status === "uploading" && "animate-pulse"} relative size-15 shrink-0 bg-gray-100 rounded flex items-center justify-center`}
@@ -282,10 +295,22 @@ export const ImageUploadField = ({
         </div>
       </FieldLabel>
 
-      <div className="mt-5 flex flex-wrap gap-3">
-        {imageAssets.map((asset) => renderExistingImage(asset))}
-        {fileItems.map((item) => renderLocalFileItem(item))}
-      </div>
+      {isPreview && (
+        <div className="mt-5 flex flex-wrap gap-3">
+          {imageAssets.map((asset, idx) => (
+            <RenderExistingImage
+              key={idx}
+              asset={asset}
+              handleDeleteImage={handleDeleteImage}
+              deletingPublicIds={deletingPublicIds}
+            />
+          ))}
+          {fileItems.map((item, idx) => (
+            <RenderLocalFileItem key={idx} item={item} />
+          ))}
+        </div>
+      )}
+
       {isMaxReached && (
         <p className="text-sm text-amber-600">
           Maximum {MAX_IMAGES} images reached.

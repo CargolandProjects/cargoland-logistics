@@ -32,7 +32,6 @@ const ShipmentDetailsForm = () => {
   const { control, watch, setValue } = useFormContext<ShipmentDataType>();
 
   const shipperEmail = watch("email");
-  const imageAssets = watch("imageUrl") || [];
 
   const weight = watch("weight");
   const length = watch("length");
@@ -247,12 +246,26 @@ const ShipmentDetailsForm = () => {
         </div>
 
         {/* image upload */}
-        <ImageUploadField
-          value={imageAssets}
-          onChange={(assets) =>
-            setValue("imageUrl", assets, { shouldValidate: false })
-          }
-          email={shipperEmail}
+        <Controller
+          name="imageUrl"
+          control={control}
+          render={({ field, fieldState }) => (
+            <div className="space-y-2">
+              <ImageUploadField
+                value={field.value || []}
+                onChange={(assets) =>
+                  setValue("imageUrl", assets, { shouldValidate: false })
+                }
+                email={shipperEmail}
+              />
+              {fieldState.invalid && (
+                <FieldError
+                  errors={[fieldState.error]}
+                  className="form-error mt-1"
+                />
+              )}
+            </div>
+          )}
         />
 
         {/* description */}

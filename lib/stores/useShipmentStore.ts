@@ -28,7 +28,7 @@ interface ShipmentStore {
   setShipmentFlow: (shipmentFlow: Step) => void;
   setCreatedShipment: (createdShipment: Shipment) => void;
   setFormData: (formData: {
-    step: number;
+    step: number | null;
     data?: DeepPartial<ShipmentDataType>;
   }) => void;
   clearShipment: () => void;

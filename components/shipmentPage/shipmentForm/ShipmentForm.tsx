@@ -51,6 +51,7 @@ const ShipmentForm = () => {
   const form = useForm<ShipmentDataType>({
     resolver: zodResolver(shipmentSchema),
     defaultValues: defaultShipmentValues,
+    // defaultValues: defaultShipmentValues as unknown as ShipmentDataType,
   });
 
   const formValues = useWatch({ control: form.control });
@@ -131,6 +132,7 @@ const ShipmentForm = () => {
       "length",
       "breadth",
       "height",
+      "imageUrl",
       "descriptionOfGoods",
     ],
   ] as const;
