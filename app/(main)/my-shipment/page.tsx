@@ -138,7 +138,7 @@ export default function MyShipmentPage() {
       searchableFields.some((field) => {
         const value = item[field];
         return value && String(value).toLowerCase().includes(term);
-      })
+      }),
     );
   };
 
@@ -183,6 +183,7 @@ export default function MyShipmentPage() {
           <div className="overflow-x-auto md:max-w-[513px] flex hide-scrollbar border rounded-md ">
             <Button
               onClick={() => setTblView(null)}
+              variant="ghost"
               className={` ${
                 !tblView ? "bg-neutral-200/50 " : "bg-white"
               } px-4 h-13 text-black border-r border-r-border rounded-none capitalize font-roboto`}
@@ -196,6 +197,7 @@ export default function MyShipmentPage() {
               return (
                 <Button
                   onClick={() => setTblView(status)}
+                  variant="ghost"
                   key={idx}
                   className={`${
                     isActive ? "bg-neutral-200/50" : "bg-white"

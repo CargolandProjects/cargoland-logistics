@@ -20,6 +20,7 @@ export const API_ROUTES = {
     allShipments: "/shipments/all-shipments",
     shipmentEstimate: "/shipments/estimation",
     myShipments: "/shipments/my-shipment",
+    getShipmentById: (shipmentId: string) => `/shipments/${shipmentId}`,
     makePayment: (shipmentId: string) =>
       `/shipments/make-payment/${shipmentId}`,
   },

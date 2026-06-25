@@ -206,6 +206,13 @@ export const shipment = {
     return res.data;
   },
 
+  async getShipment(id: string) {
+    const res = await apiClient.get<TrackShipmentRes>(
+      API_ROUTES.shipment.getShipmentById(id),
+    );
+    return res.data;
+  },
+
   async myShipments(query: string) {
     const res = await apiClient.post<MyShipmentsRes>(
       `${API_ROUTES.shipment.myShipments}?status=${query}`,

@@ -25,7 +25,7 @@ import ShipmentTable from "@/components/dashboard/ShipmentTable";
 export default function DashboardPage() {
   const { data, isLoading: isLoadingStats } = useDashboardStats();
   const { data: shipments, isSuccess, isLoading, isError } = useAllShipments();
-  const { isAuthenticated, session, signOut } = useSession();
+  const { isAuthenticated, session } = useSession();
   const { isChecking } = useProtectedRoute();
 
   console.log("DashboardStats", data);

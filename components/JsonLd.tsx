@@ -30,17 +30,16 @@ export default function JsonLd() {
       telephone: "+234-817-908-1262",
       email: "info@cargoland.africa",
       contactType: "Customer Service",
-    //   areaServed: "NG",
+      //   areaServed: "NG",
       availableLanguage: ["en"],
     },
   };
 
   return (
-    // eslint-disable-next-line @next/next/no-before-interactive-script-outside-document
     <Script
       id="organnozation-jsonld"
       type="application/ld+json"
-      strategy="beforeInteractive"
+      //   strategy="beforeInteractive"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
     />
   );

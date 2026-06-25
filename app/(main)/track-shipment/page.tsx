@@ -272,7 +272,7 @@ export default function TrackShipmentPage() {
                 </div>
 
                 <div className="relative mt-10 flex max-sm:flex-col max-sm:gap-10 justify-between">
-                  {/* backgrounf unfilled  progress bar */}
+                  {/* background unfilled progress bar */}
                   <div className="h-full sm:h-1.5 absolute w-1.5 sm:w-full max-sm:left-[16.75] sm:top-3.5 sm:translate-y-1/2 rounded-full bg-primary-light " />
 
                   {shipmentProgress.map((progress, idx) => {

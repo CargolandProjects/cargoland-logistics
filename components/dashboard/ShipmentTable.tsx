@@ -10,12 +10,26 @@ import {
 import { statusStyles } from "@/lib/utils";
 import { formatDate } from "@/lib/utils";
 import { ArrowRight, MoreVertical } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 interface ShipmentTableProps {
   shipments: Shipment[];
 }
 
 const ShipmentTable = ({ shipments }: ShipmentTableProps) => {
+  const router = useRouter();
+
+  const handleRoute = (path: string) => {
+    if (!path) return;
+    router.push(path);
+  };
   return (
     <Table className="mt-3 bg-white rounded-lg">
       <TableHeader>
@@ -43,7 +57,11 @@ const ShipmentTable = ({ shipments }: ShipmentTableProps) => {
 
       <TableBody>
         {shipments.map((shipment, idx) => (
-          <TableRow key={idx} className="h-15.5">
+          <TableRow
+            onClick={() => handleRoute(`my-shipment/${shipment.id}`)}
+            key={idx}
+            className="h-15.5 cursor-pointer"
+          >
             <TableCell className="pl-6 leading-5.5">
               {shipment.trackingId}
             </TableCell>
@@ -78,9 +96,20 @@ const ShipmentTable = ({ shipments }: ShipmentTableProps) => {
               </div>
             </TableCell>
             <TableCell className="pr-6">
-              <button className="size-6 flex items-center justify-center border border-neutral-200 rounded-[4px]">
-                <MoreVertical className="size-4" />
-              </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="size-6 flex items-center justify-center border border-neutral-200 rounded-[4px]"
+                  >
+                    <MoreVertical />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center">
+                  <DropdownMenuItem>View</DropdownMenuItem>
+                  <DropdownMenuItem>Track</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </TableCell>
           </TableRow>
         ))}

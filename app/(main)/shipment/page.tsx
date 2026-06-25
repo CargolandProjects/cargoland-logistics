@@ -1,13 +1,13 @@
 "use client";
 
-import AuthPrompt from "@/components/shipmentPage/AuthPrompt";
-import WhereTo from "@/components/shipmentPage/WhereTo";
-import SelectFreight from "@/components/shipmentPage/SelectFreight";
+import AuthPrompt from "@/components/shipments/AuthPrompt";
+import WhereTo from "@/components/shipments/WhereTo";
+import SelectFreight from "@/components/shipments/SelectFreight";
 import { useShipmentStore } from "@/lib/stores/useShipmentStore";
-import ShipmentForm from "@/components/shipmentPage/shipmentForm/ShipmentForm";
+import ShipmentForm from "@/components/shipments/shipmentForm/ShipmentForm";
 import { useSession } from "@/lib/hooks/useSession";
 
-export default function ShipmentPage() {
+export default function CreateShipmentPage() {
   const shipmentStep = useShipmentStore((s) => s.step);
   const { isAuthenticated } = useSession();
 

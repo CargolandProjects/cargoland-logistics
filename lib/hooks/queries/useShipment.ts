@@ -9,6 +9,14 @@ export const useDashboardStats = () => {
   });
 };
 
+export const useShipment = (id: string) => {
+  return useQuery({
+    queryKey: ["shipment", id],
+    queryFn: () => shipment.getShipment(id),
+    select: (res) => res.data
+  });
+};
+
 export const useAllShipments = () => {
   return useQuery({
     queryKey: ["allShipments"],
@@ -22,6 +30,6 @@ export const useMyShipments = (query: string) => {
     queryKey: ["myShipments", query],
     queryFn: () => shipment.myShipments(query),
     select: (res) => res.data,
-    enabled: !!query
+    enabled: !!query,
   });
 };
