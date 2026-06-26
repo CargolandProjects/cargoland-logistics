@@ -29,4 +29,8 @@ export const API_ROUTES = {
     upload: "/upload",
     delete: (publicId: string) => `/upload/${publicId}`,
   },
+
+  pricing: {
+    getAllPricing: "/admin/pricing",
+  }
 };
