@@ -60,7 +60,7 @@ const ShipmentTable = ({
       <TableBody>
         {shipments.map((shipment, idx) => (
           <TableRow
-            onClick={() => handleRoute(`my-shipment/${shipment.id}`)}
+            onClick={() => handleRoute(`/my-shipment/${shipment.id}`)}
             key={idx}
             className="h-15.5 cursor-pointer"
           >

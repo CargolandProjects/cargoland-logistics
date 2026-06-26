@@ -72,11 +72,11 @@ export default function DashboardPage() {
 
   const handleView = (e: MouseEvent, id: string) => {
     e.stopPropagation();
-    handleRoute(`my-shipment/${id}`);
+    handleRoute(`/my-shipment/${id}`);
   };
   const handleTrack = (e: MouseEvent, trackingId: string) => {
     e.stopPropagation();
-    handleRoute(`track-shipment/?trackingId=${trackingId}`);
+    handleRoute(`/track-shipment/?trackingId=${trackingId}`);
   };
 
   if (isChecking) {
@@ -110,6 +110,7 @@ export default function DashboardPage() {
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold leading-7">Recent Shipments</h2>
           <Button
+            onClick={() => router.push("/my-shipment")}
             variant="outline"
             className="text-primary border-primary w-[81px]"
           >
