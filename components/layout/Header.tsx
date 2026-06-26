@@ -88,7 +88,7 @@ const Header = () => {
 
   return (
     <header className="py-2 md:py-4 padding-x bg-white">
-      <div className="container flex items-center justify-between">
+      <div className="container flex gap-2 items-center justify-between">
         <Link
           href="/"
           className="relative w-28 md:w-[151px] h-10 md:h-12 shrink-0"

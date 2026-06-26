@@ -23,6 +23,7 @@ import { useSession } from "@/lib/hooks/useSession";
 import { toast } from "sonner";
 import AuthPrompt from "../AuthPrompt";
 import { ArrowLeft } from "@/components/icons";
+import ConfirmDialog from "@/components/ConfirmDialog";
 
 const ShipmentForm = () => {
   const { mutate: createShipment } = useCreateShipment();
@@ -41,6 +42,7 @@ const ShipmentForm = () => {
 
   const [step, setStep] = useState(3);
   const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasHydrated = useRef(false);
@@ -260,7 +262,7 @@ const ShipmentForm = () => {
 
             <div className="flex max-md:flex-col justify-between gap-4 w-full mt-12 md:mt-12.5">
               <Button
-                onClick={cancelShipment}
+                onClick={() => setShowConfirm(true)}
                 variant="outline"
                 type="button"
                 className="md:w-[215px] h-13.75 rounded-md border-brand-gray/40"
@@ -302,6 +304,13 @@ const ShipmentForm = () => {
           </div>
         </form>
       </FormProvider>
+
+      <ConfirmDialog
+        open={showConfirm}
+        onOpenChange={setShowConfirm}
+        onConfirm={cancelShipment}
+        desc="You are about to cancel this shipment. This action may stop delivery processing and cannot always be reversed. Do you want to proceed?"
+      />
     </div>
   );
 };
