@@ -149,11 +149,11 @@ export default function MyShipmentPage() {
 
   const handleView = (e: MouseEvent, id: string) => {
     e.stopPropagation();
-    handleRoute(`my-shipment/${id}`);
+    handleRoute(`/my-shipment/${id}`);
   };
   const handleTrack = (e: MouseEvent, trackingId: string) => {
     e.stopPropagation();
-    handleRoute(`track-shipment/?trackingId=${trackingId}`);
+    handleRoute(`/track-shipment/?trackingId=${trackingId}`);
   };
 
   if (isChecking) {
