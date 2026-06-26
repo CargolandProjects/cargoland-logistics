@@ -203,7 +203,8 @@ export const ImageUploadField = ({
     setDeletingPublicIds((prev) => new Set(prev).add(asset.publicId));
 
     try {
-      await deleteImage(asset.publicId);
+      const pId = encodeURIComponent(asset.publicId);
+      await deleteImage(pId);
       const updatedAssets = imageAssets.filter(
         (a) => a.publicId !== asset.publicId,
       );
