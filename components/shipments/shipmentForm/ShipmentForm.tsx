@@ -218,7 +218,7 @@ const ShipmentForm = () => {
 
     makePayment(createdShipment.id, {
       onSuccess: (res) => {
-        const authUrl = res.data.authorization_url;
+        const authUrl = res.data.data.authorization_url;
 
         if (!authUrl) {
           toast.error("Payment initiation failed");

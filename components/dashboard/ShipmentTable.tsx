@@ -18,6 +18,7 @@ import {
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import { MouseEvent } from "react";
 
 interface ShipmentTableProps {
   shipments: Shipment[];
@@ -30,6 +31,16 @@ const ShipmentTable = ({ shipments }: ShipmentTableProps) => {
     if (!path) return;
     router.push(path);
   };
+
+  const handleView = (e: MouseEvent, id: string) => {
+    e.stopPropagation();
+    handleRoute(`my-shipment/${id}`);
+  };
+  const handleTrack = (e: MouseEvent, trackingId: string) => {
+    e.stopPropagation();
+    handleRoute(`track-shipment/?trackingId=${trackingId}`);
+  };
+
   return (
     <Table className="mt-3 bg-white rounded-lg">
       <TableHeader>
@@ -106,8 +117,18 @@ const ShipmentTable = ({ shipments }: ShipmentTableProps) => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="center">
-                  <DropdownMenuItem>View</DropdownMenuItem>
-                  <DropdownMenuItem>Track</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={(e) => handleView(e, shipment.id)}
+                    className="cursor-pointer"
+                  >
+                    View
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={(e) => handleTrack(e, shipment.trackingId)}
+                    className="cursor-pointer"
+                  >
+                    Track
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </TableCell>

@@ -5,9 +5,9 @@ import { toast } from "sonner";
 export const useUploadImage = () => {
   return useMutation({
     mutationFn: image.upload,
-    onSuccess: (data) => {
-      toast.success(data.message || "Image upload successful");
-    },
+    // onSuccess: (data) => {
+    //   toast.success(data.message || "Image upload successful");
+    // },
     onError: (error) => {
       toast.error(error.message || "Image upload failed");
     },

@@ -153,12 +153,23 @@ interface Estimate {
   estimatedPrice: number;
 }
 
+interface MakePayment {
+  status: boolean;
+  message: string;
+  data: {
+    authorization_url: string;
+    access_code: string;
+    reference: string;
+  };
+}
+
 type CreateShipment = APIResponse<Shipment>;
 type TrackShipmentRes = APIResponse<Shipment>;
 type DashboardStatsRes = APIResponse<DashboardStats>;
 type AllShipmentsRes = APIResponse<AllShipments>;
 type MyShipmentsRes = APIResponse<Shipment[]>;
 type EstimateRes = APIResponse<Estimate>;
+type MakePaymentRes = APIResponse<MakePayment>;
 
 export const shipment = {
   async createShipment(data: ShipmentDataType) {
@@ -221,7 +232,7 @@ export const shipment = {
   },
 
   async makePayment(shipmentId: string) {
-    const res = await apiClient.post(
+    const res = await apiClient.post<MakePaymentRes>(
       API_ROUTES.shipment.makePayment(shipmentId),
     );
     return res.data;

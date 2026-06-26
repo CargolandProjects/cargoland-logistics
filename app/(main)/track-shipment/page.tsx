@@ -15,7 +15,8 @@ import { useTrackShipment } from "@/lib/hooks/mutation/useMutateShipment";
 import { formatDayOfWeek, formatTime } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, Copy } from "lucide-react";
-import { useMemo } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 
@@ -40,16 +41,16 @@ const status = "Custom Clearance" as ProgressOrder;
 
 export default function TrackShipmentPage() {
   const { mutate, isPending, data } = useTrackShipment();
-
   const { handleSubmit, control, setError } = useForm<TrackShipmentData>({
     resolver: zodResolver(trackShipmentSchema),
     defaultValues: {
       trackingId: "",
     },
   });
+  const searchParams = useSearchParams();
+  const trackingId = searchParams.get("trackingId");
 
   const shipment = data?.data;
-
   const shipmentProgress = useMemo(() => {
     const statusOrder: ProgressOrder[] = [
       "Picked Up",
@@ -114,6 +115,18 @@ export default function TrackShipmentPage() {
 
     return progressStatus;
   }, []);
+
+  useEffect(() => {
+    if (!trackingId) return;
+
+    mutate(trackingId, {
+      onError: (res) => {
+        setError("trackingId", {
+          message: res.message,
+        });
+      },
+    });
+  }, [trackingId, mutate, setError]);
 
   console.log("shipment", shipmentProgress);
 
