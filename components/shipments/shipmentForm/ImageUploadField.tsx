@@ -56,20 +56,22 @@ export const RenderExistingImage = ({
       width={60}
       height={60}
     />
-    <Button
-      type="button"
-      onClick={() => {
-        if (handleDeleteImage) handleDeleteImage(asset);
-      }}
-      disabled={deletingPublicIds && deletingPublicIds.has(asset.publicId)}
-      className="absolute -top-2 -right-2 size-5 flex justify-center items-center bg-primary-light text-primary rounded-full hover:bg-primary-light"
-    >
-      {deletingPublicIds && deletingPublicIds.has(asset.publicId) ? (
-        <Loader2 className="size-3 animate-spin" />
-      ) : (
-        <X className="size-3 stroke-[2.5]" />
-      )}
-    </Button>
+    {handleDeleteImage && (
+      <Button
+        type="button"
+        onClick={() => {
+          if (handleDeleteImage) handleDeleteImage(asset);
+        }}
+        disabled={deletingPublicIds && deletingPublicIds.has(asset.publicId)}
+        className="absolute -top-2 -right-2 size-5 flex justify-center items-center bg-primary-light text-primary rounded-full hover:bg-primary-light"
+      >
+        {deletingPublicIds && deletingPublicIds.has(asset.publicId) ? (
+          <Loader2 className="size-3 animate-spin" />
+        ) : (
+          <X className="size-3 stroke-[2.5]" />
+        )}
+      </Button>
+    )}
   </div>
 );
 

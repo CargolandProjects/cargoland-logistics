@@ -13,7 +13,8 @@ export const useShipment = (id: string) => {
   return useQuery({
     queryKey: ["shipment", id],
     queryFn: () => shipment.getShipment(id),
-    select: (res) => res.data
+    select: (res) => res.data,
+    enabled: !!id,
   });
 };
 
