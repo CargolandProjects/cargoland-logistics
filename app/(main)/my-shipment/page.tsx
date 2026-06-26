@@ -15,18 +15,16 @@ import {
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Shipment, ShipmentStatus } from "@/lib/services/shipment.service";
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 import { useProtectedRoute } from "@/lib/hooks/useProtectedRoute";
-
-import { formatDate } from "@/lib/utils";
 import Loader from "@/components/Loader";
-
 import Image from "next/image";
 import { boxChecked } from "@/assets/images";
 import { useRouter } from "next/navigation";
 import ShipmentTable from "@/components/dashboard/ShipmentTable";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import ShipmentCard from "@/components/dashboard/ShipmentCard";
 
 const statuses: ShipmentStatus[] = [
   "PENDING",
@@ -143,6 +141,20 @@ export default function MyShipmentPage() {
   };
 
   const activeData = getActiveData();
+
+  const handleRoute = (path: string) => {
+    if (!path) return;
+    router.push(path);
+  };
+
+  const handleView = (e: MouseEvent, id: string) => {
+    e.stopPropagation();
+    handleRoute(`my-shipment/${id}`);
+  };
+  const handleTrack = (e: MouseEvent, trackingId: string) => {
+    e.stopPropagation();
+    handleRoute(`track-shipment/?trackingId=${trackingId}`);
+  };
 
   if (isChecking) {
     return null;
@@ -274,41 +286,24 @@ export default function MyShipmentPage() {
 
         {isSuccessActive && activeData.length > 0 && (
           <div>
+            {/* Desktop screen */}
             <div className="max-md:hidden">
-              <ShipmentTable shipments={activeData} />
+              <ShipmentTable
+                handleRoute={handleRoute}
+                handleTrack={handleTrack}
+                handleView={handleView}
+                shipments={allShipments}
+              />
             </div>
-
+            {/* Mobile screen */}
             <div className="md:hidden mt-3 rounded-[16px] bg-white">
               {allShipments.map((shipment, idx) => (
-                <div
+                <ShipmentCard
                   key={idx}
-                  className="px-5.25 py-6 flex flex-col justify-start border-b"
-                >
-                  <div className="space-y-2">
-                    <p className="text-xs leading-5">{shipment.trackingId}</p>
-                    <div className="flex items-center gap-2">
-                      <p className="text-base leading-5.5">
-                        {shipment.country}
-                      </p>
-                      <ArrowRight className="size-4.5 text-primary" />
-                      <p className="text-base leading-5.5">
-                        {shipment.receiverCountry}
-                      </p>
-                    </div>
-                    <p className="leading-5.5">
-                      {Number(shipment.price).toLocaleString()}
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <p className="capitalize text-xs leading-5">
-                        {shipment.freightType.replace("_", " ").toLowerCase()}
-                      </p>
-                      <div className="size-1 bg-neutral-300 rounded-full" />
-                      <p className="capitalize text-xs leading-5">
-                        {formatDate(shipment.createdAt)}
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                  shipment={shipment}
+                  handleView={handleView}
+                  handleTrack={handleTrack}
+                />
               ))}
             </div>
           </div>

@@ -17,30 +17,21 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
-import { useRouter } from "next/navigation";
 import { MouseEvent } from "react";
 
 interface ShipmentTableProps {
   shipments: Shipment[];
+  handleRoute: (path: string) => void;
+  handleView: (e: MouseEvent, id: string) => void;
+  handleTrack: (e: MouseEvent, trackingId: string) => void;
 }
 
-const ShipmentTable = ({ shipments }: ShipmentTableProps) => {
-  const router = useRouter();
-
-  const handleRoute = (path: string) => {
-    if (!path) return;
-    router.push(path);
-  };
-
-  const handleView = (e: MouseEvent, id: string) => {
-    e.stopPropagation();
-    handleRoute(`my-shipment/${id}`);
-  };
-  const handleTrack = (e: MouseEvent, trackingId: string) => {
-    e.stopPropagation();
-    handleRoute(`track-shipment/?trackingId=${trackingId}`);
-  };
-
+const ShipmentTable = ({
+  shipments,
+  handleRoute,
+  handleView,
+  handleTrack,
+}: ShipmentTableProps) => {
   return (
     <Table className="mt-3 bg-white rounded-lg">
       <TableHeader>

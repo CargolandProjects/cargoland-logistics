@@ -16,7 +16,7 @@ import { formatDayOfWeek, formatTime } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, Copy } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { Suspense, useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 
@@ -39,7 +39,7 @@ type ProgressOrder =
 
 const status = "Custom Clearance" as ProgressOrder;
 
-export default function TrackShipmentPage() {
+const TrackShipmentPageContent = () => {
   const { mutate, isPending, data } = useTrackShipment();
   const { handleSubmit, control, setError } = useForm<TrackShipmentData>({
     resolver: zodResolver(trackShipmentSchema),
@@ -363,5 +363,13 @@ export default function TrackShipmentPage() {
         )}
       </div>
     </div>
+  );
+};
+
+export default function TrackShipmentPage() {
+  return (
+    <Suspense>
+      <TrackShipmentPageContent />
+    </Suspense>
   );
 }

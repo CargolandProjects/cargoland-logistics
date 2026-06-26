@@ -3,7 +3,6 @@
 import { boxChecked } from "@/assets/images";
 import DashboardStat from "@/components/dashboard/DashboardStat";
 import {
-  ArrowRight,
   DeliveryTruckBolt,
   DeliveryTruckSpeed,
   Orders,
@@ -18,15 +17,18 @@ import {
 } from "@/lib/hooks/queries/useShipment";
 import { useProtectedRoute } from "@/lib/hooks/useProtectedRoute";
 import { useSession } from "@/lib/hooks/useSession";
-import { formatDate } from "@/lib/utils";
 import Image from "next/image";
 import ShipmentTable from "@/components/dashboard/ShipmentTable";
+import { useRouter } from "next/navigation";
+import { MouseEvent } from "react";
+import ShipmentCard from "@/components/dashboard/ShipmentCard";
 
 export default function DashboardPage() {
   const { data, isLoading: isLoadingStats } = useDashboardStats();
   const { data: shipments, isSuccess, isLoading, isError } = useAllShipments();
   const { isAuthenticated, session } = useSession();
   const { isChecking } = useProtectedRoute();
+  const router = useRouter();
 
   console.log("DashboardStats", data);
   console.log("session", session, isAuthenticated);
@@ -62,6 +64,20 @@ export default function DashboardPage() {
   const allShipments = shipments?.shipments || [];
 
   const fullName = `${session?.firstName || ""} ${session?.lastName || ""}`;
+
+  const handleRoute = (path: string) => {
+    if (!path) return;
+    router.push(path);
+  };
+
+  const handleView = (e: MouseEvent, id: string) => {
+    e.stopPropagation();
+    handleRoute(`my-shipment/${id}`);
+  };
+  const handleTrack = (e: MouseEvent, trackingId: string) => {
+    e.stopPropagation();
+    handleRoute(`track-shipment/?trackingId=${trackingId}`);
+  };
 
   if (isChecking) {
     return null;
@@ -144,41 +160,24 @@ export default function DashboardPage() {
 
         {isSuccess && allShipments.length > 0 && (
           <div>
+            {/* Desktop screen */}
             <div className="max-md:hidden">
-              <ShipmentTable shipments={allShipments} />
+              <ShipmentTable
+                handleRoute={handleRoute}
+                handleTrack={handleTrack}
+                handleView={handleView}
+                shipments={allShipments}
+              />
             </div>
-
+            {/* Mobile screen */}
             <div className="md:hidden mt-3 rounded-[16px] bg-white">
               {allShipments.map((shipment, idx) => (
-                <div
+                <ShipmentCard
                   key={idx}
-                  className="px-5.25 py-6 flex flex-col justify-start border-b"
-                >
-                  <div className="space-y-2">
-                    <p className="text-xs leading-5">{shipment.trackingId}</p>
-                    <div className="flex items-center gap-2">
-                      <p className="text-base leading-5.5">
-                        {shipment.country}
-                      </p>
-                      <ArrowRight className="size-4.5 text-primary" />
-                      <p className="text-base leading-5.5">
-                        {shipment.receiverCountry}
-                      </p>
-                    </div>
-                    <p className="leading-5.5">
-                      {Number(shipment.price).toLocaleString()}
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <p className="capitalize text-xs leading-5">
-                        {shipment.freightType.replace("_", " ").toLowerCase()}
-                      </p>
-                      <div className="size-1 bg-neutral-300 rounded-full" />
-                      <p className="capitalize text-xs leading-5">
-                        {formatDate(shipment.createdAt)}
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                  shipment={shipment}
+                  handleView={handleView}
+                  handleTrack={handleTrack}
+                />
               ))}
             </div>
           </div>
