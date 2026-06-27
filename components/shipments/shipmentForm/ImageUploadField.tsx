@@ -209,7 +209,6 @@ export const ImageUploadField = ({
         (a) => a.publicId !== asset.publicId,
       );
       onChange(updatedAssets);
-      toast.success("Image deleted");
     } catch (error) {
       console.error(
         error instanceof Error ? error.message : "Failed to delete image",

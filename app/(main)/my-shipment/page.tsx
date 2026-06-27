@@ -28,13 +28,13 @@ import ShipmentCard from "@/components/dashboard/ShipmentCard";
 
 const statuses: ShipmentStatus[] = [
   "PENDING",
-  "IN_TRANSIT",
-  "DELIVERED",
-  "CANCELLED",
   "PICKED_UP",
   "AT_ORIGIN_HUB",
+  "IN_TRANSIT",
   "DESTINATION",
   "CUSTOM_CLEARANCE",
+  "DELIVERED",
+  "CANCELLED",
 ];
 
 export default function MyShipmentPage() {
@@ -221,23 +221,15 @@ export default function MyShipmentPage() {
             })}
           </div>
 
-          <div className="flex gap-2">
-            {/* input */}
-            <div className="relative w-full">
-              <Input
-                onChange={(e) => setSearch(e.target.value)}
-                value={search}
-                placeholder="Search here"
-                className="form-input h-12.5! pl-10! min-w-[219px] placeholder:text-slate-600/90!"
-              />
-              <Search className="size-5 absolute top-1/2 -translate-y-1/2 left-3 text-slate-600/90" />
-            </div>
-            <Button
-              variant="outline"
-              className="h-12.5 w-[97px] font-roboto font-normal text-primary border-primary"
-            >
-              See all
-            </Button>
+          {/* input */}
+          <div className="relative w-full md:max-w-[291px]">
+            <Input
+              onChange={(e) => setSearch(e.target.value)}
+              value={search}
+              placeholder="Search here"
+              className="form-input h-12.5! pl-10! min-w-[219px] placeholder:text-slate-600/90!"
+            />
+            <Search className="size-5 absolute top-1/2 -translate-y-1/2 left-3 text-slate-600/90" />
           </div>
         </div>
 

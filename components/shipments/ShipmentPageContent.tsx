@@ -10,24 +10,20 @@ import { notFound, useRouter } from "next/navigation";
 import LoadingOverlay from "../LoadingOverlay";
 
 const ShipmentPageContent = ({ id }: { id: string }) => {
-  const {
-    data: shipmentData,
-    isLoading,
-    isError,
-    isSuccess,
-  } = useShipment(id);
+  const { data: shipmentData, isLoading, isError, isSuccess } = useShipment(id);
   const router = useRouter();
 
   const isCancelled = shipmentData?.status === "CANCELLED";
+  const images = shipmentData?.imageUrl || [];
 
   if (isError) return notFound();
 
   return (
     <>
-      <LoadingOverlay showPercenttage loading={isLoading} />
+      <LoadingOverlay loading={isLoading} />
 
       {isSuccess && (
-        <div className="mt-16.5 padding-x rounded-lg">
+        <div className="mt-15 md:mt-16.5 padding-x rounded-lg">
           <Button
             onClick={() => router.back()}
             variant="ghost"
@@ -162,9 +158,10 @@ const ShipmentPageContent = ({ id }: { id: string }) => {
               </div>
 
               <div className="mt-2 mt-3 md:mt-2 flex flex-wrap gap-3">
-                {shipmentData?.imageUrl.map((img) => (
-                  <RenderExistingImage key={img.publicId} asset={img} />
-                ))}
+                {images.length > 0 &&
+                  images.map((img) => (
+                    <RenderExistingImage key={img.publicId} asset={img} />
+                  ))}
               </div>
             </div>
 

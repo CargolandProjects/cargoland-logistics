@@ -112,7 +112,7 @@ export default function DashboardPage() {
           <Button
             onClick={() => router.push("/my-shipment")}
             variant="outline"
-            className="text-primary border-primary w-[81px]"
+            className="text-primary border-primary w-[81px] hover:text-primary"
           >
             See All
           </Button>
@@ -170,6 +170,7 @@ export default function DashboardPage() {
                 shipments={allShipments}
               />
             </div>
+
             {/* Mobile screen */}
             <div className="md:hidden mt-3 rounded-[16px] bg-white">
               {allShipments.map((shipment, idx) => (

@@ -135,6 +135,7 @@ const EstimatePageContent = () => {
 
   return (
     <div className="relative pt-16.5 ">
+      {/* backgound color */}
       <div className="bg-primary/8 absolute top-0 h-[449px] w-full" />
       <section className="padding-x">
         <div className="max-w-[758px] mx-auto relative">
