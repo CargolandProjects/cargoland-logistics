@@ -11,10 +11,10 @@ import { useShipmentByReference } from "@/lib/hooks/queries/useShipment";
 import { useShipmentStore } from "@/lib/stores/useShipmentStore";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { toast } from "sonner";
 
-export default function PaymentSuccessfulPage() {
+const PaymentSuccessfulContent = () => {
   const { mutate: getInvoice, isPending } = useShipmentInvoice();
   const clearShipmentData = useShipmentStore((s) => s.clearShipment);
   const searchParams = useSearchParams();
@@ -110,6 +110,7 @@ export default function PaymentSuccessfulPage() {
 
             <Button
               onClick={handleinvoice}
+              disabled={isPending}
               variant="ghost"
               className="mt-3.5 text-xs font-normal leading-5 font-roboto rounded-md bg-[#E9EBF3] text-secondary gap-1"
             >
@@ -134,10 +135,17 @@ export default function PaymentSuccessfulPage() {
                 Track Shipment
               </Button>
             </div>
-            {/* <Button onClick={() => clearShipmentData()}>Burn Everything</Button> */}
           </div>
         </section>
       )}
     </>
+  );
+};
+
+export default function PaymentSuccessfulPage() {
+  return (
+    <Suspense>
+      <PaymentSuccessfulContent />
+    </Suspense>
   );
 }
