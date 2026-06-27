@@ -7,7 +7,7 @@ export default async function ShipmentPage({
 }) {
   const { id } = await params;
 
-  console.log("Shipment ID: ", id);
+  // console.log("Shipment ID: ", id);
 
   return <ShipmentPageContent id={id} />;
 }

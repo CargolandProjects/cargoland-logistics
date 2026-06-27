@@ -6,6 +6,7 @@ import { APIResponse } from "./auth.service";
 
 export type ShipmentStatus =
   | "PENDING"
+  | "ASSIGNED"
   | "PICKED_UP"
   | "AT_ORIGIN_HUB"
   | "IN_TRANSIT"

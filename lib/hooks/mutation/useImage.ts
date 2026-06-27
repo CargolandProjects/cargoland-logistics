@@ -18,7 +18,7 @@ export const useDeleteImage = () => {
   return useMutation({
     mutationFn: image.delete,
     onSuccess: () => {
-      toast.success("Image deleted successfully");
+      toast.success("Image deleted");
     },
     onError: () => {
       toast.error("failed to delete image");

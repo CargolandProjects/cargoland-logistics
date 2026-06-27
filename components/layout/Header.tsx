@@ -131,12 +131,24 @@ const Header = () => {
                   <ArrowDown className="size-5 text-black" />
                 </Button>
               ) : (
-                <Link href="/login" className="flex gap-2 max-md:hidden  ">
+                <div className="flex gap-2 max-md:hidden  ">
                   <UserCircleIcon className="size-6" />
-                  <p className="leading-5 hover:text-primary duration-200 hover:underline underline-offset-[1.5px]">
-                    Login/Register
+                  <p>
+                    <Link
+                      href="/login"
+                      className="leading-5 hover:text-primary duration-200 hover:underline underline-offset-[1.5px]"
+                    >
+                      Login
+                    </Link>
+                    /
+                    <Link
+                      href="/signup"
+                      className="leading-5 hover:text-primary duration-200 hover:underline underline-offset-[1.5px]"
+                    >
+                      Register
+                    </Link>
                   </p>
-                </Link>
+                </div>
               )}
             </DropdownMenuTrigger>
 
@@ -144,18 +156,19 @@ const Header = () => {
               <DropdownMenuContent className="max-md:hidden space-y-2 p-2">
                 <DropdownMenuItem
                   asChild
-                  className="p-0 font-medium leading-5.5 hover:p-2 hover:bg-primary/8 duration-200 cursor-pointer"
+                  className="p-0 font-medium leading-5.5 hover:p-2 hover:bg-primary/8! duration-200 cursor-pointer"
                 >
                   <Link href="/profile">Profile</Link>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem
                   asChild
-                  className="font-medium leading-5.5 hover:p-2 hover:bg-primary/8 duration-200 cursor-pointer"
+                  className="font-medium leading-5.5 hover:p-2 hover:bg-primary/8! duration-200 cursor-pointer"
                 >
                   <Button
                     onClick={() => setOpen(true)}
-                    className="p-0 w-full justify-start  h-fit text-black hover:text-destructive hover:destructive/10 bg-transparent font-roboto"
+                    variant="ghost"
+                    className="p-0 w-full justify-start h-fit text-black hover:text-destructive! hover:bg-destructive/10! font-roboto"
                   >
                     Logout
                   </Button>
@@ -207,7 +220,10 @@ const Header = () => {
                     >
                       Sign In
                     </Button>
-                    <Button className="h-12! w-full rounded-lg">
+                    <Button
+                      onClick={() => router.push("/signup")}
+                      className="h-12! w-full rounded-lg"
+                    >
                       Get Started
                     </Button>
                   </div>

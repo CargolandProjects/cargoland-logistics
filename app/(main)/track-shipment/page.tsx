@@ -1,6 +1,8 @@
 "use client";
 
+import CopyButton from "@/components/CopyButton";
 import {
+  ArrowLeft,
   CheckboxMarkedOutline,
   DeliveryTruckSpeedOutline,
   DepartmentStore,
@@ -8,6 +10,7 @@ import {
   NoticeOutline,
   Package,
 } from "@/components/icons";
+import LoadingOverlay from "@/components/LoadingOverlay";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -15,9 +18,9 @@ import { useTrackShipment } from "@/lib/hooks/mutation/useMutateShipment";
 import { ShipmentStatus } from "@/lib/services/shipment.service";
 import { formatDayOfWeek, formatTime } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, Copy, Stamp } from "lucide-react";
+import { ArrowRight, Stamp } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useMemo } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 
@@ -32,6 +35,8 @@ type TrackShipmentData = z.infer<typeof trackShipmentSchema>;
 
 const TrackShipmentPageContent = () => {
   const { mutate, isPending, data } = useTrackShipment();
+  const [step, setStep] = useState<"track" | "details">("track");
+
   const { handleSubmit, control, setError } = useForm<TrackShipmentData>({
     resolver: zodResolver(trackShipmentSchema),
     defaultValues: {
@@ -43,7 +48,10 @@ const TrackShipmentPageContent = () => {
   const trackingId = searchParams.get("trackingId");
 
   const shipment = data?.data;
-  const status: ShipmentStatus = shipment?.status || "PENDING";
+  const status: ShipmentStatus =
+    shipment?.status === "ASSIGNED" ? "PENDING" : shipment?.status || "PENDING";
+  // const isCanceled = shipment?.status === "CANCELLED";
+
   // console.log("SHipment Status:", status)
 
   const shipmentProgress = useMemo(() => {
@@ -116,13 +124,21 @@ const TrackShipmentPageContent = () => {
       }
     });
 
-    return progressStatus;
+    const percentage =
+      currentIndex === -1
+        ? 0
+        : Math.round(((currentIndex + 1) / statusOrder.length) * 100);
+
+    return { progressStatus, percentage };
   }, [status]);
 
   useEffect(() => {
     if (!trackingId) return;
 
     mutate(trackingId, {
+      onSuccess: () => {
+        setStep("details");
+      },
       onError: (res) => {
         setError("trackingId", {
           message: res.message,
@@ -131,12 +147,13 @@ const TrackShipmentPageContent = () => {
     });
   }, [trackingId, mutate, setError]);
 
-  console.log("shipment", shipmentProgress);
+  // console.log("shipment", shipmentProgress);
 
   const onSubmit = (data: TrackShipmentData) => {
-    console.log(data);
-
     mutate(data.trackingId, {
+      onSuccess: () => {
+        setStep("details");
+      },
       onError: (res) => {
         setError("trackingId", {
           message: res.message,
@@ -147,64 +164,71 @@ const TrackShipmentPageContent = () => {
 
   return (
     <div className="sec-mt padding-x">
+      {step === "details" && (
+        <Button
+          onClick={() => setStep("track")}
+          variant="ghost"
+          className="mb-6 p-0 h-fit hover:bg-transparent"
+        >
+          <ArrowLeft /> back
+        </Button>
+      )}
+      <LoadingOverlay loading={isPending} />
+
       <div>
         {/* Enter Tracking Number */}
-        {!shipment && (
-          <div className=" px-4 max-w-[638px] mx-auto">
-            <h1 className="text-[32px] font-bold leading-10 text-center">
+        {step === "track" && !isPending && (
+          <div>
+            <h1 className="text-2xl md:text-[32px] font-bold leading-8 md:leading-10 md:text-center">
               Track Shipment
             </h1>
-            <p className="text-base font-light leading-6 text-center mt-2">
+            <p className="mt-2 text-sm md:text-base font-light leading-5 md:leading-6 text-center ">
               Manage your shipments easily with fast tracking and reliable
               delivery.
             </p>
-            <div className="mt-6 py-20 px-10  rounded-[16px] bg-white">
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="p-6 bg-white rounded-lg max-w-[747px] mx-auto "
-              >
-                <FieldSet className="gap-0">
-                  <Controller
-                    name="trackingId"
-                    control={control}
-                    render={({ field, fieldState }) => (
-                      <Field
-                        data-invalid={fieldState.invalid}
-                        className="gap-1"
-                      >
-                        <FieldLabel htmlFor={field.name} className="form-label">
-                          Enter your tracking number
-                        </FieldLabel>
-                        <Input
-                          {...field}
-                          id={field.name}
-                          aria-invalid={fieldState.invalid}
-                          placeholder="Enter Number"
-                          className="form-input"
-                        />
-                        {fieldState.invalid && (
-                          <FieldError
-                            errors={[fieldState.error]}
-                            className="form-error"
-                          />
-                        )}
-                      </Field>
-                    )}
-                  />
-                </FieldSet>
 
-                <Button
-                  disabled={isPending}
-                  type="submit"
-                  className="mt-6 submit-button"
-                >
-                  Track Shipment
-                </Button>
-              </form>
-            </div>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="mt-5 md:mt-6 py-10 md:py-20 px-6 md:px-25 rounded-[16px] bg-white max-w-[758px] mx-auto"
+            >
+              <FieldSet className="gap-0">
+                <Controller
+                  name="trackingId"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid} className="gap-1">
+                      <FieldLabel htmlFor={field.name} className="form-label">
+                        Enter your tracking number
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id={field.name}
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Enter Number"
+                        className="form-input"
+                      />
+                      {fieldState.invalid && (
+                        <FieldError
+                          errors={[fieldState.error]}
+                          className="form-error"
+                        />
+                      )}
+                    </Field>
+                  )}
+                />
+              </FieldSet>
+
+              <Button
+                disabled={isPending}
+                type="submit"
+                className="mt-6 submit-button"
+              >
+                Track Shipment
+              </Button>
+            </form>
           </div>
         )}
-        {shipment && (
+        {step === "details" && shipment && (
           <div>
             <div>
               <h1 className="text-2xl md:text-[32px] font-bold leading-8 md:leading-10 ">
@@ -232,8 +256,7 @@ const TrackShipmentPageContent = () => {
                   <h2 className="text-xl md:text-[32px] font-bold leading-7 md:leading-10">
                     {shipment.trackingId}
                   </h2>
-
-                  <Copy className="size-[16px] text-secondary" />
+                  <CopyButton text={shipment.trackingId} />
                 </div>
 
                 <div className="mt-2 flex items-center gap-3 text-slate-700">
@@ -281,7 +304,7 @@ const TrackShipmentPageContent = () => {
 
                   <div className="flex items-center md:items-end gap-2">
                     <p className="text-xl md:text-[32px] font-bold leading-7 md;leading-10  font-montserrat">
-                      70%
+                      {shipmentProgress.percentage}%
                     </p>
                     <p className="text-xs leading-5 text-slate-600">complete</p>
                   </div>
@@ -291,7 +314,7 @@ const TrackShipmentPageContent = () => {
                   {/* background unfilled progress bar */}
                   <div className="h-full sm:h-1.5 absolute w-1.5 sm:w-full max-sm:left-[16.75] sm:top-3.5 sm:translate-y-1/2 rounded-full bg-primary-light " />
 
-                  {shipmentProgress.map((progress, idx) => {
+                  {shipmentProgress.progressStatus.map((progress, idx) => {
                     const isCompleted = progress.status === "success";
                     const isIdle = progress.status === "idle";
                     return (
