@@ -165,6 +165,12 @@ const ShipmentForm = () => {
   };
 
   const onSubmit = (data: ShipmentDataType) => {
+    if (!isAuthenticated) {
+      toast.error("Please login to create shipment ");
+      router.push("/login");
+      return;
+    }
+
     const payload = {
       ...data,
       shipmentType: shipmentType,
@@ -212,6 +218,7 @@ const ShipmentForm = () => {
     if (!isAuthenticated) {
       toast.error("Please login to make payment");
       router.push("/login");
+      return;
     }
 
     if (!createdShipment?.id) return;
@@ -294,6 +301,7 @@ const ShipmentForm = () => {
               {step === 3 && (
                 <Button
                   onClick={handlePayment}
+                  disabled={isPaying}
                   type="button"
                   className="w-full md:w-[215px] h-13.75 rounded-md"
                 >

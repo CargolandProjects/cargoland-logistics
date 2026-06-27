@@ -143,15 +143,14 @@ export const shipmentSchema = z
       .max(500, "Height cannot exceed 500 cm")
       .regex(/^\d+(\.\d+)?$/, "Must be a valid number"),
 
-    imageUrl: z
-      .array(
-        z.object({
-          imageUrl: z.string().url(),
-          publicId: z.string(),
-        }),
-      )
-      .min(1, "At least one image is required"),
-
+    imageUrl: z.array(
+      z.object({
+        imageUrl: z.string().url(),
+        publicId: z.string(),
+      }),
+    ),
+    // .min(1, "At least one image is required")
+    
     descriptionOfGoods: z
       .string()
       .min(5, "Description must be at least 5 characters")

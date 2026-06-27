@@ -20,18 +20,26 @@ import { useSession } from "@/lib/hooks/useSession";
 import Image from "next/image";
 import ShipmentTable from "@/components/dashboard/ShipmentTable";
 import { useRouter } from "next/navigation";
-import { MouseEvent } from "react";
+import { MouseEvent, useRef, useState } from "react";
 import ShipmentCard from "@/components/dashboard/ShipmentCard";
+import { Pagination } from "@/components/Pagination";
 
 export default function DashboardPage() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const shipmentsRef = useRef<HTMLElement>(null);
   const { data, isLoading: isLoadingStats } = useDashboardStats();
-  const { data: shipments, isSuccess, isLoading, isError } = useAllShipments();
-  const { isAuthenticated, session } = useSession();
+  const {
+    data: shipments,
+    isSuccess,
+    isLoading,
+    isError,
+  } = useAllShipments(currentPage);
+  const { session } = useSession();
   const { isChecking } = useProtectedRoute();
   const router = useRouter();
 
-  console.log("DashboardStats", data);
-  console.log("session", session, isAuthenticated);
+  // console.log("DashboardStats", data);
+  // console.log("session", session, isAuthenticated);
 
   const getDashboardStats = () => {
     const dashboardStats = [
@@ -62,8 +70,23 @@ export default function DashboardPage() {
 
   const dashboardStats = getDashboardStats();
   const allShipments = shipments?.shipments || [];
+  const pagination = shipments?.pagination;
+
+  const totalPages = pagination?.totalPages || 1;
+  const page = pagination?.page || 1;
 
   const fullName = `${session?.firstName || ""} ${session?.lastName || ""}`;
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to top of the table when page changes
+    if (shipmentsRef.current) {
+      shipmentsRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
 
   const handleRoute = (path: string) => {
     if (!path) return;
@@ -85,7 +108,7 @@ export default function DashboardPage() {
 
   return (
     <div className="padding-x sec-mt">
-      <section className="">
+      <section>
         <h1 className="font-bold text-[32px] leading-10 ">
           Welcome, {fullName}
         </h1>
@@ -106,7 +129,7 @@ export default function DashboardPage() {
         ))}
       </section>
 
-      <section className="mt-[76px] md:mt-8">
+      <section ref={shipmentsRef} className="mt-[76px] md:mt-8">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold leading-7">Recent Shipments</h2>
           <Button
@@ -186,7 +209,19 @@ export default function DashboardPage() {
         )}
       </section>
 
-      {/* <section></section> */}
+      {isSuccess && totalPages > 1 && (
+        <div className="mt-9.5">
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+            siblings={totalPages > 3 ? 1 : 0}
+          />
+          {/* <div className="text-center text-sm text-gray-500 mt-2">
+            Showing {allShipments.length} of {totalPages} shipments
+          </div> */}
+        </div>
+      )}
     </div>
   );
 }

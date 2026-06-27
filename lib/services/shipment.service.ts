@@ -203,9 +203,15 @@ export const shipment = {
     return res.data;
   },
 
-  async allShipments() {
+  async allShipments(page: number, limit: number) {
     const res = await apiClient.get<AllShipmentsRes>(
       API_ROUTES.shipment.allShipments,
+      {
+        params: {
+          page,
+          limit,
+        },
+      },
     );
     return res.data;
   },

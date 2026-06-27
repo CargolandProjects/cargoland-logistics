@@ -15,7 +15,7 @@ import {
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Shipment, ShipmentStatus } from "@/lib/services/shipment.service";
-import { MouseEvent, useState } from "react";
+import { MouseEvent, useRef, useState } from "react";
 import { useProtectedRoute } from "@/lib/hooks/useProtectedRoute";
 import Loader from "@/components/Loader";
 import Image from "next/image";
@@ -25,6 +25,7 @@ import ShipmentTable from "@/components/dashboard/ShipmentTable";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import ShipmentCard from "@/components/dashboard/ShipmentCard";
+import { Pagination } from "@/components/Pagination";
 
 const statuses: ShipmentStatus[] = [
   "PENDING",
@@ -38,13 +39,15 @@ const statuses: ShipmentStatus[] = [
 ];
 
 export default function MyShipmentPage() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const shipmentsRef = useRef<HTMLElement>(null);
   const { data, isLoading: isLoadingStats } = useDashboardStats();
   const {
     data: shipments,
     isSuccess: isSuccessAll,
     isLoading: isLoadingAll,
     isError: isErrorAll,
-  } = useAllShipments();
+  } = useAllShipments(currentPage);
   const [tblView, setTblView] = useState<ShipmentStatus | null>(null);
   const [search, setSearch] = useState("");
   const {
@@ -95,6 +98,11 @@ export default function MyShipmentPage() {
   const allShipments = shipments?.shipments || [];
   const currentData = isFiltered ? myShipments || [] : allShipments;
 
+  //   const pagination = currentData?.pagination;
+
+  // const totalPages = pagination?.totalPages || 1;
+  // const page = pagination?.page || 1;
+
   const searchableFields: (keyof Shipment)[] = [
     "shipmentType",
     "freightType",
@@ -141,6 +149,17 @@ export default function MyShipmentPage() {
   };
 
   const activeData = getActiveData();
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to top of the table when page changes
+    if (shipmentsRef.current) {
+      shipmentsRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
 
   const handleRoute = (path: string) => {
     if (!path) return;
@@ -189,9 +208,11 @@ export default function MyShipmentPage() {
           />
         ))}
       </section>
+
       {/* Tabs and search section */}
-      <section className="mt-5 md:mt-6">
+      <section ref={shipmentsRef} className="mt-5 md:mt-6">
         <div className="flex max-md:flex-col-reverse gap-4 md:justify-between">
+          {/* Tabs */}
           <div className="overflow-x-auto md:max-w-[513px] flex hide-scrollbar border rounded-md ">
             <Button
               onClick={() => setTblView(null)}
@@ -221,7 +242,7 @@ export default function MyShipmentPage() {
             })}
           </div>
 
-          {/* input */}
+          {/* search input */}
           <div className="relative w-full md:max-w-[291px]">
             <Input
               onChange={(e) => setSearch(e.target.value)}
@@ -301,6 +322,20 @@ export default function MyShipmentPage() {
           </div>
         )}
       </section>
+
+      {/* {isSuccess && totalPages > 1 && (
+        <div className="mt-9.5">
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+            siblings={totalPages > 3 ? 1 : 0}
+          />
+          <div className="text-center text-sm text-gray-500 mt-2">
+            Showing {allShipments.length} of {totalPages} shipments
+          </div>
+        </div>
+      )} */}
     </div>
   );
 }

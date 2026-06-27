@@ -1,10 +1,10 @@
 "use client";
 
 import { boxChecked } from "@/assets/images";
+import CopyButton from "@/components/CopyButton";
 import { FileDownload } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { useShipmentStore } from "@/lib/stores/useShipmentStore";
-import { Copy } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -37,14 +37,14 @@ export default function PaymentSuccessfulPage() {
             Your shipment was completed successfully
           </p>
           <p className=" text-center flex justify-center items-center gap-1">
-            Tracking number: 102302146671 <Copy className="size-[16px]" />
+            Tracking number: 102302146671 <CopyButton text="Okay naw!!" />
           </p>
-          <p className=" text-center">
+          {/* <p className=" text-center">
             Expected Delivery:{" "}
             <span className="font-semibold">
               Wednesday 09/03/2026 by 05:00 pm
             </span>
-          </p>
+          </p> */}
         </div>
 
         <div className="mt-6 space-y-2">
@@ -57,7 +57,10 @@ export default function PaymentSuccessfulPage() {
           </p>
         </div>
 
-        <Button className="mt-3.5 text-xs font-normal leading-5 font-roboto rounded-md bg-[#E9EBF3] text-secondary gap-1">
+        <Button
+          variant="ghost"
+          className="mt-3.5 text-xs font-normal leading-5 font-roboto rounded-md bg-[#E9EBF3] text-secondary gap-1"
+        >
           <FileDownload className="text-sm  text-secondary" />
           Download PDF
         </Button>
@@ -70,7 +73,9 @@ export default function PaymentSuccessfulPage() {
             Go to dashboard
           </Button>
           <Button
-            onClick={() => router.push("/track-shipment")}
+            onClick={() =>
+              router.push(`/track-shipment?trackingId=${"CLD-52341534"}`)
+            }
             variant="outline"
             className="md:w-[178px] h-[55px] rounded-md text-primary border-2 border-primary hover:text-primary hover:bg-transparent"
           >
