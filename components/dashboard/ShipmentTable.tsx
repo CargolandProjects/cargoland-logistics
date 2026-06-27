@@ -28,7 +28,7 @@ interface ShipmentTableProps {
 
 const ShipmentTable = ({
   shipments,
-  // handleRoute,
+  // handleRoute, 
   handleView,
   handleTrack,
 }: ShipmentTableProps) => {

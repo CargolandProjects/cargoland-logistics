@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrowRight, DeliveryTruck, Plane, Ship } from "../../icons";
 import { Button } from "../../ui/button";
 
@@ -53,10 +54,10 @@ const ChooseFreight = () => {
                 {freight.desc}
               </p>
 
-              <Button className="mt-8 h-12 w-fit px-5 gap-2 text-primary rounded-lg bg-primary-light">
+              <Link href="/shipment" className="flex items-center mt-8 h-12 w-fit px-5 gap-2 text-base text-primary rounded-lg bg-primary-light">
                 {freight.action}
                 <ArrowRight className="size-4.5" />
-              </Button>
+              </Link>
             </div>
           </div>
         ))}

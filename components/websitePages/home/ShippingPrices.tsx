@@ -1,3 +1,6 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import { ArrowRight } from "../../icons";
 import { Button } from "../../ui/button";
 
@@ -25,19 +28,21 @@ const prices = [
   },
 ];
 const ShippingPrices = () => {
+  const router = useRouter();
   return (
     <section className="padding-x padding-y">
       <div className="grid md:grid-cols-2 gap-6 md:gap-4 lg:gap-15">
         <div className="max-md:flex flex-col">
-          <h2 className="sec-heading md:text-left!">
-            Shipping Prices Today
-          </h2>
+          <h2 className="sec-heading md:text-left!">Shipping Prices Today</h2>
           <p className="sec-paragraph md:text-left!">
             Real-time shipping rates per kilogram across popular international
             routes.
           </p>
 
-          <Button className="mt-6 py-3 px-5 h-auto text-base leading-6 rounded-lg w-fit mx-auto">
+          <Button
+            onClick={() => router.push("/shipment")}
+            className="mt-6 py-3 px-5 h-auto text-base leading-6 rounded-lg w-fit mx-auto"
+          >
             Book Shipment
           </Button>
         </div>
@@ -71,7 +76,13 @@ const ShippingPrices = () => {
               {/* price + action */}
               <div className="max-md:mt-6 flex flex-col max-md:gap-6 justify-between">
                 <p className="text-2xl font-bold leading-8">{price.price}</p>
-                <Button variant="outline" className="py-3 px-5 h-auto text-base font-normal text-primary rounded-lg border-primary ">Book Now</Button>
+                <Button
+                  onClick={() => router.push("/shipment")}
+                  variant="outline"
+                  className="py-3 px-5 h-auto text-base font-normal text-primary rounded-lg border-primary hover:text-prrimary "
+                >
+                  Book Now
+                </Button>
               </div>
             </div>
           ))}

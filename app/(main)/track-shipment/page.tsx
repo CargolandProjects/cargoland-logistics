@@ -12,9 +12,10 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useTrackShipment } from "@/lib/hooks/mutation/useMutateShipment";
+import { ShipmentStatus } from "@/lib/services/shipment.service";
 import { formatDayOfWeek, formatTime } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, Copy } from "lucide-react";
+import { ArrowRight, Copy, Stamp } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -29,16 +30,6 @@ const trackShipmentSchema = z.object({
 
 type TrackShipmentData = z.infer<typeof trackShipmentSchema>;
 
-type ProgressOrder =
-  | "new"
-  | "Picked Up"
-  | "At Origin Hub"
-  | "In Transit"
-  | "Destination"
-  | "Custom Clearance";
-
-const status = "Custom Clearance" as ProgressOrder;
-
 const TrackShipmentPageContent = () => {
   const { mutate, isPending, data } = useTrackShipment();
   const { handleSubmit, control, setError } = useForm<TrackShipmentData>({
@@ -47,17 +38,22 @@ const TrackShipmentPageContent = () => {
       trackingId: "",
     },
   });
+
   const searchParams = useSearchParams();
   const trackingId = searchParams.get("trackingId");
 
   const shipment = data?.data;
+  const status: ShipmentStatus = shipment?.status || "PENDING";
+  // console.log("SHipment Status:", status)
+
   const shipmentProgress = useMemo(() => {
-    const statusOrder: ProgressOrder[] = [
-      "Picked Up",
-      "At Origin Hub",
-      "In Transit",
-      "Destination",
-      "Custom Clearance",
+    const statusOrder: ShipmentStatus[] = [
+      "PICKED_UP",
+      "AT_ORIGIN_HUB",
+      "IN_TRANSIT",
+      "DESTINATION",
+      "CUSTOM_CLEARANCE",
+      "DELIVERED",
     ];
 
     const currentIndex = statusOrder.indexOf(status);
@@ -95,6 +91,13 @@ const TrackShipmentPageContent = () => {
         title: "Custom Clearance",
         location: "Abuja, Sorting Facility",
         time: "2026-05-27T09:16:00",
+        icon: Stamp,
+        status: "idle",
+      },
+      {
+        title: "Delivered",
+        location: "Abuja, Sorting Facility",
+        time: "2026-05-27T09:16:00",
         icon: CheckboxMarkedOutline,
         status: "idle",
       },
@@ -114,7 +117,7 @@ const TrackShipmentPageContent = () => {
     });
 
     return progressStatus;
-  }, []);
+  }, [status]);
 
   useEffect(() => {
     if (!trackingId) return;
