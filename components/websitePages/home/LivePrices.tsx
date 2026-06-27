@@ -22,6 +22,8 @@ import { usePricing } from "@/lib/hooks/queries/usePricing";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import TableSkeleton from "../pricing/TableSkeleton";
+import CardSkeleton from "../pricing/CardSkeleton";
 
 const LivePrices = () => {
   const [filter, setFilter] = useState("");
@@ -67,64 +69,15 @@ const LivePrices = () => {
         <p className="leading-6 text-primary-light">Updated: 10:40:57 PM</p>
       </div>
 
-      {isLoading && (
-        // Skeleton loading state for the table
-        <Table
-          className="max-md:hidden bg-white"
-          containerClassName="mt-6 rounded-t-lg overflow-hidden hide-scrollbar"
-        >
-          <TableHeader className="rounded-lg! bg-primary-light">
-            <TableRow className="">
-              <TableHead className="text-base font-normal uppercase text-primary-dark">
-                Route
-              </TableHead>
-              <TableHead className="text-base font-normal uppercase text-primary-dark">
-                Air/Kg
-              </TableHead>
-              <TableHead className="text-base font-normal uppercase text-primary-darkt">
-                Land/Kg
-              </TableHead>
-              <TableHead className="text-base font-normal uppercase text-primary-dark">
-                Ocean/kg
-              </TableHead>
-              <TableHead className="text-base font-normal uppercase text-primary-dark" />
-            </TableRow>
-          </TableHeader>
-
-          <TableBody>
-            {Array.from({ length: 5 }).map((_, idx) => (
-              <TableRow key={idx} className="border hover:bg-muted">
-                <TableCell className="pl-4 py-3">
-                  <div className="flex gap-3.5 items-center">
-                    <Skeleton className="h-5 w-20 capitalize" />
-                    <ArrowRight className="size-4.5 text-neutral-200 animate-pulse" />
-                    <Skeleton className="h-5 w-20 capitalize" />
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-5 w-16" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-5 w-16" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-5 w-16" />
-                </TableCell>
-                <TableCell className="pr-10.5">
-                  <Skeleton className="h-11 w-18 rounded-md rounded-lg" />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      )}
+      {/* Skeleton loading state for the table */}
+      {isLoading && <TableSkeleton />}
 
       {/* Desktop Screens */}
       <Table
         className="max-md:hidden bg-white"
         containerClassName="mt-6 rounded-t-lg overflow-hidden hide-scrollbar"
       >
-        <>
+        {!isLoading && (
           <TableHeader className="rounded-lg! bg-primary-light">
             <TableRow className="">
               <TableHead className="text-base font-normal uppercase text-primary-dark">
@@ -145,60 +98,56 @@ const LivePrices = () => {
               <TableHead className="text-base font-normal uppercase text-primary-dark" />
             </TableRow>
           </TableHeader>
+        )}
 
-          <TableBody>
-            {isError && (
-              <TableRow>
-                <TableCell
-                  colSpan={5}
-                  className="text-center py-10 text-red-400"
-                >
-                  Failed to Load Prices
-                </TableCell>
-              </TableRow>
-            )}
+        <TableBody>
+          {isError && (
+            <TableRow>
+              <TableCell colSpan={5} className="text-center py-10 text-red-400">
+                Failed to Load Prices
+              </TableCell>
+            </TableRow>
+          )}
 
-            {isSuccess && (
-              <>
-                {livePrices.length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={5} className="text-center py-10">
-                      No data found
-                    </TableCell>
-                  </TableRow>
-                )}
+          {isSuccess && (
+            <>
+              {livePrices.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center py-10">
+                    No data found
+                  </TableCell>
+                </TableRow>
+              )}
 
-                {livePrices.length > 0 &&
-                  livePrices.map((price, idx) => (
-                    <TableRow key={idx} className="border hover:bg-muted">
-                      <TableCell className="pl-4 py-3">
-                        <div className="flex gap-3.5 items-center">
-                          <p className="text-base capitalize">
-                            {price.fromWhere}
-                          </p>
-                          <ArrowRight className="size-4.5 text-primary" />
-                          <p className="text-base capitalize">
-                            {price.toWhere}
-                          </p>
-                        </div>
+              {livePrices.length > 0 &&
+                livePrices.map((price, idx) => (
+                  <TableRow key={idx} className="border hover:bg-muted">
+                    <TableCell className="pl-4 py-3">
+                      <div className="flex gap-3.5 items-center">
+                        <p className="text-base capitalize">
+                          {price.fromWhere}
+                        </p>
+                        <ArrowRight className="size-4.5 text-primary" />
+                        <p className="text-base capitalize">{price.toWhere}</p>
+                      </div>
 
-                        {/* <div className="mt-2 flex gap-1 items-center">
+                      {/* <div className="mt-2 flex gap-1 items-center">
                       <p className="text-gray-400">{price.airFreightRate}</p>
                       <div className="size-1 rounded-full bg-neutral-200" />
                       <p className="text-gray-400">{price.oceanFreightRate}</p>
                     </div> */}
-                      </TableCell>
-                      <TableCell className="text-base font-bold">
-                        ${Number(price.airFreightRate).toLocaleString()}
-                      </TableCell>
-                      <TableCell className="text-base font-bold">
-                        ${Number(price.roadFreightRate).toLocaleString()}
-                      </TableCell>
-                      <TableCell className="text-base font-bold">
-                        ${Number(price.oceanFreightRate).toLocaleString()}
-                      </TableCell>
-                      {/* Trend cell */}
-                      {/* <TableCell
+                    </TableCell>
+                    <TableCell className="text-base font-bold">
+                      ${Number(price.airFreightRate).toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-base font-bold">
+                      ${Number(price.roadFreightRate).toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-base font-bold">
+                      ${Number(price.oceanFreightRate).toLocaleString()}
+                    </TableCell>
+                    {/* Trend cell */}
+                    {/* <TableCell
                   className={`${price.trend < 0 ? " text-red-500" : " text-green-500"} text-base font-bold`}
                 >
                   <div className="flex gap-0.75 items-center">
@@ -210,43 +159,58 @@ const LivePrices = () => {
                     {price.pricingShippingType > 0 ? `+${price.trend}` : price.trend}%
                   </div>
                 </TableCell> */}
-                      <TableCell className="pr-10.5">
-                        <Button
-                          variant="outline"
-                          className="py-3 h-auto w-full border-primary text-base font-normal text-primary hover:text-primary"
-                        >
-                          Book
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </>
-            )}
-          </TableBody>
-        </>
+                    <TableCell className="pr-10.5">
+                      <Button
+                        onClick={() => router.push("/shipment")}
+                        variant="outline"
+                        className="py-3 h-auto w-full border-primary text-base font-normal text-primary hover:text-primary"
+                      >
+                        Book
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </>
+          )}
+        </TableBody>
       </Table>
 
       {/* Mobile Screens */}
-      {isSuccess && (
-        <div className="md:hidden bg-white rounded-lg  overflow-hidden">
-          <h3 className="py-3 px-4 bg-primary-light  uppercase font-roboto">
-            Route
-          </h3>
+      <div className="md:hidden bg-white rounded-lg  overflow-hidden">
+        <h3 className="py-3 px-4 bg-primary-light  uppercase font-roboto">
+          Route
+        </h3>
 
-          <div>
-            {livePrices.map((price, idx) => (
-              <div
-                key={idx}
-                className={`${idx !== livePrices.length - 1 && "border-b"} p-6 `}
-              >
-                <div className="flex justify-between">
-                  <div className="flex items-center gap-3.5">
-                    <p className="text-base capitalize">{price.fromWhere}</p>
-                    <ArrowRight className="size-4.5 text-primary" />
-                    <p className="text-base capitalize">{price.toWhere}</p>
-                  </div>
-                  {/* Trend */}
-                  {/* <p
+        {isLoading && <CardSkeleton />}
+
+        {/* Error State */}
+        {isError && (
+          <div className="p-6 text-center text-red-400">
+            Failed to Load Prices
+          </div>
+        )}
+
+        {isSuccess && (
+          <>
+            {/* Empty State */}
+            {livePrices.length === 0 && (
+              <div className="p-6 text-center">No data found</div>
+            )}
+
+            <div>
+              {livePrices.map((price, idx) => (
+                <div
+                  key={idx}
+                  className={`${idx !== livePrices.length - 1 && "border-b"} p-6 `}
+                >
+                  <div className="flex justify-between">
+                    <div className="flex items-center gap-3.5">
+                      <p className="text-base capitalize">{price.fromWhere}</p>
+                      <ArrowRight className="size-4.5 text-primary" />
+                      <p className="text-base capitalize">{price.toWhere}</p>
+                    </div>
+                    {/* Trend */}
+                    {/* <p
                       className={`${price.trend < 0 ? " text-red-500" : " text-green-500"} text-base font-bold flex gap-0.75 items-center`}
                     >
                       {price.trend < 0 ? (
@@ -256,50 +220,52 @@ const LivePrices = () => {
                       )}
                       {price.trend > 0 ? `+${price.trend}` : price.trend}%
                     </p> */}
-                </div>
+                  </div>
 
-                {/* <div className="mt-2 flex gap-1 items-center">
+                  {/* <div className="mt-2 flex gap-1 items-center">
                     <p className="text-gray-400">{price.routeAir}</p>
                     <div className="size-1 rounded-full bg-neutral-200" />
                     <p className="text-gray-400">{price.routeOcean}</p>
                   </div> */}
-                <div className="mt-4.5 flex gap-2 max-xxs:justify-between xxs:gap-6">
-                  <div className="space-y-2">
-                    <p className="text-lg font-semibold leading-6.5 uppercase">
-                      Air/kg
-                    </p>
-                    <p className="text-base font-bold">
-                      ${price.airFreightRate}
-                    </p>
+                  <div className="mt-4.5 flex gap-2 max-xxs:justify-between xxs:gap-6">
+                    <div className="space-y-2">
+                      <p className="text-lg font-semibold leading-6.5 uppercase">
+                        Air/kg
+                      </p>
+                      <p className="text-base font-bold">
+                        ${price.airFreightRate}
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <p className="text-lg font-semibold leading-6.5 uppercase">
+                        Land/kg
+                      </p>
+                      <p className="text-base font-bold">
+                        ${price.roadFreightRate}
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <p className="text-lg font-semibold leading-6.5 uppercase">
+                        Ocean/kg
+                      </p>
+                      <p className="text-base font-bold">
+                        ${price.oceanFreightRate}
+                      </p>
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <p className="text-lg font-semibold leading-6.5 uppercase">
-                      Land/kg
-                    </p>
-                    <p className="text-base font-bold">
-                      ${price.roadFreightRate}
-                    </p>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="text-lg font-semibold leading-6.5 uppercase">
-                      Ocean/kg
-                    </p>
-                    <p className="text-base font-bold">
-                      ${price.oceanFreightRate}
-                    </p>
-                  </div>
+                  <Button
+                    onClick={() => router.push("/shipment")}
+                    variant="outline"
+                    className="mt-6 py-3 h-auto w-full border-primary text-base font-normal text-primary hover:text-primary"
+                  >
+                    Book Now
+                  </Button>
                 </div>
-                <Button
-                  variant="outline"
-                  className="mt-6 py-3 h-auto w-full border-primary text-base font-normal text-primary hover:text-primary"
-                >
-                  Book Now
-                </Button>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+              ))}
+            </div>
+          </>
+        )}
+      </div>
 
       <div className="flex justify-center">
         <Button

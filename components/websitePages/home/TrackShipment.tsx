@@ -1,11 +1,22 @@
-import React from "react";
+"use client";
+
+import { useState } from "react";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import { ArrowRight } from "../../icons";
 import Image from "next/image";
 import { heroImg } from "@/assets/images";
+import { useRouter } from "next/navigation";
 
 const TrackShipment = () => {
+  const [trakingId, setTrackingId] = useState("");
+  const router = useRouter();
+
+  const handleTrack = () => {
+    if (!trakingId) return;
+    router.push(`/track-shipment?trackingId=${trakingId}`);
+  };
+
   return (
     <section className="padding-x py-10.5 bg-primary">
       <div className="flex max-md:flex-col-reverse justify-between items-center gap-12.75 text-white">
@@ -19,10 +30,15 @@ const TrackShipment = () => {
           </p>
           <div className="relative mt-10 md:max-w-[462px]">
             <Input
+              value={trakingId}
+              onChange={(e) => setTrackingId(e.target.value)}
               placeholder="Enter your tracking number"
               className="form-input pr-29! border-gray-400/90! bg-neutral-100 text-black"
             />
-            <Button className=" absolute top-1/2 -translate-y-1/2 active:-translate-y-6! active:scale-98 right-1 h-12 w-[106px] rounded-lg gap-2 ">
+            <Button
+              onClick={handleTrack}
+              className=" absolute top-1/2 -translate-y-1/2 active:-translate-y-6! active:scale-98 right-1 h-12 w-[106px] rounded-lg gap-2 "
+            >
               Track <ArrowRight />{" "}
             </Button>
           </div>

@@ -6,13 +6,13 @@ import { APIResponse } from "./auth.service";
 
 export type ShipmentStatus =
   | "PENDING"
-  | "IN_TRANSIT"
-  | "DELIVERED"
-  | "CANCELLED"
   | "PICKED_UP"
   | "AT_ORIGIN_HUB"
+  | "IN_TRANSIT"
   | "DESTINATION"
-  | "CUSTOM_CLEARANCE";
+  | "CUSTOM_CLEARANCE"
+  | "DELIVERED"
+  | "CANCELLED";
 
 export type Shipment = {
   id: string;

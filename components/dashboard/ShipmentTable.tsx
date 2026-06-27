@@ -28,7 +28,7 @@ interface ShipmentTableProps {
 
 const ShipmentTable = ({
   shipments,
-  handleRoute,
+  // handleRoute, 
   handleView,
   handleTrack,
 }: ShipmentTableProps) => {
@@ -60,9 +60,9 @@ const ShipmentTable = ({
       <TableBody>
         {shipments.map((shipment, idx) => (
           <TableRow
-            onClick={() => handleRoute(`/my-shipment/${shipment.id}`)}
+            // onClick={() => handleRoute(`/my-shipment/${shipment.id}`)}
             key={idx}
-            className="h-15.5 cursor-pointer"
+            className="h-15.5"
           >
             <TableCell className="pl-6 leading-5.5">
               {shipment.trackingId}

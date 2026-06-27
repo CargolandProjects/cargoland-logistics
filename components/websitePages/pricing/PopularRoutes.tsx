@@ -41,7 +41,7 @@ const PopularRoutes = () => {
               <ArrowRight className="size-4.5" />
               <p className="text-base font-semibold">{route.to}</p>
             </div>
-            <p className="mt-4 text-center">{route.time}</p>
+            {/* <p className="mt-4 text-center">{route.time}</p> */}
           </div>
         ))}
       </div>
