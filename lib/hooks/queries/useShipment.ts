@@ -35,3 +35,12 @@ export const useMyShipments = (query: string) => {
     enabled: !!query,
   });
 };
+
+export const useShipmentByReference = (reference: string) => {
+  return useQuery({
+    queryKey: ["shipmentByReference", reference],
+    queryFn: () => shipment.getShipmentByReference(reference),
+    select: (res) => res.data,
+    enabled: !!reference,
+  });
+};

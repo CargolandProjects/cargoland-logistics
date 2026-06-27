@@ -244,4 +244,21 @@ export const shipment = {
     );
     return res.data;
   },
+
+  async getShipmentByReference(reference: string) {
+    const res = await apiClient.get<TrackShipmentRes>(
+      API_ROUTES.shipment.getShipmentByReference(reference),
+    );
+    return res.data;
+  },
+
+  async getShipmentInvoice(reference: string) {
+    const res = await apiClient.get(
+      API_ROUTES.shipment.getShipmentInvoice(reference),
+      {
+        responseType: "blob", 
+      },
+    );
+    return res.data;
+  },
 };

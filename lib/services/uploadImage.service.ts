@@ -13,34 +13,14 @@ export const image = {
     formData.append("file", file);
     formData.append("userEmail", userEmail);
 
-    // const controller = new AbortController();
+    const res = await apiClient.post<UploadResponse>(
+      API_ROUTES.image.upload,
+      formData,
+      // Override global JSON header; undefined lets Axios auto-set multipart/form-data with boundary
+      { headers: { "Content-Type": undefined }, timeout: 60000 },
+    );
 
-    // 👇 manual timeout (fetch doesn’t support it natively)
-    // const timeoutId = setTimeout(() => {
-    //   controller.abort();
-    // }, 60000); // 60s
-
-    try {
-      const res = await fetch(API_ROUTES.image.upload, {
-        method: "POST",
-        body: formData,
-        // signal: controller.signal,
-        // ❌ DO NOT set Content-Type (browser handles it for FormData)
-      });
-
-      if (!res.ok) {
-        throw new Error(`Upload failed: ${res.status}`);
-      }
-
-      const data: UploadResponse = await res.json();
-      return data;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      if (err.name === "AbortError") {
-        throw new Error("Upload timed out");
-      }
-      throw err;
-    }
+    return res.data;
   },
 
   async delete(publicId: string) {

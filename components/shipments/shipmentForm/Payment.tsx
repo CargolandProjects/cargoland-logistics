@@ -17,8 +17,10 @@ const Payment = () => {
   );
   const { mutateAsync: deleteImage } = useDeleteImage();
 
-  // console.log("Shipment Data", shipmentData);  
-  
+  const images = shipmentData?.imageUrl || [];
+
+  // console.log("Shipment Data", shipmentData);
+
   // ----- Delete (mutate with callbacks) -----
   const handleDeleteImage = async (asset: ImageAsset) => {
     if (deletingPublicIds.has(asset.publicId)) return;
@@ -145,14 +147,15 @@ const Payment = () => {
         </div>
 
         <div className="mt-2 mt-3 md:mt-2 flex flex-wrap gap-3">
-          {shipmentData?.imageUrl.map((img) => (
-            <RenderExistingImage
-              key={img.publicId}
-              asset={img}
-              handleDeleteImage={handleDeleteImage}
-              deletingPublicIds={deletingPublicIds}
-            />
-          ))}
+          {images.length > 0 &&
+            images.map((img) => (
+              <RenderExistingImage
+                key={img.publicId}
+                asset={img}
+                handleDeleteImage={handleDeleteImage}
+                deletingPublicIds={deletingPublicIds}
+              />
+            ))}
         </div>
       </div>
 

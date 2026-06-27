@@ -166,7 +166,7 @@ const ShipmentForm = () => {
 
   const onSubmit = (data: ShipmentDataType) => {
     if (!isAuthenticated) {
-      toast.error("Please login to create shipment ");
+      toast.error("Please login to create shipment  payment");
       router.push("/login");
       return;
     }

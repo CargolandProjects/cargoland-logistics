@@ -168,7 +168,7 @@ const TrackShipmentPageContent = () => {
         <Button
           onClick={() => setStep("track")}
           variant="ghost"
-          className="mb-6 p-0 h-fit hover:bg-transparent"
+          className="p-0 h-fit hover:bg-transparent"
         >
           <ArrowLeft /> back
         </Button>
@@ -228,9 +228,10 @@ const TrackShipmentPageContent = () => {
             </form>
           </div>
         )}
+
         {step === "details" && shipment && (
           <div>
-            <div>
+            {/* <div>
               <h1 className="text-2xl md:text-[32px] font-bold leading-8 md:leading-10 ">
                 Truck CLA-NGR-22
               </h1>
@@ -238,7 +239,7 @@ const TrackShipmentPageContent = () => {
                 Your shipment is currently in transit and progressing smoothly
                 to it&apos;s destination.
               </p>
-            </div>
+            </div> */}
 
             <div className="mt-6">
               <div className="p-6 bg-white rounded-lg">
@@ -279,7 +280,7 @@ const TrackShipmentPageContent = () => {
                 </div>
               </div>
 
-              <div className="mt-5 md:mt-6 flex gap-2.5 bg-primary-light p-4 md:px-6 rounded-lg">
+              {/* <div className="mt-5 md:mt-6 flex gap-2.5 bg-primary-light p-4 md:px-6 rounded-lg">
                 <div className="size-10 flex justify-center items-center shrink-0 rounded-full bg-primary/5">
                   <NoticeOutline className="size-6 text-primary" />
                 </div>
@@ -296,7 +297,7 @@ const TrackShipmentPageContent = () => {
                     <span className="font-medium">Thursday, 16:00 EAT.</span>
                   </p>
                 </div>
-              </div>
+              </div> */}
 
               <div className="mt-5 md:mt-6 p-6 bg-white rounded-lg">
                 <div className="flex justify-between">
