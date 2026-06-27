@@ -6,6 +6,7 @@ export const useCreateShipment = () => {
     mutationFn: shipment.createShipment,
   });
 };
+
 export const useCreateShipmentUser = () => {
   return useMutation({
     mutationFn: shipment.createShipmentUser,
@@ -27,5 +28,11 @@ export const useShipmentEstimate = () => {
 export const useMakePayment = () => {
   return useMutation({
     mutationFn: shipment.makePayment,
+  });
+};
+
+export const useShipmentInvoice = () => {
+  return useMutation({
+    mutationFn: shipment.getShipmentInvoice,
   });
 };

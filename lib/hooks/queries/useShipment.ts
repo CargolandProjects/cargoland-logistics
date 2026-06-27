@@ -18,11 +18,12 @@ export const useShipment = (id: string) => {
   });
 };
 
-export const useAllShipments = () => {
+export const useAllShipments = (page: number = 1, limit: number = 10) => {
   return useQuery({
-    queryKey: ["allShipments"],
-    queryFn: shipment.allShipments,
+    queryKey: ["allShipments", { page, limit }],
+    queryFn: () => shipment.allShipments(page, limit),
     select: (res) => res.data,
+    placeholderData: (prev) => prev,
   });
 };
 
@@ -32,5 +33,14 @@ export const useMyShipments = (query: string) => {
     queryFn: () => shipment.myShipments(query),
     select: (res) => res.data,
     enabled: !!query,
+  });
+};
+
+export const useShipmentByReference = (reference: string) => {
+  return useQuery({
+    queryKey: ["shipmentByReference", reference],
+    queryFn: () => shipment.getShipmentByReference(reference),
+    select: (res) => res.data,
+    enabled: !!reference,
   });
 };

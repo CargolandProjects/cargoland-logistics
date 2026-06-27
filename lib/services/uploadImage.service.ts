@@ -17,7 +17,7 @@ export const image = {
       API_ROUTES.image.upload,
       formData,
       // Override global JSON header; undefined lets Axios auto-set multipart/form-data with boundary
-      { headers: { "Content-Type": undefined } },
+      { headers: { "Content-Type": undefined }, timeout: 60000 },
     );
 
     return res.data;

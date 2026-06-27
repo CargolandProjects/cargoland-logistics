@@ -203,9 +203,15 @@ export const shipment = {
     return res.data;
   },
 
-  async allShipments() {
+  async allShipments(page: number, limit: number) {
     const res = await apiClient.get<AllShipmentsRes>(
       API_ROUTES.shipment.allShipments,
+      {
+        params: {
+          page,
+          limit,
+        },
+      },
     );
     return res.data;
   },
@@ -235,6 +241,23 @@ export const shipment = {
   async makePayment(shipmentId: string) {
     const res = await apiClient.post<MakePaymentRes>(
       API_ROUTES.shipment.makePayment(shipmentId),
+    );
+    return res.data;
+  },
+
+  async getShipmentByReference(reference: string) {
+    const res = await apiClient.get<TrackShipmentRes>(
+      API_ROUTES.shipment.getShipmentByReference(reference),
+    );
+    return res.data;
+  },
+
+  async getShipmentInvoice(reference: string) {
+    const res = await apiClient.get(
+      API_ROUTES.shipment.getShipmentInvoice(reference),
+      {
+        responseType: "blob", 
+      },
     );
     return res.data;
   },

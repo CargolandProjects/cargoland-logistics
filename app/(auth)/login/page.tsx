@@ -67,7 +67,7 @@ export default function LogInPage() {
   }, [isAuthenticated, router]);
 
   const onSubmit = (data: LoginData) => {
-    console.log(data);
+    // console.log(data);
     mutate(data, {
       onSuccess: (res) => {
         const user = res.data.user;

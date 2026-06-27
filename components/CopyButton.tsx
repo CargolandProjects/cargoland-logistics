@@ -25,7 +25,7 @@ const CopyButton = ({ text }: { text: string }) => {
           className="w-0 h-fit"
           aria-label="Copy"
         >
-          <Copy className="size-[16px] text-secondary" />
+          <Copy className="size-4 text-secondary" />
         </Button>
       </PopoverTrigger>
 

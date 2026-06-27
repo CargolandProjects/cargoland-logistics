@@ -207,13 +207,13 @@ const PricingLivePrices = () => {
                     </div> */}
                     </TableCell>
                     <TableCell className="text-base font-bold">
-                      ${Number(price.airFreightRate).toLocaleString()}
+                      ₦{Number(price.airFreightRate).toLocaleString()}
                     </TableCell>
                     <TableCell className="text-base font-bold">
-                      ${Number(price.roadFreightRate).toLocaleString()}
+                      ₦{Number(price.roadFreightRate).toLocaleString()}
                     </TableCell>
                     <TableCell className="text-base font-bold">
-                      ${Number(price.oceanFreightRate).toLocaleString()}
+                      ₦{Number(price.oceanFreightRate).toLocaleString()}
                     </TableCell>
                     {/* Trend cell */}
                     {/* <TableCell
@@ -302,7 +302,7 @@ const PricingLivePrices = () => {
                         Air/kg
                       </p>
                       <p className="text-base font-bold">
-                        ${price.airFreightRate}
+                        ₦{price.airFreightRate}
                       </p>
                     </div>
                     <div className="space-y-2">
@@ -310,7 +310,7 @@ const PricingLivePrices = () => {
                         Land/kg
                       </p>
                       <p className="text-base font-bold">
-                        ${price.roadFreightRate}
+                        ₦{price.roadFreightRate}
                       </p>
                     </div>
                     <div className="space-y-2">
@@ -318,10 +318,11 @@ const PricingLivePrices = () => {
                         Ocean/kg
                       </p>
                       <p className="text-base font-bold">
-                        ${price.oceanFreightRate}
+                        ₦{price.oceanFreightRate}
                       </p>
                     </div>
                   </div>
+
                   <Button
                     onClick={() => router.push("/shipment")}
                     variant="outline"
