@@ -528,14 +528,14 @@ const EstimatePageContent = () => {
           <DialogFooter className="flex flex-col gap-4 mt-6 w-full">
             <Button
               onClick={() => router.push("/shipment")}
-              className="submit-button"
+              className="submit-button flex-1"
             >
               Continue Shipment
             </Button>
-            <DialogClose>
+            <DialogClose asChild>
               <Button
                 variant="outline"
-                className="submit-button border-primary text-primary! hover:border-primary hover:text-primary"
+                className="flex-1 submit-button border-primary text-primary! hover:border-primary hover:text-primary"
               >
                 Cancel
               </Button>
