@@ -63,11 +63,11 @@ const PricingLivePrices = () => {
           <div className="flex max-md:flex-col max-md:w-full  gap-4">
             {/* origin */}
             <Select
-              value={filters.origin ?? "all"}
+              value={filters.origin ?? "origin"}
               onValueChange={(val) =>
                 setFilters((prev) => ({
                   ...prev,
-                  origin: val === "all" ? undefined : val,
+                  origin: val === "origin" ? undefined : val,
                 }))
               }
             >
@@ -76,7 +76,7 @@ const PricingLivePrices = () => {
               </SelectTrigger>
 
               <SelectContent position="popper">
-                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="origin">Origin</SelectItem>
                 <SelectItem value="Nigeria">Nigeria</SelectItem>
                 <SelectItem value="United Kingdom">United Kingdom</SelectItem>
                 <SelectItem value="Ghana">Ghana</SelectItem>
@@ -85,12 +85,13 @@ const PricingLivePrices = () => {
               </SelectContent>
             </Select>
 
+            {/* destination */}
             <Select
-              value={filters.destination ?? "all"}
+              value={filters.destination ?? "destination"}
               onValueChange={(val) =>
                 setFilters((prev) => ({
                   ...prev,
-                  destination: val === "all" ? undefined : val,
+                  destination: val === "destination" ? undefined : val,
                 }))
               }
             >
@@ -99,7 +100,7 @@ const PricingLivePrices = () => {
               </SelectTrigger>
 
               <SelectContent position="popper">
-                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="destination">Destination</SelectItem>
                 <SelectItem value="Nigeria">Nigeria</SelectItem>
                 <SelectItem value="United Kingdom">United Kingdom</SelectItem>
                 <SelectItem value="Ghana">Ghana</SelectItem>
@@ -110,11 +111,11 @@ const PricingLivePrices = () => {
 
             {/* Method */}
             <Select
-              value={filters.method ?? "all"}
+              value={filters.method ?? "method"}
               onValueChange={(val) =>
                 setFilters((prev) => ({
                   ...prev,
-                  method: val === "all" ? undefined : (val as Method),
+                  method: val === "method" ? undefined : (val as Method),
                 }))
               }
             >
@@ -123,7 +124,7 @@ const PricingLivePrices = () => {
               </SelectTrigger>
 
               <SelectContent position="popper">
-                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="method">Method</SelectItem>
                 <SelectItem value="INTERNATION_SHIPPING">
                   International Shipping
                 </SelectItem>
