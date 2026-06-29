@@ -25,10 +25,9 @@ const HowItWorks = () => {
   return (
     <section className="padding-y padding-x">
       <div className="">
-        <h2 className="sec-heading">Live Prices Today</h2>
+        <h2 className="sec-heading">How It Works</h2>
         <p className="sec-paragraph">
-          Real-time shipping rates per kilogram across popular international
-          routes.
+          Get your shipment booked and tracked in four simple steps.
         </p>
       </div>
       <div className="mt-6 grid md:grid-cols-2 gap-6">
@@ -41,7 +40,10 @@ const HowItWorks = () => {
         </div>
         <div className="p-6 lg:px-[58px] lg:py-[67px] flex flex-col justify-center">
           {steps.map((step, idx) => (
-            <div key={idx} className={`${idx !== steps.length - 1 && "pb-15"} relative flex gap-4`}>
+            <div
+              key={idx}
+              className={`${idx !== steps.length - 1 && "pb-15"} relative flex gap-4`}
+            >
               {idx !== steps.length - 1 && (
                 <div
                   className="absolute w-px h-full left-[19.25px] lg:left-4.75"
