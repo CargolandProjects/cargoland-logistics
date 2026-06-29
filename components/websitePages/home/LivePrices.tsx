@@ -73,7 +73,7 @@ const LivePrices = () => {
 
       {/* Desktop Screens */}
       <Table
-        className="max-md:hidden bg-white"
+        className="max-md:hidden bg-white table-fixed"
         containerClassName="mt-6 rounded-t-lg overflow-hidden hide-scrollbar"
       >
         {!isLoading && (
