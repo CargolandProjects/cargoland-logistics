@@ -11,7 +11,8 @@ export const metadata = {
   ],
   openGraph: {
     title: "Contact Cargoland Logistics",
-    description: "Get a free quote for your air, sea, or road freight today.",
+    description:
+      "Reach out to Cargoland Logistics for freight quotes, parcel tracking, or customer support. We respond within 24 hours.",
   },
 };
 
