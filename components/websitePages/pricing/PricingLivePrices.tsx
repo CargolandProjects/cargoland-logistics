@@ -24,6 +24,15 @@ import { useRouter } from "next/navigation";
 import TableSkeleton from "./TableSkeleton";
 import CardSkeleton from "./CardSkeleton";
 import { Method } from "@/lib/services/pricing.service";
+import { countryOptions } from "@/lib/utils/countryOptions";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox";
 
 interface Filter {
   origin?: string;
@@ -33,7 +42,7 @@ interface Filter {
 
 const PricingLivePrices = () => {
   const [filters, setFilters] = useState<Filter>({});
-
+  const router = useRouter();
   const {
     data: livePrices,
     isLoading,
@@ -45,7 +54,14 @@ const PricingLivePrices = () => {
     method: filters.method as Method,
   });
 
-  const router = useRouter();
+  const fromCountryList = [
+    { value: "origin", label: "Origin" },
+    ...countryOptions,
+  ];
+  const toCountryList = [
+    { value: "destination", label: "Destination" },
+    ...countryOptions,
+  ];
 
   return (
     <div className="padding-x pt-20 pb-20.5 ">
@@ -59,55 +75,65 @@ const PricingLivePrices = () => {
 
       <div className="mt-2.5 md:mt-6 flex max-md:flex-col justify-between md:items-end gap-6">
         <div className="flex max-md:flex-col max-md:w-full md:items-center gap-3">
-          <p className="text-lg leading-6">Filter by:</p>
-          <div className="flex max-md:flex-col max-md:w-full  gap-4">
+          <p className="text-lg leading-6 shrink-0">Filter by:</p>
+          <div className="grid md:grid-cols-3 max-w-[650px] 2xl:max-w-[807px] gap-4">
             {/* origin */}
-            <Select
-              value={filters.origin ?? "origin"}
+            <Combobox
+              items={fromCountryList}
+              value={filters.origin ?? "Origin"}
               onValueChange={(val) =>
                 setFilters((prev) => ({
                   ...prev,
-                  origin: val === "origin" ? undefined : val,
+                  origin: val === "origin" ? undefined : (val as string),
                 }))
               }
             >
-              <SelectTrigger className="max-md:w-full py-3 h-auto! px-4 text-primary-dark! bg-primary-light">
-                <SelectValue placeholder="Origin" />
-              </SelectTrigger>
+              <ComboboxInput className="py-1! h-auto px-1.5 text-primary-dark! bg-primary-light font-roboto [&_input]:text-sm!" />
 
-              <SelectContent position="popper">
-                <SelectItem value="origin">Origin</SelectItem>
-                <SelectItem value="Nigeria">Nigeria</SelectItem>
-                <SelectItem value="United Kingdom">United Kingdom</SelectItem>
-                <SelectItem value="Ghana">Ghana</SelectItem>
-                <SelectItem value="Germany">Germany</SelectItem>
-                <SelectItem value="Canada">Canada</SelectItem>
-              </SelectContent>
-            </Select>
+              <ComboboxContent>
+                <ComboboxEmpty>No country found</ComboboxEmpty>
+                <ComboboxList>
+                  {(country) => (
+                    <ComboboxItem
+                      key={country.value}
+                      value={country.label}
+                      className="font-roboto"
+                    >
+                      {country.label}
+                    </ComboboxItem>
+                  )}
+                </ComboboxList>
+              </ComboboxContent>
+            </Combobox>
 
             {/* destination */}
-            <Select
-              value={filters.destination ?? "destination"}
+            <Combobox
+              items={toCountryList}
+              value={filters.destination ?? "Destination"}
               onValueChange={(val) =>
                 setFilters((prev) => ({
                   ...prev,
-                  destination: val === "destination" ? undefined : val,
+                  destination: val === "destination" ? undefined : (val as string),
                 }))
               }
             >
-              <SelectTrigger className="max-md:w-full py-3 h-auto! px-4 text-primary-dark! bg-primary-light">
-                <SelectValue placeholder="Destination" />
-              </SelectTrigger>
+              <ComboboxInput className="py-1! h-auto px-1.5 text-primary-dark! bg-primary-light font-roboto [&_input]:text-sm!" />
 
-              <SelectContent position="popper">
-                <SelectItem value="destination">Destination</SelectItem>
-                <SelectItem value="Nigeria">Nigeria</SelectItem>
-                <SelectItem value="United Kingdom">United Kingdom</SelectItem>
-                <SelectItem value="Ghana">Ghana</SelectItem>
-                <SelectItem value="Germany">Germany</SelectItem>
-                <SelectItem value="Canada">Canada</SelectItem>
-              </SelectContent>
-            </Select>
+              <ComboboxContent>
+                <ComboboxEmpty>No country found</ComboboxEmpty>
+                <ComboboxList>
+                  {(country) => (
+                    <ComboboxItem
+                      key={country.value}
+                      value={country.label}
+                      className="font-roboto"
+                    >
+                      {country.label}
+                    </ComboboxItem>
+                  )}
+                </ComboboxList>
+              </ComboboxContent>
+            </Combobox>
 
             {/* Method */}
             <Select
@@ -119,7 +145,7 @@ const PricingLivePrices = () => {
                 }))
               }
             >
-              <SelectTrigger className="max-md:w-full py-3 h-auto! px-4 text-primary-dark! bg-primary-light">
+              <SelectTrigger className="w-full py-3 h-auto! px-4 text-primary-dark! bg-primary-light">
                 <SelectValue placeholder="Method" />
               </SelectTrigger>
 
@@ -136,7 +162,7 @@ const PricingLivePrices = () => {
             </Select>
           </div>
         </div>
-        <p className="leading-6 font-light ">Updated: 10:40:57 PM</p>
+        <p className="shrink-0 leading-6 font-light ">Updated: 10:40:57 PM</p>
       </div>
 
       {/* Skeleton loading state for the table */}

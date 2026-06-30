@@ -128,7 +128,6 @@ const ShipperDetailsForm = () => {
                 >
                   <ComboboxInput
                     autoComplete="new-country"
-                    onFocus={(e) => e.target.removeAttribute("autoComplete")}
                     id={field.name}
                     aria-invalid={fieldState.invalid}
                     className="form-input h-14!"
@@ -268,14 +267,15 @@ const ShipperDetailsForm = () => {
               </Field>
             )}
           />
-          
+
           <Controller
             name="cityCode"
             control={control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid} className="gap-1">
                 <FieldLabel htmlFor={field.name} className="form-label">
-                  City Code <span className="form-label text-gray-400!">(Optional)</span>
+                  City Code{" "}
+                  <span className="form-label text-gray-400!">(Optional)</span>
                 </FieldLabel>
                 <Input
                   {...field}
