@@ -3,8 +3,8 @@ import Faqs from "@/components/websitePages/home/Faqs";
 import Hero from "@/components/websitePages/home/Hero";
 import HowItWorks from "@/components/websitePages/home/HowItWorks";
 import LivePrices from "@/components/websitePages/home/LivePrices";
-import ShippingPrices from "@/components/websitePages/home/ShippingPrices";
 import Stats from "@/components/websitePages/home/Stats";
+import WhyChooseUs from "@/components/websitePages/home/WhyChooseUs";
 
 export default function HomePage() {
   return (
@@ -12,7 +12,8 @@ export default function HomePage() {
       <Hero />
       <Stats />
       <ChooseFreight />
-      <ShippingPrices />
+      <WhyChooseUs />
+      {/* <ShippingPrices /> */}
       <LivePrices />
       <HowItWorks />
       <Faqs />

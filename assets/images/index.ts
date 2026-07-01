@@ -4,6 +4,7 @@ import heroImg from "./hero-img.webp";
 import howItWorks from "./how-it-woks-img.webp";
 import companyImg from "./company-img.webp";
 import pricingHero from "./pricing-hero.webp";
+import whyUs from "./why-us.webp";
 
 export {
   boxChecked,
@@ -12,4 +13,5 @@ export {
   howItWorks,
   companyImg,
   pricingHero,
+  whyUs,
 };
