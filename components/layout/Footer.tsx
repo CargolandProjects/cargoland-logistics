@@ -9,9 +9,9 @@ const footer = [
     title: "Company",
     links: [
       { title: "About Cargoland", href: "/company" },
-      { title: "Book Shipment", href: "#" },
-      { title: "Get a Quote", href: "#" },
-      { title: "Track", href: "#" },
+      { title: "Book Shipment", href: "/shipment" },
+      { title: "Get a Quote", href: "/estimate" },
+      { title: "Track", href: "/track-shipment" },
     ],
   },
   {
@@ -19,20 +19,20 @@ const footer = [
     links: [
       {
         title: "Air Freight",
-        href: "#",
+        href: "/shipment",
       },
-      { title: "Ocean Freight", href: "#" },
-      { title: "Road Freight", href: "#" },
-      { title: "Get a Quote", href: "#" },
-      { title: "Domestic Shipping", href: "#" },
+      { title: "Ocean Freight", href: "/shipment" },
+      { title: "Road Freight", href: "/shipment" },
+      { title: "Get a Quote", href: "/estimate" },
+      { title: "Domestic Shipping", href: "/pricing" },
     ],
   },
   {
     title: "Customer Support",
     links: [
-      { title: "Help Center", href: "#" },
-      { title: "Contact Support", href: "#" },
-      { title: "FAQs", href: "#" },
+      { title: "Help Center", href: "/faq" },
+      { title: "Contact Support", href: "/contact" },
+      { title: "FAQs", href: "/faq" },
     ],
   },
 ];
@@ -58,7 +58,7 @@ const socialIcons = [
 
 export default function Footer() {
   return (
-    <footer className="w-full max-md:px-6 md:pl-[86px] md:pr-[101px] pt-15 pb-12 bg-secondary text-white">
+    <footer className="w-full max-lg:px-6 lg:pl-[86px] lg:pr-[101px] pt-15 pb-12 bg-secondary text-white">
       <div className="flex flex-wrap gap-6 justify-between md:grid md:grid-cols-4">
         {footer.map((section, idx) => (
           <div key={idx} className="min-w-[140px]">
@@ -123,11 +123,11 @@ export default function Footer() {
         </div>
 
         <div className="flex gap-2 items-center">
-          <Link href="#" className="text-xs font-medium leading-4.5">
+          <Link href="/privacy-policy" className="text-xs font-medium leading-4.5">
             Privacy Policy
           </Link>
           <div className="h-[13.5px] w-px bg-gray-400" />
-          <Link href="#" className="text-xs font-medium leading-4.5">
+          <Link href="/terms-conditions" className="text-xs font-medium leading-4.5">
             Terms & Conditions
           </Link>
         </div>
