@@ -23,10 +23,12 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import TableSkeleton from "../pricing/TableSkeleton";
 import CardSkeleton from "../pricing/CardSkeleton";
+import { formatMinSecMill } from "@/lib/utils";
+import { Method } from "@/lib/services/pricing.service";
 
 const LivePrices = () => {
   const [filter, setFilter] = useState("");
-  const origin = filter === "all" ? undefined : filter;
+  const method = filter === "all" ? undefined : filter;
 
   const {
     data: livePrices,
@@ -34,7 +36,7 @@ const LivePrices = () => {
     isError,
     isSuccess,
   } = usePricing({
-    origin,
+    method: method as Method,
   });
   const router = useRouter();
 
@@ -50,7 +52,7 @@ const LivePrices = () => {
 
       <div className="mt-6 flex justify-between items-end text-white">
         <div className="flex max-md:flex-col md:items-center gap-3">
-          <p className="">Filter by origin</p>
+          <p className="">Filter by method</p>
 
           <Select onValueChange={(val) => setFilter(val)} defaultValue="all">
             <SelectTrigger className="md:min-w-[186px] bg-primary-light text-primary-dark!">
@@ -58,14 +60,15 @@ const LivePrices = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All</SelectItem>
-              <SelectItem value="Nigeria">Nigeria</SelectItem>
-              <SelectItem value="Great Britain">Great Britain</SelectItem>
-              <SelectItem value="United States">United States</SelectItem>
-              <SelectItem value="Canada">Canada</SelectItem>
+              <SelectItem value="INTERNATIONAL">International</SelectItem>
+              <SelectItem value="DOMESTIC">Domestic</SelectItem>
             </SelectContent>
           </Select>
         </div>
-        <p className="leading-6 text-primary-light">Updated: 10:40:57 PM</p>
+        <p className="leading-6 text-primary-light">
+          {" "}
+          Updated: {formatMinSecMill(new Date())}
+        </p>
       </div>
 
       {/* Skeleton loading state for the table */}

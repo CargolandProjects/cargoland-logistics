@@ -21,6 +21,10 @@ export function formatTime(date: Date | string) {
   return `${format(date, "h:m")}`;
 }
 
+export function formatMinSecMill(date: Date| string){
+return `${format(date, "h:m:ss a")}`
+}
+
 export const statusStyles: Partial<
   Record<ShipmentStatus, { bgcolor: string; containerStyles: string }>
 > = {
