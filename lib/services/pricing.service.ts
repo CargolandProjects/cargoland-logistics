@@ -2,10 +2,7 @@ import apiClient from "../api/client";
 import { API_ROUTES } from "../api/endpoints";
 import { APIResponse } from "./auth.service";
 
-export type Method =
-  | "INTERNATION_SHIPPING"
-  | "LOCAL_SHIPPING"
-  | "DOOR_TO_DOOR_SHIPPING";
+export type Method = "DOMESTIC" | "INTERNATIONAL";
 
 interface Pricing {
   id: string;

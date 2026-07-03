@@ -24,7 +24,7 @@ import { useRouter } from "next/navigation";
 import TableSkeleton from "./TableSkeleton";
 import CardSkeleton from "./CardSkeleton";
 import { Method } from "@/lib/services/pricing.service";
-import { countryOptions } from "@/lib/utils/countryOptions";
+import { countryOptions, nigeriaStates } from "@/lib/utils/countryOptions";
 import {
   Combobox,
   ComboboxContent,
@@ -33,6 +33,7 @@ import {
   ComboboxItem,
   ComboboxList,
 } from "@/components/ui/combobox";
+import { formatMinSecMill } from "@/lib/utils";
 
 interface Filter {
   origin?: string;
@@ -54,14 +55,15 @@ const PricingLivePrices = () => {
     method: filters.method as Method,
   });
 
-  const fromCountryList = [
-    { value: "origin", label: "Origin" },
-    ...countryOptions,
-  ];
-  const toCountryList = [
-    { value: "destination", label: "Destination" },
-    ...countryOptions,
-  ];
+  const fromList =
+    filters.method === "DOMESTIC"
+      ? [{ value: "origin", label: "Origin" }, ...nigeriaStates]
+      : [{ value: "origin", label: "Origin" }, ...countryOptions];
+
+  const toList =
+    filters.method === "DOMESTIC"
+      ? [{ value: "destination", label: "Destination" }, ...nigeriaStates]
+      : [{ value: "destination", label: "Destination" }, ...countryOptions];
 
   return (
     <div className="padding-x pt-20 pb-20.5 ">
@@ -79,14 +81,15 @@ const PricingLivePrices = () => {
           <div className="grid md:grid-cols-3 max-w-[650px] 2xl:max-w-[807px] gap-4">
             {/* origin */}
             <Combobox
-              items={fromCountryList}
-              value={filters.origin ?? "Origin"}
-              onValueChange={(val) =>
+              items={fromList}
+              value={filters.origin}
+              defaultValue="Origin"
+              onValueChange={(val) => {
                 setFilters((prev) => ({
                   ...prev,
                   origin: val === "origin" ? undefined : (val as string),
-                }))
-              }
+                }));
+              }}
             >
               <ComboboxInput className="py-1! h-auto px-1.5 text-primary-dark! bg-primary-light font-roboto [&_input]:text-sm!" />
 
@@ -108,12 +111,14 @@ const PricingLivePrices = () => {
 
             {/* destination */}
             <Combobox
-              items={toCountryList}
-              value={filters.destination ?? "Destination"}
+              items={toList}
+              value={filters.destination}
+              defaultValue="Destination"
               onValueChange={(val) =>
                 setFilters((prev) => ({
                   ...prev,
-                  destination: val === "destination" ? undefined : (val as string),
+                  destination:
+                    val === "destination" ? undefined : (val as string),
                 }))
               }
             >
@@ -151,18 +156,20 @@ const PricingLivePrices = () => {
 
               <SelectContent position="popper">
                 <SelectItem value="method">Method</SelectItem>
-                <SelectItem value="INTERNATION_SHIPPING">
-                  International Shipping
+                <SelectItem value="INTERNATIONAL">
+                  International
                 </SelectItem>
-                <SelectItem value="LOCAL_SHIPPING">Local Shipping</SelectItem>
-                <SelectItem value="DOOR_TO_DOOR_SHIPPING">
+                <SelectItem value="DOMESTIC">Domestic</SelectItem>
+                {/* <SelectItem value="DOOR_TO_DOOR_SHIPPING">
                   Door to door
-                </SelectItem>
+                </SelectItem> */}
               </SelectContent>
             </Select>
           </div>
         </div>
-        <p className="shrink-0 leading-6 font-light ">Updated: 10:40:57 PM</p>
+        <p className="shrink-0 leading-6 font-light ">
+          Updated: {formatMinSecMill(new Date())}
+        </p>
       </div>
 
       {/* Skeleton loading state for the table */}
@@ -176,7 +183,7 @@ const PricingLivePrices = () => {
         {!isLoading && (
           <TableHeader className="rounded-lg! bg-primary-light">
             <TableRow className="">
-              <TableHead className="text-base font-normal uppercase text-primary-dark">
+              <TableHead className="pl-4 text-base font-normal uppercase text-primary-dark">
                 Route
               </TableHead>
               <TableHead className="text-base font-normal uppercase text-primary-dark">
@@ -218,12 +225,12 @@ const PricingLivePrices = () => {
               {livePrices.length > 0 &&
                 livePrices.map((price, idx) => (
                   <TableRow key={idx} className="border hover:bg-muted">
-                    <TableCell className="pl-4 py-3">
-                      <div className="flex gap-3.5 items-center">
+                    <TableCell className="pl-4 pr-0 py-3">
+                      <div className="flex gap-3.5 items-center line-clamp-1">
                         <p className="text-base capitalize">
                           {price.fromWhere}
                         </p>
-                        <ArrowRight className="size-4.5 text-primary" />
+                        <ArrowRight className="size-4.5 text-primary shrink-0" />
                         <p className="text-base capitalize">{price.toWhere}</p>
                       </div>
 
@@ -255,11 +262,11 @@ const PricingLivePrices = () => {
                     {price.pricingShippingType > 0 ? `+${price.trend}` : price.trend}%
                   </div>
                 </TableCell> */}
-                    <TableCell className="pr-10.5">
+                    <TableCell className="pr-10.5 pl-4">
                       <Button
                         onClick={() => router.push("/shipment")}
                         variant="outline"
-                        className="py-3 h-auto w-full border-primary text-base font-normal text-primary hover:text-primary"
+                        className="py-3 h-auto w-18 border-primary text-base font-normal text-primary hover:text-primary"
                       >
                         Book
                       </Button>
