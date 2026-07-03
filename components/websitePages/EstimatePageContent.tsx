@@ -31,9 +31,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import z from "zod";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "../ui/combobox";
+import { nigeriaStates } from "@/lib/utils/countryOptions";
 
 const deliveryType = ["DOMESTIC", "INTERNATIONAL"] as const;
 const freightType = ["AIR_FREIGHT", "OCEAN_FREIGHT", "ROAD_FREIGHT"] as const;
@@ -66,25 +75,36 @@ const estimateSchema = z.object({
   shipmentType: z.enum(deliveryType, "Please select a delivery type"),
   freightType: z.enum(freightType, "Please select a freight type"),
 
-  fromCountry: z.string("must provid a valid country"),
+  fromCountry: z
+    .string("must provid a valid country")
+    .min(2, "pickup zone is required"),
+
   fromCountryText: z
     .string("must provid a valid country")
-    .min(2, "Country of origin is required"),
-  toCountry: z.string("must provid a valid country"),
+    .min(2, "Country of origin is required")
+    .optional()
+    .or(z.literal("")),
+
+  toCountry: z
+    .string("must provid a valid country")
+    .min(2, "drop-off zone is required"),
+
   toCountryText: z
     .string("must provid a valid country")
-    .min(2, "Destination Country is required"),
+    .min(2, "Destination Country is required")
+    .optional()
+    .or(z.literal("")),
 });
 
 type EstimateData = z.infer<typeof estimateSchema>;
 
 const EstimatePageContent = () => {
-  const { mutate, isPending } = useShipmentEstimate();
+  const { mutate, isPending, data } = useShipmentEstimate();
   const router = useRouter();
   const { handleSubmit, control, setValue } = useForm<EstimateData>({
     resolver: zodResolver(estimateSchema),
     defaultValues: {
-      shipmentType: undefined,
+      shipmentType: "INTERNATIONAL",
       freightType: undefined,
       fromCountry: "",
       fromCountryText: "",
@@ -98,21 +118,29 @@ const EstimatePageContent = () => {
   });
   const [fromCountry, setFromCountry] = useState<Country | null>(null);
   const [toCountry, setToCountry] = useState<Country | null>(null);
-  const [estimate, setEstimate] = useState({
-    open: false,
-    data: {
-      totalShipmentWeight: 0,
-      estimatedPrice: 0,
-    },
-  });
+  const [open, setOpen] = useState(false);
+
+  const shipmentType = useWatch({ control, name: "shipmentType" });
+
+  const estimate = data?.data;
+
+  useEffect(() => {
+    if (shipmentType !== "DOMESTIC") return;
+
+    setValue("fromCountry", "");
+    setValue("fromCountryText", "");
+    setValue("toCountry", "");
+    setValue("toCountryText", "");
+  }, [setValue, shipmentType]);
 
   const onSubmit = (data: EstimateData) => {
     console.log("Estimate Data: ", data);
 
     const payload = {
       shipmentType: data.shipmentType,
-      fromCountry: fromCountry?.name,
-      toCountry: toCountry?.name,
+      fromCountry:
+        shipmentType === "DOMESTIC" ? data.fromCountry : fromCountry?.name,
+      toCountry: shipmentType === "DOMESTIC" ? data.toCountry : toCountry?.name,
       freightType: data.freightType,
       weight: Number(data.weight),
       length: Number(data.length),
@@ -121,12 +149,8 @@ const EstimatePageContent = () => {
     };
 
     mutate(payload, {
-      onSuccess: (res) => {
-        setEstimate((prev) => ({
-          ...prev,
-          open: true,
-          data: res.data,
-        }));
+      onSuccess: () => {
+        setOpen(true);
       },
     });
   };
@@ -251,27 +275,105 @@ const EstimatePageContent = () => {
 
                 {/* pickup zone */}
                 <div>
-                  <h2 className="form-label">Select Pickup Zone</h2>
+                  {shipmentType === "INTERNATIONAL" && (
+                    <h2 className="form-label">Select Pickup Zone</h2>
+                  )}
 
-                  <div className="flex gap-4.5 mt-1">
+                  {shipmentType === "INTERNATIONAL" ? (
+                    <div className="flex gap-4.5 mt-1">
+                      <Controller
+                        name="fromCountry"
+                        control={control}
+                        render={({ field, fieldState }) => (
+                          <Field
+                            data-invalid={fieldState.invalid}
+                            className="min-w-20 md:min-w-[108px] flex-1"
+                          >
+                            <CountryDropdown
+                              defaultValue={field.value}
+                              onChange={(country) => {
+                                field.onChange(country.alpha2);
+                                setFromCountry(country);
+                                setValue("fromCountryText", country.name);
+                              }}
+                              className="form-input gap-3 max-md:px-3!"
+                              slim
+                            />
+                          </Field>
+                        )}
+                      />
+
+                      <Controller
+                        name="fromCountryText"
+                        control={control}
+                        render={({ field, fieldState }) => (
+                          <Field
+                            data-invalid={fieldState.invalid}
+                            className="gap-1 self-end"
+                          >
+                            {/* <FieldLabel
+                          htmlFor={field.name}
+                          className="form-label"
+                        ></FieldLabel> */}
+                            <Input
+                              {...field}
+                              readOnly
+                              value={field.value}
+                              onChange={field.onChange}
+                              aria-invalid={fieldState.invalid}
+                              className="form-input border"
+                            />
+                            {fieldState.invalid && (
+                              <FieldError
+                                errors={[fieldState.error]}
+                                className="form-error"
+                              />
+                            )}
+                          </Field>
+                        )}
+                      />
+                    </div>
+                  ) : (
                     <Controller
                       name="fromCountry"
                       control={control}
                       render={({ field, fieldState }) => (
                         <Field
                           data-invalid={fieldState.invalid}
-                          className="min-w-20 md:min-w-[108px] flex-1"
+                          className="gap-1"
                         >
-                          <CountryDropdown
-                            defaultValue={field.value}
-                            onChange={(country) => {
-                              field.onChange(country.alpha2);
-                              setFromCountry(country);
-                              setValue("fromCountryText", country.name);
-                            }}
-                            className="form-input gap-3 max-md:px-3!"
-                            slim
-                          />
+                          <FieldLabel
+                            htmlFor={field.name}
+                            className="form-label"
+                          >
+                            Select Pickup Zone
+                          </FieldLabel>
+
+                          <Combobox
+                            items={nigeriaStates}
+                            value={field.value}
+                            // defaultValue="Destination"
+                            onValueChange={field.onChange}
+                            aria-invalid={fieldState.invalid}
+                          >
+                            <ComboboxInput className="form-input text-brand-black" />
+
+                            <ComboboxContent>
+                              <ComboboxEmpty>No country found</ComboboxEmpty>
+                              <ComboboxList>
+                                {(from) => (
+                                  <ComboboxItem
+                                    key={from.value}
+                                    value={from.label}
+                                    className="font-roboto"
+                                  >
+                                    {from.label}
+                                  </ComboboxItem>
+                                )}
+                              </ComboboxList>
+                            </ComboboxContent>
+                          </Combobox>
+
                           {fieldState.invalid && (
                             <FieldError
                               errors={[fieldState.error]}
@@ -281,92 +383,110 @@ const EstimatePageContent = () => {
                         </Field>
                       )}
                     />
+                  )}
+                </div>
 
-                    <Controller
-                      name="fromCountryText"
-                      control={control}
-                      render={({ field, fieldState }) => (
-                        <Field
-                          data-invalid={fieldState.invalid}
-                          className="gap-1 self-end"
-                        >
-                          {/* <FieldLabel
+                {/* drop off zone */}
+                <div>
+                  {shipmentType === "INTERNATIONAL" && (
+                    <h2 className="form-label">Select Drop-off Zone</h2>
+                  )}
+
+                  {shipmentType === "INTERNATIONAL" ? (
+                    <div className="flex gap-4.5 mt-1">
+                      <Controller
+                        name="toCountry"
+                        control={control}
+                        render={({ field, fieldState }) => (
+                          <Field
+                            data-invalid={fieldState.invalid}
+                            className="min-w-20 md:min-w-[108px] flex-1"
+                          >
+                            <CountryDropdown
+                              defaultValue={field.value}
+                              onChange={(country) => {
+                                field.onChange(country.alpha2);
+                                setToCountry(country);
+                                setValue("toCountryText", country.name);
+                              }}
+                              className="form-input gap-3 max-md:px-3!"
+                              slim
+                            />
+                          </Field>
+                        )}
+                      />
+
+                      <Controller
+                        name="toCountryText"
+                        control={control}
+                        render={({ field, fieldState }) => (
+                          <Field
+                            data-invalid={fieldState.invalid}
+                            className="gap-1 self-end"
+                          >
+                            {/* <FieldLabel
                           htmlFor={field.name}
                           className="form-label"
                         ></FieldLabel> */}
-                          <Input
-                            {...field}
-                            readOnly
-                            value={field.value}
-                            onChange={field.onChange}
-                            aria-invalid={fieldState.invalid}
-                            className="form-input border"
-                          />
-                          {fieldState.invalid && (
-                            <FieldError
-                              errors={[fieldState.error]}
-                              className="form-error"
+                            <Input
+                              {...field}
+                              readOnly
+                              value={field.value}
+                              onChange={field.onChange}
+                              aria-invalid={fieldState.invalid}
+                              className="form-input border"
                             />
-                          )}
-                        </Field>
-                      )}
-                    />
-                  </div>
-                </div>
-
-                {/* delivery zone */}
-                <div>
-                  <h2 className="form-label">Select Pickup Zone</h2>
-
-                  <div className="flex gap-4.5 mt-1">
+                            {fieldState.invalid && (
+                              <FieldError
+                                errors={[fieldState.error]}
+                                className="form-error"
+                              />
+                            )}
+                          </Field>
+                        )}
+                      />
+                    </div>
+                  ) : (
                     <Controller
                       name="toCountry"
                       control={control}
                       render={({ field, fieldState }) => (
                         <Field
                           data-invalid={fieldState.invalid}
-                          className="min-w-20 md:min-w-[108px] flex-1"
+                          className="gap-1"
                         >
-                          <CountryDropdown
-                            defaultValue={field.value}
-                            onChange={(country) => {
-                              field.onChange(country.alpha2);
-                              setToCountry(country);
-                              setValue("toCountryText", country.name);
-                            }}
-                            className="form-input gap-3 max-md:px-3!"
-                            slim
-                          />
-                          {fieldState.invalid && (
-                            <FieldError
-                              errors={[fieldState.error]}
-                              className="form-error"
-                            />
-                          )}
-                        </Field>
-                      )}
-                    />
+                          <FieldLabel
+                            htmlFor={field.name}
+                            className="form-label"
+                          >
+                            Select Drop-off Zone
+                          </FieldLabel>
 
-                    <Controller
-                      name="toCountryText"
-                      control={control}
-                      render={({ field, fieldState }) => (
-                        <Field
-                          data-invalid={fieldState.invalid}
-                          className="gap-1 self-end"
-                        >
-                          {/* <FieldLabel
-                          htmlFor={field.name}
-                          className="form-label"
-                        ></FieldLabel> */}
-                          <Input
-                            {...field}
-                            readOnly
+                          <Combobox
+                            items={nigeriaStates}
                             value={field.value}
-                            onChange={field.onChange}
+                            // defaultValue="Destination"
+                            onValueChange={field.onChange}
                             aria-invalid={fieldState.invalid}
-                            className="form-input border"
-                          />
+                          >
+                            <ComboboxInput className="form-input text-brand-black" />
+
+                            <ComboboxContent>
+                              <ComboboxEmpty>No country found</ComboboxEmpty>
+                              <ComboboxList>
+                                {(from) => (
+                                  <ComboboxItem
+                                    key={from.value}
+                                    value={from.label}
+                                    className="font-roboto"
+                                  >
+                                    {from.label}
+                                  </ComboboxItem>
+                                )}
+                              </ComboboxList>
+                            </ComboboxContent>
+                          </Combobox>
+
                           {fieldState.invalid && (
                             <FieldError
                               errors={[fieldState.error]}
@@ -376,7 +496,7 @@ const EstimatePageContent = () => {
                         </Field>
                       )}
                     />
-                  </div>
+                  )}
                 </div>
 
                 <Controller
@@ -503,15 +623,12 @@ const EstimatePageContent = () => {
         </div>
       </section>
 
-      <Dialog
-        open={estimate.open}
-        onOpenChange={(val) => setEstimate((prev) => ({ ...prev, open: val }))}
-      >
-        <DialogContent className="dialog min-h-0! flex flex-col items-center pt-15! pb-10!">
-          <h2 className="text-2xl font-bold leading-8">
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="dialog min-h-0! flex flex-col items-center pt-15! pb-10! overflow-auto!">
+          <h2 className="text-2xl font-bold leading-8 text-center">
             Your Delivery Estimate
           </h2>
-          <div className="mt-6 size-20 relative">
+          <div className="mt-6 size-20 relative shrink-0">
             <Image
               src={boxChecked}
               alt="box package checked icon"
@@ -522,13 +639,20 @@ const EstimatePageContent = () => {
           <div className="mt-4 flex flex-col items-center">
             <p className="text-center">Estimated delivery including VAT</p>
             <h3 className="mt-2 text-[32px] font-bold leading-10 text-center">
-              ₦{Number(estimate.data.estimatedPrice).toLocaleString()}
+              ₦{Number(estimate?.estimatedPrice).toLocaleString()}
             </h3>
-            <p className="mt-4 font-light text-center text-neutral-400">
+            {/* <p className="mt-4 font-light text-center text-neutral-400">
               Book by 09/03/2026 by 05:00 pm for a pick-up today
+            </p> */}
+
+            <p className="mt-4 font- text-center text-neutral-600">
+              Total Shipment Weight:{" "}
+              <span className="font-semibold text-black">
+                {estimate?.totalShipmentWeight}kg
+              </span>
             </p>
           </div>
-          <DialogFooter className="flex flex-col gap-2 md:gap-4 mt-6 w-full">
+          <DialogFooter className="flex flex-col gap-2 md:gap-4 mt-6 w-full p-0">
             <Button
               onClick={() => router.push("/shipment")}
               className="submit-button md:flex-1"
