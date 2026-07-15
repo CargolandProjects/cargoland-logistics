@@ -1,6 +1,13 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from "axios";
 import { API_ROUTES } from "./endpoints";
 
+// separate refresh token client
+const refreshClient = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  timeout: 10000,
+  headers: { "Content-Type": "application/json" },
+});
+
 // Simple API client setup
 const apiClient: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -62,7 +69,7 @@ apiClient.interceptors.response.use(
       try {
         if (!isRefreshing) {
           isRefreshing = true;
-          refreshPromise = apiClient
+          refreshPromise = refreshClient
             .post(API_ROUTES.auth.refreshToken, { refreshToken })
             .then((res) => {
               // Expecting { token: { accessToken, refreshToken } }
@@ -72,7 +79,6 @@ apiClient.interceptors.response.use(
               if (newAccess) localStorage.setItem(`${process.env.NEXT_PUBLIC_ACCESS_KEY}`, newAccess);
               if (newRefresh) localStorage.setItem(`${process.env.NEXT_PUBLIC_REFRESH_KEY}`, newRefresh);
               return newAccess as string;
-
             })
             .finally(() => {
               isRefreshing = false;

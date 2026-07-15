@@ -21,8 +21,8 @@ export function formatTime(date: Date | string) {
   return `${format(date, "h:m")}`;
 }
 
-export function formatMinSecMill(date: Date| string){
-return `${format(date, "h:m:ss a")}`
+export function formatMinSecMill(date: Date | string) {
+  return `${format(date, "h:m:ss a")}`;
 }
 
 export const statusStyles: Partial<
@@ -70,3 +70,10 @@ export const statusStyles: Partial<
     containerStyles: "border-primary bg-primary/5 text-primary",
   },
 };
+
+export function getAddressComponent(
+  components: google.maps.places.AddressComponent[],
+  type: string,
+): string {
+  return components.find((c) => c.types.includes(type))?.longText || "";
+}

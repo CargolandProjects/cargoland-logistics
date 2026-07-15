@@ -34,7 +34,7 @@ const signUpSchema = z
       .max(100, "First name must be less than 100 characters long")
       .regex(
         /^[a-zA-Z\s'-]+$/,
-        "First name can only contain letters, spaces, hyphens, and apostrophes"
+        "First name can only contain letters, spaces, hyphens, and apostrophes",
       ),
     lastName: z
       .string()
@@ -42,13 +42,15 @@ const signUpSchema = z
       .max(100, "Last name must be less than 100 characters long")
       .regex(
         /^[a-zA-Z\s'-]+$/,
-        "last name can only contain letters, spaces, hyphens, and apostrophes"
+        "last name can only contain letters, spaces, hyphens, and apostrophes",
       ),
     email: z
       .email("Enter a valid email address")
       .max(100, "email must be less than 100 characters long"),
 
-    country: z.string("must provid a valid country"),
+    country: z
+      .string("must provide a valid country")
+      .max(200, "country must be less than 100 characters long"),
     phoneNumber: phoneSchema,
     // z.string()
     //   .min(7, "Phone number is too short")
@@ -60,23 +62,23 @@ const signUpSchema = z
       .max(20, "Password must not be more than 20 characters")
       .regex(
         /(?=.*[a-z])/,
-        "Password must contain at least one lowercase letter"
+        "Password must contain at least one lowercase letter",
       )
       .regex(
         /(?=.*[A-Z])/,
-        "Password must contain at least one uppercase letter"
+        "Password must contain at least one uppercase letter",
       )
       .regex(/(?=.*\d)/, "Password must contain at least one number")
       .regex(
         /(?=.*[!@#$%^&*])/,
-        "Password must contain at least one special character"
+        "Password must contain at least one special character",
       ),
     confirmPassword: z.string(),
     termsAndCondition: z
       .boolean()
       .refine(
         (val) => val === true,
-        "Please accept the terms and conditions to proceed"
+        "Please accept the terms and conditions to proceed",
       ),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -137,7 +139,7 @@ export default function SignupPage() {
       onSuccess: (res) => {
         toast.success("Signup successful!");
         router.push(
-          `/verify-email?email=${encodeURIComponent(res.data.email)}`
+          `/verify-email?email=${encodeURIComponent(res.data.email)}`,
         );
       },
       onError: (res) => {

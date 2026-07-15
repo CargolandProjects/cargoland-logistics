@@ -23,8 +23,10 @@ export const API_ROUTES = {
     getShipmentById: (shipmentId: string) => `/shipments/${shipmentId}`,
     makePayment: (shipmentId: string) =>
       `/shipments/make-payment/${shipmentId}`,
-    getShipmentByReference: (reference: string) => `/shipments/get-shipment-by-reference/${reference}`,
-    getShipmentInvoice: (reference: string) => `/shipments/${reference}/invoice`,
+    getShipmentByReference: (reference: string) =>
+      `/shipments/get-shipment-by-reference/${reference}`,
+    getShipmentInvoice: (reference: string) =>
+      `/shipments/${reference}/invoice`,
   },
 
   image: {
@@ -34,5 +36,11 @@ export const API_ROUTES = {
 
   pricing: {
     getAllPricing: "/admin/pricing",
+  },
+
+  location: {
+    getPlaceDetails: (placeId: string) =>
+      `https://places.googleapis.com/v1/places/${placeId}`,
+    // `api/places/details?placeId=${placeId}`,
   },
 };
