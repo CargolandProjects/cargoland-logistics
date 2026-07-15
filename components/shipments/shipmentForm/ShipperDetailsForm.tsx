@@ -26,9 +26,13 @@ import IntlTelInput from "@intl-tel-input/react";
 import "intl-tel-input/styles";
 import { useEffect, useRef } from "react";
 import { Iso2 } from "intl-tel-input";
+import { CityAutocomplete } from "@/components/googlePlaces/CityAutocomplete";
+import { AddressAutocomplete } from "@/components/googlePlaces/AddressAutocomplete";
+import { getAddressComponent } from "@/lib/utils";
 
 const ShipperDetailsForm = () => {
-  const { control, watch } = useFormContext<ShipmentDataType>();
+  const { control, watch, setValue, setError, clearErrors, trigger } =
+    useFormContext<ShipmentDataType>();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const phoneInputRef = useRef<any>(null);
 
@@ -36,6 +40,7 @@ const ShipperDetailsForm = () => {
   const selectedCountry = countryOptions.find(
     (c) => c.label === selectedCountryLabel,
   );
+  const countryCode = selectedCountry?.value?.toLowerCase();
 
   // Update phone input country when country selector changes
   useEffect(() => {
@@ -47,6 +52,59 @@ const ShipperDetailsForm = () => {
       iti.setCountry(selectedCountry.value.toLowerCase());
     }
   }, [selectedCountry?.value]);
+
+  // ---------- Handlers for autocomplete selection ----------
+  const handleCitySelect = (place: google.maps.places.Place) => {
+    const components = place.addressComponents || [];
+
+    const city =
+      getAddressComponent(components, "locality") ||
+      getAddressComponent(components, "administrative_area_level_2");
+    const state = getAddressComponent(
+      components,
+      "administrative_area_level_1",
+    );
+
+    setValue("stateOrCity", city || state || "");
+
+    // Optionally auto-fill postal code
+    const postalCode = getAddressComponent(components, "postal_code");
+    if (postalCode) setValue("postalCode", postalCode);
+  };
+
+  const handleAddressSelect = (place: google.maps.places.Place) => {
+    const components = place.addressComponents || [];
+
+    const city =
+      getAddressComponent(components, "locality") ||
+      getAddressComponent(components, "administrative_area_level_2");
+    const state = getAddressComponent(
+      components,
+      "administrative_area_level_1",
+    );
+    const postalCode = getAddressComponent(components, "postal_code");
+
+    setValue("address", place.formattedAddress || "");
+    setValue("stateOrCity", city || state || "");
+    setValue("postalCode", postalCode || "");
+  };
+
+  const handleFocus = (fieldName: "stateOrCity" | "address") => {
+    if (!countryCode) {
+      if (fieldName === "stateOrCity") {
+        setError("stateOrCity", {
+          type: "manual",
+          message: "Please select a country first",
+        });
+      } else
+        setError("address", {
+          type: "manual",
+          message: "Please select a country first",
+        });
+    } else {
+      clearErrors(fieldName);
+    }
+  };
 
   return (
     <div>
@@ -200,12 +258,20 @@ const ShipperDetailsForm = () => {
                 <FieldLabel htmlFor={field.name} className="form-label">
                   State/City
                 </FieldLabel>
-                <Input
-                  {...field}
-                  id={field.name}
-                  aria-invalid={fieldState.invalid}
-                  // placeholder=""
-                  className="form-input"
+                <CityAutocomplete
+                  value={field.value}
+                  onChange={field.onChange}
+                  onFocus={() => handleFocus("stateOrCity")}
+                  onBlur={() => trigger("stateOrCity")}
+                  onSelect={handleCitySelect}
+                  placeholder={
+                    !countryCode
+                      ? "Please select a country first"
+                      : "Start typing city name..."
+                  }
+                  countryCode={countryCode}
+                  readOnly={!countryCode}
+                  inputClassName="form-input h-10 w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 {fieldState.invalid && (
                   <FieldError
@@ -224,12 +290,20 @@ const ShipperDetailsForm = () => {
                 <FieldLabel htmlFor={field.name} className="form-label">
                   Address
                 </FieldLabel>
-                <Input
-                  {...field}
-                  id={field.name}
-                  aria-invalid={fieldState.invalid}
-                  // placeholder="First Name and Last Name"
-                  className="form-input"
+                <AddressAutocomplete
+                  value={field.value}
+                  onChange={field.onChange}
+                  onFocus={() => handleFocus("address")}
+                  onBlur={() => trigger("address")}
+                  onSelect={handleAddressSelect}
+                  placeholder={
+                    !countryCode
+                      ? "Please select a country first"
+                      : "Start typing your address..."
+                  }
+                  countryCode={countryCode}
+                  readOnly={!countryCode}
+                  inputClassName="form-input h-10 w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 {fieldState.invalid && (
                   <FieldError
@@ -278,6 +352,7 @@ const ShipperDetailsForm = () => {
                   <span className="form-label text-gray-400!">(Optional)</span>
                 </FieldLabel>
                 <Input
+                  autoComplete="new-cityCode"
                   {...field}
                   id={field.name}
                   aria-invalid={fieldState.invalid}
