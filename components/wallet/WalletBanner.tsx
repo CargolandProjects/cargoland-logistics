@@ -1,6 +1,5 @@
-import {Plus } from "lucide-react";
 import { Wallet } from "../icons";
-import { Button } from "../ui/button";
+import FundWalletModal from "./FundWalletModal";
 
 const WalletBanner = () => {
   return (
@@ -11,9 +10,7 @@ const WalletBanner = () => {
       </div>
       <h1 className="mt-4 text-5xl font-bold leading-14 text-white">₦0.00</h1>
 
-      <Button className="mt-6 h-auto py-3 px-6 gap-2">
-        <Plus/> Fund Wallet
-      </Button>
+      <FundWalletModal />
     </div>
   );
 };
