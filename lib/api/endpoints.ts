@@ -43,4 +43,9 @@ export const API_ROUTES = {
       `https://places.googleapis.com/v1/places/${placeId}`,
     // `api/places/details?placeId=${placeId}`,
   },
+  wallet: {
+    fundWallet: "/users/fund-wallet",
+    chargeWallet: "/users/charge-wallet",
+    getBalance: "/users/get-wallet-balance",
+  },
 };
