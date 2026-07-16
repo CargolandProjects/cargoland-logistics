@@ -26,6 +26,13 @@ import CallOutline from "./CallOutline";
 import WorldFilled from "./WorldFilled";
 import LockOutline from "./LockOutline";
 import ArrowRight2 from "./ArrowRight2";
+import FaceBook from "./FaceBook";
+import Instagram from "./Instagram";
+import TikTok from "./TikTok";
+import Youtube from "./Youtube";
+import Warning from "./Warning";
+import LocationPin from "./LocationPin";
+import Wallet from "./Wallet";
 
 export {
   Location,
@@ -56,4 +63,11 @@ export {
   WorldFilled,
   LockOutline,
   ArrowRight2,
+  FaceBook,
+  Instagram,
+  TikTok,
+  Youtube,
+  Warning,
+  LocationPin,
+  Wallet,
 };

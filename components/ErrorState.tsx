@@ -1,4 +1,4 @@
-import Warning from "./icons/Warning";
+import { Warning } from "./icons";
 
 const ErrorState = ({ message }: { message: string }) => {
   return (
