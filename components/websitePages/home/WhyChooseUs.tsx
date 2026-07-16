@@ -1,17 +1,10 @@
-import { heroImg, whyUs } from "@/assets/images";
-import LocationPin from "@/components/icons/ArrowDown copy";
-import {
-  Compass,
-  Globe,
-  HeartHandshake,
-  House,
-  ShieldCheck,
-  Tag,
-} from "lucide-react";
+import { whyUs } from "@/assets/images";
+import { LocationPin } from "@/components/icons";
+import { Globe, ShieldCheck, Tag } from "lucide-react";
 import Image from "next/image";
 
 const services = [
-  {
+  { 
     title: "Fully Insured Shipments",
     description:
       "Delivering your shipments safely, on time, and with complete peace of mind.",

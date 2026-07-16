@@ -22,7 +22,7 @@ export default function ProfilePage () {
     <div className="mt-15 md:mt-16.5 relative">
       <div className="padding-x">
         <h1 className="font-bold text-[32px] leading-10 ">My Profile</h1>
-        <p className="text-base font-light leading-6">
+        <p className="mt-2 text-base font-light leading-6">
           Manage your account, company, and how Cargoland works for your team.
         </p>
 

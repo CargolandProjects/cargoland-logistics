@@ -1,8 +1,7 @@
 import Link from "next/link";
-import TikTok from "../icons/TikTok";
-import FaceBook from "../icons/FaceBook";
-import Instagram from "../icons/Instagram";
-import Youtube from "../icons/Youtube";
+
+import {FaceBook, Instagram, TikTok, Youtube, } from "@/components/icons";
+
 
 const footer = [
   {
