@@ -16,7 +16,7 @@ const Overview = () => {
         <h2
           className={`${isLoading && "animate-pulse"} mt-5 text-xl font-bold leading-7`}
         >
-          ₦{data?.totalFunded || 0}
+          ₦{Number(data?.totalFunded || 0).toLocaleString()}
         </h2>
       </div>
 
@@ -28,7 +28,7 @@ const Overview = () => {
         <h2
           className={`${isLoading && "animate-pulse"} mt-5 text-xl font-bold leading-7`}
         >
-          ₦{data?.totalSpent || 0}
+          ₦{Number(data?.totalSpent || 0).toLocaleString()}
         </h2>
       </div>
     </div>

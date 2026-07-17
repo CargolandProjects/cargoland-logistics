@@ -22,11 +22,25 @@ interface GetBalance {
   transactions: Transaction[];
 }
 
+interface MakePayment {
+  status: boolean;
+  message: string;
+  data: {
+    authorization_url: string;
+    access_code: string;
+    reference: string;
+  };
+}
+
+export type MakePaymentRes = APIResponse<MakePayment>;
 type GetBalanceResponse = APIResponse<GetBalance>;
 
 export const wallet = {
   async fundWallet(data: { amount: string; walletId: string }) {
-    const res = await apiClient.post(API_ROUTES.wallet.fundWallet, data);
+    const res = await apiClient.post<MakePaymentRes>(
+      API_ROUTES.wallet.fundWallet,
+      data,
+    );
     return res.data;
   },
   async chargeWallet(data: {
