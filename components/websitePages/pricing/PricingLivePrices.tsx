@@ -54,7 +54,7 @@ const PricingLivePrices = () => {
     destination: filters.destination,
     method: filters.method as Method,
   });
-
+  console.log("Filters", filters);
   const fromList =
     filters.method === "DOMESTIC"
       ? [{ value: "origin", label: "Origin" }, ...nigeriaStates]
@@ -87,14 +87,18 @@ const PricingLivePrices = () => {
               onValueChange={(val) => {
                 setFilters((prev) => ({
                   ...prev,
-                  origin: val === "origin" ? undefined : (val as string),
+                  origin: val === "Origin" ? undefined : (val as string),
                 }));
               }}
             >
               <ComboboxInput className="py-1! h-auto px-1.5 text-primary-dark! bg-primary-light font-roboto [&_input]:text-sm!" />
 
               <ComboboxContent>
-                <ComboboxEmpty>No country found</ComboboxEmpty>
+                <ComboboxEmpty>
+                  {filters.method === "INTERNATIONAL"
+                    ? "No country found"
+                    : "No state found"}
+                </ComboboxEmpty>
                 <ComboboxList>
                   {(country) => (
                     <ComboboxItem
@@ -118,14 +122,18 @@ const PricingLivePrices = () => {
                 setFilters((prev) => ({
                   ...prev,
                   destination:
-                    val === "destination" ? undefined : (val as string),
+                    val === "Destination" ? undefined : (val as string),
                 }))
               }
             >
               <ComboboxInput className="py-1! h-auto px-1.5 text-primary-dark! bg-primary-light font-roboto [&_input]:text-sm!" />
 
               <ComboboxContent>
-                <ComboboxEmpty>No country found</ComboboxEmpty>
+                <ComboboxEmpty>
+                  {filters.method === "INTERNATIONAL"
+                    ? "No country found"
+                    : "No state found"}
+                </ComboboxEmpty>
                 <ComboboxList>
                   {(country) => (
                     <ComboboxItem
@@ -156,9 +164,7 @@ const PricingLivePrices = () => {
 
               <SelectContent position="popper">
                 <SelectItem value="method">Method</SelectItem>
-                <SelectItem value="INTERNATIONAL">
-                  International
-                </SelectItem>
+                <SelectItem value="INTERNATIONAL">International</SelectItem>
                 <SelectItem value="DOMESTIC">Domestic</SelectItem>
                 {/* <SelectItem value="DOOR_TO_DOOR_SHIPPING">
                   Door to door

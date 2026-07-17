@@ -8,8 +8,6 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatDate(date: Date | string) {
-  if (!date) return null;
-
   return `${format(date, "MMM d, yyyy")}`;
 }
 
@@ -19,6 +17,9 @@ export function formatDayOfWeek(date: Date | string) {
 
 export function formatTime(date: Date | string) {
   return `${format(date, "h:m")}`;
+}
+export function formatMeridiem(date: Date | string) {
+  return `${format(date, "a")}`;
 }
 
 export function formatMinSecMill(date: Date | string) {
