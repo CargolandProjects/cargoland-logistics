@@ -10,15 +10,46 @@ import {
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
 import { useState } from "react";
+import { useFundWallet } from "@/lib/hooks/mutation/useWallet";
+import { toast } from "sonner";
 
-const FundWalletModal = () => {
+const FundWalletModal = ({ walletId }: { walletId: string }) => {
+  const { mutate: fundWallet, isPending } = useFundWallet();
   const [amount, setAmount] = useState("");
+  const [message, setMessage] = useState("");
+
   const amounts = ["2000", "5000", "10000", "25000", "50000", "100000"];
+  const minAmount = Number(amounts[0]);
 
   const formatNumber = (value: string) => {
     if (!value) return "";
     const number = value.replace(/\D/g, ""); // remove non-digits
     return new Intl.NumberFormat("en-US").format(Number(number));
+  };
+
+  const handleFund = () => {
+    if (!walletId) return;
+
+    if (!amount || Number(amount) < minAmount) {
+      setMessage(`Funding amount must be at least ₦${minAmount}`);
+      return;
+    }
+
+    fundWallet(
+      { amount, walletId },
+      {
+        onSuccess: (res) => {
+          const authUrl = res.data.data.authorization_url;
+
+          if (!authUrl) {
+            toast.error("Payment initiation failed");
+            return;
+          }
+
+          window.location.href = authUrl;
+        },
+      },
+    );
   };
 
   return (
@@ -68,7 +99,21 @@ const FundWalletModal = () => {
             </div>
           </div>
 
-          <Button className="mt-6 submit-button">Fund</Button>
+          <div className="mt-6 ">
+            {message && (
+              <p className="mb-1.5 text-red-500 text-center text-sm  relative">
+                {message}
+              </p>
+            )}
+
+            <Button
+              onClick={handleFund}
+              disabled={!amount || isPending}
+              className="submit-button"
+            >
+              Fund
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

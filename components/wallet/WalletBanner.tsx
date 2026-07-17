@@ -17,10 +17,10 @@ const WalletBanner = () => {
       <h1
         className={`${isLoading && "animate-pulse"} mt-4 text-5xl font-bold leading-14 text-white`}
       >
-        ₦{Number(data?.balance || 0).toFixed(2)}
+        ₦{Number(data?.balance || 0).toLocaleString()}
       </h1>
 
-      <FundWalletModal />
+      <FundWalletModal walletId={data?.id || ""} />
     </div>
   );
 };

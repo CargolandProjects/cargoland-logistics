@@ -3,6 +3,7 @@ import { API_ROUTES } from "../api/endpoints";
 import { ShipmentDataType } from "../schemas/shipmentSchema";
 import { FreightType, ShipmentType } from "../stores/useShipmentStore";
 import { APIResponse } from "./auth.service";
+import { MakePaymentRes } from "./wallet.service";
 
 export type ShipmentStatus =
   | "PENDING"
@@ -154,23 +155,12 @@ interface Estimate {
   estimatedPrice: number;
 }
 
-interface MakePayment {
-  status: boolean;
-  message: string;
-  data: {
-    authorization_url: string;
-    access_code: string;
-    reference: string;
-  };
-}
-
 type CreateShipment = APIResponse<Shipment>;
 type TrackShipmentRes = APIResponse<Shipment>;
 type DashboardStatsRes = APIResponse<DashboardStats>;
 type AllShipmentsRes = APIResponse<AllShipments>;
 type MyShipmentsRes = APIResponse<Shipment[]>;
 type EstimateRes = APIResponse<Estimate>;
-type MakePaymentRes = APIResponse<MakePayment>;
 
 export const shipment = {
   async createShipment(data: ShipmentDataType) {
