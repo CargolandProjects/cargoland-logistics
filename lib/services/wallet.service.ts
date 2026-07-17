@@ -2,12 +2,12 @@ import apiClient from "../api/client";
 import { API_ROUTES } from "../api/endpoints";
 import { APIResponse } from "./auth.service";
 
-interface Transaction {
+export interface Transaction {
   id: string;
   walletId: string;
   amount: string;
   type: "CREDIT";
-  status: "PENDING";
+  status: "SUCCESS" | "FAILED";
   reference: string;
   description: string;
   createdAt: string;

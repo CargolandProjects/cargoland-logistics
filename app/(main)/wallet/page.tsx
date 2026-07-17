@@ -1,6 +1,7 @@
 "use client";
 
 import Overview from "@/components/wallet/Overview";
+import TransactionHistory from "@/components/wallet/TransactionHistory";
 import WalletBanner from "@/components/wallet/WalletBanner";
 import { useProtectedRoute } from "@/lib/hooks/useProtectedRoute";
 
@@ -20,6 +21,7 @@ export default function WalletPage() {
 
       <WalletBanner />
       <Overview />
+      <TransactionHistory />
     </div>
   );
 }
