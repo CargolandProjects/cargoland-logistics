@@ -69,15 +69,21 @@ export const shipmentSchema = z
     pickupDate: z
       .string()
       .min(1, "Pickup date is required")
-      .refine(isTodayOrFuture, "Pickup date must be today or a future date"),
-
+      .refine((val) => {
+        if (!val) return true;
+        return isTodayOrFuture(val);
+      }, "Pickup date must be today or a future date")
+      .optional()
+      .or(z.literal("")),
     pickupTime: z
       .string()
       .min(1, "Pickup time is required")
-      .refine(
-        isValidPickupTime,
-        "Pickup time must be between 8:00 AM and 8:00 PM",
-      ),
+      .refine((val) => {
+        if (!val) return true;
+        return isValidPickupTime(val);
+      }, "Pickup time must be between 8:00 AM and 8:00 PM")
+      .optional()
+      .or(z.literal("")),
 
     //  Receiver's Details Starts Here
     receiverName: z
@@ -150,7 +156,7 @@ export const shipmentSchema = z
       }),
     ),
     // .min(1, "At least one image is required")
-    
+
     descriptionOfGoods: z
       .string()
       .min(5, "Description must be at least 5 characters")
@@ -161,6 +167,9 @@ export const shipmentSchema = z
   .refine(
     (data) => {
       const { pickupDate, pickupTime } = data;
+      // Skip validation if either field is empty (they're optional)
+      if (!pickupDate || !pickupTime) return true;
+
       const pickupDateTime = new Date(`${pickupDate}T${pickupTime}`);
       const now = new Date();
 
