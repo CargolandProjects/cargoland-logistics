@@ -64,9 +64,9 @@ const TransactionHistory = () => {
           // Special handling for date fields
           if (field === "createdAt") {
             try {
-              const dateStr = formatDate(value).toLowerCase();
+              const dateStr = formatDate(value)?.toLowerCase();
               const timeStr = formatTime(value).toLowerCase();
-              return dateStr.includes(term) || timeStr.includes(term);
+              return dateStr?.includes(term) || timeStr.includes(term);
             } catch {
               return false;
             }
