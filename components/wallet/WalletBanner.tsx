@@ -13,7 +13,7 @@ const WalletBanner = () => {
         <Wallet className="size-6 text-primary" />
         <p className="text-gray-500 leading-5.5">Available Balance</p>
       </div>
-
+    
       <h1
         className={`${isLoading && "animate-pulse"} mt-4 text-[32px] md:text-5xl font-bold leading-10 md:leading-14 text-white wrap-break-word`}
       >
