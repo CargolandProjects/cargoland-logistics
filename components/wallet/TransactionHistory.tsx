@@ -137,6 +137,7 @@ const TransactionHistory = () => {
         </div>
       )}
 
+      {/* Desktop screen */}
       {isSuccess && filteredTransactions.length > 0 && (
         <Table className="max-md:hidden mt-3 bg-white rounded-lg">
           <TableHeader>
@@ -222,8 +223,9 @@ const TransactionHistory = () => {
         </Table>
       )}
 
+      {/* Mobile Scren */}
       {isSuccess && filteredTransactions.length > 0 && (
-        <div className="mt-5 rounded-lg border bg-white">
+        <div className="md:hidden mt-5 rounded-lg border bg-white">
           {filteredTransactions.map((transaction, idx) => (
             <div className="p-6 flex gap-3 border-b" key={idx}>
               {transaction.type === "CREDIT" ? (
