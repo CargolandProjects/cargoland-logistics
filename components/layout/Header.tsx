@@ -43,6 +43,10 @@ const authenticatedLinks = [
     href: "/estimate",
   },
   {
+    title: "Wallet",
+    href: "/wallet",
+  },
+  {
     title: "Profile",
     href: "/profile",
   },
@@ -84,7 +88,9 @@ const Header = () => {
   };
 
   const displayLinks = isAuthenticated ? authenticatedLinks : homeLinks; // check if user is a
-  const desktopLinks = displayLinks.filter((link) => link.title !== "Profile");
+  const desktopLinks = displayLinks.filter(
+    (link) => link.title !== "Profile" && link.title !== "Wallet",
+  );
 
   return (
     <header className="py-2 md:py-4 padding-x bg-white">
@@ -159,6 +165,13 @@ const Header = () => {
                   className="p-0 font-medium leading-5.5 hover:p-2 hover:bg-primary/8! duration-200 cursor-pointer"
                 >
                   <Link href="/profile">Profile</Link>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem
+                  asChild
+                  className="p-0 font-medium leading-5.5 hover:p-2 hover:bg-primary/8! duration-200 cursor-pointer"
+                >
+                  <Link href="/wallet">Wallet</Link>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem
