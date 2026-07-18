@@ -15,7 +15,7 @@ const WalletBanner = () => {
       </div>
 
       <h1
-        className={`${isLoading && "animate-pulse"} mt-4 text-5xl font-bold leading-14 text-white`}
+        className={`${isLoading && "animate-pulse"} mt-4 text-[32px] md:text-5xl font-bold leading-10 md:leading-14 text-white wrap-break-word`}
       >
         ₦{Number(data?.balance || 0).toLocaleString()}
       </h1>

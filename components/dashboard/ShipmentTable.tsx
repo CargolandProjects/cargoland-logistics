@@ -21,7 +21,7 @@ import { MouseEvent } from "react";
 
 interface ShipmentTableProps {
   shipments: Shipment[];
-  handleRoute: (path: string) => void;
+  handleRoute?: (path: string) => void;
   handleView: (e: MouseEvent, id: string) => void;
   handleTrack: (e: MouseEvent, trackingId: string) => void;
 }
@@ -76,8 +76,8 @@ const ShipmentTable = ({
               <TableCell>
                 <div className="flex items-center gap-2 leading-5.5">
                   <p className="leading-5.5">{shipment.country}</p>
-                  <ArrowRight className="size-4.5 text-primary" />
-                  <p className="leading-5.5">{shipment.receiverCountry}</p>
+                  <ArrowRight className="shrink-0 size-4.5 text-primary" />
+                  <p className="leading-5.5 w-[180px] break-all wrap-anywhere line-clamp-1">{shipment.receiverCountry}</p>
                 </div>
               </TableCell>
               <TableCell className="leading-5.5 capitalize">
@@ -115,7 +115,7 @@ const ShipmentTable = ({
                       <MoreVertical />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="center">
+                  <DropdownMenuContent align="end">
                     <DropdownMenuItem
                       onClick={(e) => handleView(e, shipment.id)}
                       className="cursor-pointer"

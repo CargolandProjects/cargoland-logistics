@@ -129,7 +129,7 @@ export default function DashboardPage() {
         ))}
       </section>
 
-      <section ref={shipmentsRef} className="mt-[76px] md:mt-8">
+      <section ref={shipmentsRef} className="mt-10 md:mt-8">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold leading-7">Recent Shipments</h2>
           <Button
@@ -187,7 +187,7 @@ export default function DashboardPage() {
             {/* Desktop screen */}
             <div className="max-md:hidden">
               <ShipmentTable
-                handleRoute={handleRoute}
+                // handleRoute={handleRoute}
                 handleTrack={handleTrack}
                 handleView={handleView}
                 shipments={allShipments}
@@ -210,7 +210,7 @@ export default function DashboardPage() {
       </section>
 
       {isSuccess && totalPages > 1 && (
-        <div className="mt-9.5">
+        <div className="mt-9.25 mb-10">
           <Pagination
             currentPage={page}
             totalPages={totalPages}

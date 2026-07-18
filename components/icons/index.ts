@@ -33,6 +33,8 @@ import Youtube from "./Youtube";
 import Warning from "./Warning";
 import LocationPin from "./LocationPin";
 import Wallet from "./Wallet";
+import ArrowUpRight from "./ArrowUpRight";
+import ArrowDownLeft from "./ArrowDownLeft";
 
 export {
   Location,
@@ -70,4 +72,6 @@ export {
   Warning,
   LocationPin,
   Wallet,
+  ArrowUpRight,
+  ArrowDownLeft,
 };

@@ -22,6 +22,7 @@ import {
 import { useWalletBalance } from "@/lib/hooks/queries/useBalance";
 import { formatDate, formatMeridiem, formatTime } from "@/lib/utils";
 import { Transaction } from "@/lib/services/wallet.service";
+import { ArrowDownLeft, ArrowUpRight } from "../icons";
 
 type Status = "ALL" | "CREDIT" | "DEBIT";
 
@@ -81,20 +82,20 @@ const TransactionHistory = () => {
   }, [transactions, filter, search]);
 
   return (
-    <section className="mt-[76px] md:mt-8">
+    <section className="mt-5 md:mt-8">
       <div className="flex max-md:flex-col md:items-center">
         <h2 className="text-xl font-semibold leading-7 text-secondary">
           Transaction History
         </h2>
 
         {/* search input */}
-        <div className="max-md:mt-6 flex-1 flex justify-end gap-4">
+        <div className="max-md:mt-4 flex-1 flex justify-end gap-4">
           <div className="relative w-full md:max-w-[291px]">
             <Input
               onChange={(e) => setSearch(e.target.value)}
               value={search}
               placeholder="Search here"
-              className="form-input h-12.5! pl-10! min-w-[219px] placeholder:text-slate-600/90!"
+              className="form-input h-12.5! pl-10! md:min-w-[219px] placeholder:text-slate-600/90!"
             />
             <Search className="size-5 absolute top-1/2 -translate-y-1/2 left-3 text-slate-600/90" />
           </div>
@@ -130,16 +131,17 @@ const TransactionHistory = () => {
         </div>
       )}
 
-      {isSuccess && transactions.length === 0 && (
+      {isSuccess && filteredTransactions.length === 0 && (
         <div className="mt-3 min-h-[437px] flex flex-col justify-center items-center rounded-lg bg-white">
           <p className="text2xl leading-8">No Transactions Yet</p>
         </div>
       )}
 
-      {isSuccess && transactions.length > 0 && (
-        <Table className="mt-3 bg-white rounded-lg">
+      {isSuccess && filteredTransactions.length > 0 && (
+        <Table className="max-md:hidden mt-3 bg-white rounded-lg">
           <TableHeader>
             <TableRow className="h-[53px] hover:bg-white">
+              <TableHead className="sr-only text-sm font-normal leading-5.5 font-roboto text-neutral-600/90"></TableHead>
               <TableHead className="pl-6 text-sm font-normal leading-5.5 font-roboto text-neutral-600/90">
                 Transaction ID
               </TableHead>
@@ -164,6 +166,13 @@ const TransactionHistory = () => {
           <TableBody>
             {filteredTransactions.map((transaction, idx) => (
               <TableRow key={idx} className="h-15.5">
+                <TableCell className="pl-6 leading-5.5">
+                  {transaction.type === "CREDIT" ? (
+                    <ArrowDownLeft className="size-6 text-[#16A34A]" />
+                  ) : (
+                    <ArrowUpRight className="size-6 text-primary" />
+                  )}
+                </TableCell>
                 <TableCell className="pl-6 leading-5.5">
                   {transaction.reference}
                 </TableCell>
@@ -211,6 +220,68 @@ const TransactionHistory = () => {
             ))}
           </TableBody>
         </Table>
+      )}
+
+      {isSuccess && filteredTransactions.length > 0 && (
+        <div className="mt-5 rounded-lg border bg-white">
+          {filteredTransactions.map((transaction, idx) => (
+            <div className="p-6 flex gap-3 border-b" key={idx}>
+              {transaction.type === "CREDIT" ? (
+                <ArrowDownLeft className="shrink-0 size-5 text-[#16A34A]" />
+              ) : (
+                <ArrowUpRight className="shrink-0 size-5 text-primary" />
+              )}
+              <div className="flex w-full justify-between">
+                <div className="space-y-2">
+                  <p className="text-xs leading-5 text-neutral-400">
+                    {transaction.reference}
+                  </p>
+                  <p className="text-base leading-5.5">
+                    {transaction.type === "CREDIT"
+                      ? "Wallet top-up"
+                      : "Payment"}
+                  </p>
+                  <p className="text-[10px] leading-4.5 text-neutral-400">
+                    {formatDate(transaction.createdAt)} -{" "}
+                    {formatTime(transaction.createdAt)}{" "}
+                    {formatMeridiem(transaction.createdAt)}
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <h3 className="text-lg font-bold leading-6 line-clamp-1 break-all">
+                    ₦{Number(transaction.amount).toLocaleString()}
+                  </h3>
+
+                  <div
+                    className={`px-2 py-0.5 size-fit ${
+                      transaction.status === "SUCCESS"
+                        ? "bg-cargo-success/5 border-cargo-success"
+                        : "bg-primary/5 border-primary"
+                    } flex items-center justify-center gap-1 border rounded-full text-center leading-5.5 capitalize`}
+                  >
+                    <div
+                      className={`${
+                        transaction.status === "SUCCESS"
+                          ? "bg-cargo-success"
+                          : "bg-primary"
+                      } size-1.5 rounded-full`}
+                    />
+                    <p
+                      className={`${
+                        transaction.status === "SUCCESS"
+                          ? "text-cargo-success"
+                          : "text-primary"
+                      } text-[10px] leading-5 capitalize`}
+                    >
+                      {transaction.status.toLowerCase()}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </section>
   );
