@@ -8,7 +8,7 @@ import success from "@/assets/gifs/success.gif";
 export default function WalletSuccessPage() {
   const router = useRouter();
   return (
-    <div className=" min-h-[calc(100vh-100px)] md:min-h-[calc(100vh-125px)] flex justify-center items-center">
+    <div className="px-4 min-h-[calc(100vh-100px)] md:min-h-[calc(100vh-125px)] flex justify-center items-center">
       <div className="w-[328px] flex flex-col items-center">
         <div className="relative size-[124px] sm:size-[180px]">
           <Image

@@ -16,7 +16,7 @@ export function formatDayOfWeek(date: Date | string) {
 }
 
 export function formatTime(date: Date | string) {
-  return `${format(date, "h:m")}`;
+  return `${format(date, "h:mm")}`;
 }
 export function formatMeridiem(date: Date | string) {
   return `${format(date, "a")}`;

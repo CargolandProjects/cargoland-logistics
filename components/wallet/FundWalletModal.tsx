@@ -20,6 +20,7 @@ const FundWalletModal = ({ walletId }: { walletId: string }) => {
 
   const amounts = ["2000", "5000", "10000", "25000", "50000", "100000"];
   const minAmount = Number(amounts[0]);
+  const maxAmount = 100000000;
 
   const formatNumber = (value: string) => {
     if (!value) return "";
@@ -35,6 +36,11 @@ const FundWalletModal = ({ walletId }: { walletId: string }) => {
       return;
     }
 
+    if (Number(amount) >= maxAmount) {
+      setMessage(`Funding amount must be less than ₦${maxAmount.toLocaleString()}`);
+      return;
+    }
+
     fundWallet(
       { amount, walletId },
       {
@@ -47,6 +53,9 @@ const FundWalletModal = ({ walletId }: { walletId: string }) => {
           }
 
           window.location.href = authUrl;
+        },
+        onError: (res) => {
+          toast.error(res.message || "Failed to fund wallet");
         },
       },
     );
