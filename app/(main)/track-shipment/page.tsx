@@ -365,7 +365,7 @@ const TrackShipmentPageContent = () => {
                           <h3 className="text-base font-roboto font-medium leading-5 sm:text-center">
                             {progress.title}
                           </h3>
-                          <div className="flex sm:flex-col items-center gap-1">
+                          {/* <div className="flex sm:flex-col items-center gap-1">
                             <p className="text-xs leading-5 text-slate-700 sm:text-center">
                               {progress.location}
                             </p>
@@ -378,7 +378,7 @@ const TrackShipmentPageContent = () => {
                                 {formatTime(progress.time)}
                               </p>
                             </div>
-                          </div>
+                          </div> */}
                         </div>
                       </div>
                     );
