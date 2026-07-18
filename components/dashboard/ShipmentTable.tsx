@@ -74,10 +74,10 @@ const ShipmentTable = ({
                 {shipment.trackingId}
               </TableCell>
               <TableCell>
-                <div className="flex items-center gap-2 leading-5.5">
+                <div className="flex items-center gap-2 leading-5.5 w-[180px]">
                   <p className="leading-5.5">{shipment.country}</p>
                   <ArrowRight className="shrink-0 size-4.5 text-primary" />
-                  <p className="leading-5.5 w-[180px] break-all wrap-anywhere line-clamp-1">{shipment.receiverCountry}</p>
+                  <p className="leading-5.5 min-w-0 truncate">{shipment.receiverCountry}</p>
                 </div>
               </TableCell>
               <TableCell className="leading-5.5 capitalize">
