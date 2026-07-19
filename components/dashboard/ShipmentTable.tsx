@@ -74,7 +74,7 @@ const ShipmentTable = ({
                 {shipment.trackingId}
               </TableCell>
               <TableCell>
-                <div className="flex items-center gap-2 leading-5.5 w-[180px]">
+                <div className="flex items-center gap-2 leading-5.5 max-w-[180px]">
                   <p className="leading-5.5">{shipment.country}</p>
                   <ArrowRight className="shrink-0 size-4.5 text-primary" />
                   <p className="leading-5.5 min-w-0 truncate">{shipment.receiverCountry}</p>

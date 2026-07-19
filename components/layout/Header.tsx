@@ -137,7 +137,7 @@ const Header = () => {
                   <ArrowDown className="size-5 text-black" />
                 </Button>
               ) : (
-                <div className="flex gap-2 max-md:hidden  ">
+                <div className="flex gap-2 max-md:hidden">
                   <UserCircleIcon className="size-6" />
                   <p>
                     <Link
