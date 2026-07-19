@@ -5,7 +5,7 @@ export default function AuthLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <div className="bg-background-screen">
+    <div className="w-full max-w-[1554px] mx-auto bg-background-screen">
       <AuthHeader />
       {children}
       <Footer />

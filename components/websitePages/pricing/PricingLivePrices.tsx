@@ -179,7 +179,7 @@ const PricingLivePrices = () => {
       </div>
 
       {/* Skeleton loading state for the table */}
-      {isLoading && <TableSkeleton />}
+      {isLoading && <TableSkeleton ShipmentType="INTERNATIONAL" />}
 
       {/* Desktop Screens */}
       <Table
@@ -290,7 +290,7 @@ const PricingLivePrices = () => {
           Route
         </h3>
 
-        {isLoading && <CardSkeleton />}
+        {isLoading && <CardSkeleton ShipmentType="INTERNATIONAL" />}
 
         {/* Error State */}
         {isError && (

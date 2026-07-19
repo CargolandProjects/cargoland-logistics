@@ -36,7 +36,7 @@ export const useLocalPricing = ({
   shipmentType?: ShipmentType;
 } = {}) => {
   return useQuery({
-    queryKey: ["pricing", { page, limit, origin, destination, shipmentType }],
+    queryKey: ["localPricing", { page, limit, origin, destination, shipmentType }],
     queryFn: () =>
       pricing.getAllLocalPricing(
         page,

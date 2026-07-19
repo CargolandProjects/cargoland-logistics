@@ -6,7 +6,7 @@ export default function HomeLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <div className="max-w-[1554px] mx-auto bg-white">
+    <div className="w-full max-w-[1554px] mx-auto bg-white">
       <Header />
       {children}
       <TrackShipment />

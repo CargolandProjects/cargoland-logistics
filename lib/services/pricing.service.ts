@@ -4,7 +4,7 @@ import { APIResponse } from "./auth.service";
 
 export type ShipmentType = "DOMESTIC" | "INTERNATIONAL";
 
-interface Pricing {
+export interface Pricing {
   id: string;
   pricingShippingType: string;
   airFreightRate: string;
@@ -18,7 +18,14 @@ interface Pricing {
   updatedAt: string;
 }
 
-interface LocalPricing {
+export interface Bracket {
+  id: string;
+  minWeight: string;
+  maxWeight: string;
+  ratePerkg: string;
+}
+
+export interface LocalPricing {
   id: string;
   shipmentType: string;
   fromState: string;
@@ -28,12 +35,7 @@ interface LocalPricing {
   adminId: string;
   createdAt: string;
   updatedAt: string;
-  brackets: {
-    id: string;
-    minWeight: string;
-    maxWeight: string;
-    ratePerkg: string;
-  }[];
+  brackets: (Bracket | null)[];
 }
 
 type PricingRes = APIResponse<Pricing[]> & {
@@ -88,8 +90,8 @@ export const pricing = {
         params: {
           page,
           limit,
-          ...(origin && { origin }),
-          ...(destination && { destination }),
+          ...(origin && { fromState: origin }),
+          ...(destination && { toWhereState: destination }),
           ...(shipmentType && { shipmentType }),
         },
       },
