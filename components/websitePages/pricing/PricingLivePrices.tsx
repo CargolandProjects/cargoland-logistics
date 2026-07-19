@@ -23,7 +23,7 @@ import { usePricing } from "@/lib/hooks/queries/usePricing";
 import { useRouter } from "next/navigation";
 import TableSkeleton from "./TableSkeleton";
 import CardSkeleton from "./CardSkeleton";
-import { Method } from "@/lib/services/pricing.service";
+import { ShipmentType } from "@/lib/services/pricing.service";
 import { countryOptions, nigeriaStates } from "@/lib/utils/countryOptions";
 import {
   Combobox,
@@ -38,7 +38,7 @@ import { formatMinSecMill } from "@/lib/utils";
 interface Filter {
   origin?: string;
   destination?: string;
-  method?: Method;
+  method?: ShipmentType;
 }
 
 const PricingLivePrices = () => {
@@ -52,7 +52,7 @@ const PricingLivePrices = () => {
   } = usePricing({
     origin: filters.origin,
     destination: filters.destination,
-    method: filters.method as Method,
+    method: filters.method as ShipmentType,
   });
   console.log("Filters", filters);
   const fromList =
@@ -154,7 +154,7 @@ const PricingLivePrices = () => {
               onValueChange={(val) =>
                 setFilters((prev) => ({
                   ...prev,
-                  method: val === "method" ? undefined : (val as Method),
+                  method: val === "method" ? undefined : (val as ShipmentType),
                 }))
               }
             >

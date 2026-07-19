@@ -36,6 +36,7 @@ export const API_ROUTES = {
 
   pricing: {
     getAllPricing: "/admin/pricing",
+    getAllLocalPricing: "/admin/pricing/local-pricing",
   },
 
   location: {
