@@ -79,7 +79,7 @@ const DomesticCards = ({
                   </div>
 
                   <Button
-                    onClick={() => router.push("/shipment")}
+                    onClick={() => router.push("/shipment?shipmentType=DOMESTIC")}
                     variant="outline"
                     className="mt-6 py-3 h-auto w-full border-primary text-base font-normal text-primary hover:text-primary"
                   >

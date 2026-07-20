@@ -1,8 +1,9 @@
 import apiClient from "../api/client";
 import { API_ROUTES } from "../api/endpoints";
 import { ShipmentDataType } from "../schemas/shipmentSchema";
-import { FreightType, ShipmentType } from "../stores/useShipmentStore";
+import { FreightType } from "../stores/useShipmentStore";
 import { APIResponse } from "./auth.service";
+import { ShipmentType } from "./pricing.service";
 import { MakePaymentRes } from "./wallet.service";
 
 export type ShipmentStatus =

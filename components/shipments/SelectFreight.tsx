@@ -18,12 +18,13 @@ const SelectFreight = () => {
   const setFreightType = useShipmentStore((s) => s.setFreightType);
   const freightType = useShipmentStore((s) => s.freightType);
   const setShipmentFlow = useShipmentStore((s) => s.setShipmentFlow);
+  const shipmentType = useShipmentStore((s) => s.shipmentType);
 
   useEffect(() => {
     if (!freightType) return;
 
-    const setFType = () => setValue(freightType);
-    setFType();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setValue(freightType);
   }, [freightType]);
 
   const handleNext = () => {
@@ -59,48 +60,51 @@ const SelectFreight = () => {
         <RadioGroup
           value={value}
           onValueChange={(value: FreightType) => setValue(value)}
-          className="grid md:grid-cols-3 mt-6 md:mt-8 gap-3 md:gap-6"
+          className={`${shipmentType === "INTERNATIONAL" && "md:grid-cols-3"} grid  mt-6 md:mt-8 gap-3 md:gap-6`}
         >
-          <FieldLabel
-            htmlFor="air-freight"
-            className="p-4 md:p-6 border border-neutral-200 rounded-[16px] cursor-pointer"
-          >
-            <Field orientation="horizontal" className="p-0! ">
-              <FieldContent>
-                <Plane className="text-primary size-10" />
+          {shipmentType !== "DOMESTIC" && (
+            <>
+              <FieldLabel
+                htmlFor="air-freight"
+                className="p-4 md:p-6 border border-neutral-200 rounded-[16px] cursor-pointer"
+              >
+                <Field orientation="horizontal" className="p-0! ">
+                  <FieldContent>
+                    <Plane className="text-primary size-10" />
 
-                <FieldTitle className="mt-5 text-base font-medium leading-6">
-                  Air Freight
-                </FieldTitle>
-              </FieldContent>
-              <RadioGroupItem
-                value="AIR_FREIGHT"
-                id="air-freight"
-                className="size-5 border-2 border-neutral-400"
-              />
-            </Field>
-          </FieldLabel>
+                    <FieldTitle className="mt-5 text-base font-medium leading-6">
+                      Air Freight
+                    </FieldTitle>
+                  </FieldContent>
+                  <RadioGroupItem
+                    value="AIR_FREIGHT"
+                    id="air-freight"
+                    className="size-5 border-2 border-neutral-400"
+                  />
+                </Field>
+              </FieldLabel>
 
-          <FieldLabel
-            htmlFor="ocean-freight"
-            className="p-4 md:p-6 border border-neutral-200 rounded-[16px] cursor-pointer"
-          >
-            <Field orientation="horizontal" className="p-0! ">
-              <FieldContent>
-                <Ship className="text-primary size-10" />
+              <FieldLabel
+                htmlFor="ocean-freight"
+                className="p-4 md:p-6 border border-neutral-200 rounded-[16px] cursor-pointer"
+              >
+                <Field orientation="horizontal" className="p-0! ">
+                  <FieldContent>
+                    <Ship className="text-primary size-10" />
 
-                <FieldTitle className="mt-5 text-base font-medium leading-6">
-                  Ocean Freight
-                </FieldTitle>
-              </FieldContent>
-              <RadioGroupItem
-                value="OCEAN_FREIGHT"
-                id="ocean-freight"
-                className="size-5 border-2 border-neutral-400"
-              />
-            </Field>
-          </FieldLabel>
-
+                    <FieldTitle className="mt-5 text-base font-medium leading-6">
+                      Ocean Freight
+                    </FieldTitle>
+                  </FieldContent>
+                  <RadioGroupItem
+                    value="OCEAN_FREIGHT"
+                    id="ocean-freight"
+                    className="size-5 border-2 border-neutral-400"
+                  />
+                </Field>
+              </FieldLabel>
+            </>
+          )}
           <FieldLabel
             htmlFor="road-freight"
             className="p-4 md:p-6 border border-neutral-200 rounded-[16px] cursor-pointer"

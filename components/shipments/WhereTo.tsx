@@ -10,9 +10,10 @@ import {
   FieldTitle,
 } from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ShipmentType, useShipmentStore } from "@/lib/stores/useShipmentStore";
+import { useShipmentStore } from "@/lib/stores/useShipmentStore";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { ShipmentType } from "@/lib/services/pricing.service";
 
 const WhereTo = () => {
   const [value, setValue] = useState<ShipmentType | null>(null);
