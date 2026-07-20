@@ -54,7 +54,7 @@ const DomesticCards = ({
                   </div>
 
                   {/* prices/kg */}
-                  <div className="mt-4.5 flex gap-2 max-xxs:justify-between w-full xxs:gap-6 overflow-x-auto">
+                  <div className="mt-4.5 flex w-full gap-6 overflow-x-auto">
                     <div className="shrink-0 space-y-2">
                       <p className="text-lg font-semibold leading-6.5 text-gray-400">
                         0-3(kg)

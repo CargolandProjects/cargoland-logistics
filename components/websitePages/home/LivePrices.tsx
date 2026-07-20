@@ -75,13 +75,17 @@ const LivePrices = () => {
 
   const MAX_BRACKETS = 6;
 
-  const normalizedLPrice = (localLivePrices || []).map((item) => ({
-    ...item,
-    brackets: [
-      ...item.brackets,
-      ...Array(MAX_BRACKETS - item.brackets.length).fill(null),
-    ] as (Bracket | null)[],
-  }));
+  const normalizedLPrice = (localLivePrices || []).map((item) => {
+    const count = Math.max(0, MAX_BRACKETS - item.brackets.length);
+
+    return {
+      ...item,
+      brackets: [
+        ...item.brackets.slice(0, MAX_BRACKETS), // also prevent overflow
+        ...Array(count).fill(null),
+      ] as (Bracket | null)[],
+    };
+  });
 
   return (
     <section className="padding-y padding-x bg-primary">
@@ -137,10 +141,8 @@ const LivePrices = () => {
               Updated: {formatMinSecMill(new Date())}
             </p>
           </div>
-
           {/* Skeleton loading state for the table */}
           {isLoading && <TableSkeleton ShipmentType="INTERNATIONAL" />}
-
           {/* Desktop Screens */}
           <InternationalTable
             livePrices={livePrices ?? []}
