@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ShipmentType } from "@/lib/stores/useShipmentStore";
+import { ShipmentType } from "@/lib/services/pricing.service";
 
 const TableSkeleton = ({
   ShipmentType,
@@ -95,7 +95,9 @@ const TableSkeleton = ({
               </TableCell>
             ))}
 
-            <TableCell className={`${ShipmentType === "DOMESTIC" && "sticky right-0 z-10 bg-white" }  pr-10.5`}>
+            <TableCell
+              className={`${ShipmentType === "DOMESTIC" && "sticky right-0 z-10 bg-white"}  pr-10.5`}
+            >
               <Skeleton className="h-11 w-18 rounded-md rounded-lg" />
             </TableCell>
           </TableRow>
