@@ -73,7 +73,7 @@ const LivePrices = () => {
   console.log("Filters: ", filters);
   const States = [{ value: "all", label: "All" }, ...nigeriaStates];
 
-  const MAX_BRACKETS = 6;
+  const MAX_BRACKETS = 8;
 
   const normalizedLPrice = (localLivePrices || []).map((item) => {
     const count = Math.max(0, MAX_BRACKETS - item.brackets.length);

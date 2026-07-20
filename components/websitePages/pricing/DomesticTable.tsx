@@ -9,8 +9,7 @@ import {
 } from "@/components/ui/table";
 import { LocalPricing } from "@/lib/services/pricing.service";
 import { Button } from "@/components/ui/button";
-import router from "next/router";
-import TableSkeleton from "./TableSkeleton";
+import { useRouter } from "next/navigation";
 
 const DomesticTable = ({
   localPrices,
@@ -23,6 +22,7 @@ const DomesticTable = ({
   isError: boolean;
   isSuccess: boolean;
 }) => {
+  const router = useRouter();
   return (
     <Table
       className="max-md:hidden bg-white"
@@ -102,7 +102,9 @@ const DomesticTable = ({
                   ))}
                   <TableCell className="sticky z-10 right-0 bg-white pr-10.5">
                     <Button
-                      onClick={() => router.push("/shipment")}
+                      onClick={() =>
+                        router.push("/shipment?shipmentType=DOMESTIC")
+                      }
                       variant="outline"
                       className="py-2 h-auto w-full min-w-18 border-primary text-base font-normal text-primary hover:text-primary"
                     >

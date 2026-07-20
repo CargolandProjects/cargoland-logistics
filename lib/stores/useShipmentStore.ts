@@ -3,15 +3,10 @@ import { persist } from "zustand/middleware";
 import { ShipmentDataType } from "../schemas/shipmentSchema";
 import { DeepPartial } from "react-hook-form";
 import { Shipment } from "../services/shipment.service";
+import { ShipmentType } from "../services/pricing.service";
 
 export type FreightType = "AIR_FREIGHT" | "OCEAN_FREIGHT" | "ROAD_FREIGHT";
-export type ShipmentType = "DOMESTIC" | "INTERNATIONAL";
 type Step = "shipmentType" | "freightType" | "shipmentForm" | "successful";
-
-// Create a type that matches react-hook-form's watch return type
-// export type DeepPartial<T> = {
-//   [P in keyof T]?: DeepPartial<T[P]>;
-// };
 
 interface ShipmentStore {
   step: Step;
@@ -86,6 +81,6 @@ export const useShipmentStore = create(
     }),
     {
       name: "shipment-store",
-    }
-  )
+    },
+  ),
 );
