@@ -26,18 +26,32 @@ import IntlTelInput from "@intl-tel-input/react";
 import "intl-tel-input/styles";
 import { useEffect, useRef } from "react";
 import { Iso2 } from "intl-tel-input";
-import { CityAutocomplete } from "@/components/googlePlaces/CityAutocomplete";
 import { AddressAutocomplete } from "@/components/googlePlaces/AddressAutocomplete";
 import { getAddressComponent } from "@/lib/utils";
+import { useShipmentStore } from "@/lib/stores/useShipmentStore";
+import StateCityAutocomplete from "@/components/googlePlaces/StateCityAutocomplete";
 
 const ShipperDetailsForm = () => {
+  const shipmentType = useShipmentStore((s) => s.shipmentType);
   const { control, watch, setValue, setError, clearErrors, trigger } =
     useFormContext<ShipmentDataType>();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const phoneInputRef = useRef<any>(null);
 
+  const isDomestic = shipmentType === "DOMESTIC";
+
+  const countriesOptions = isDomestic
+    ? [
+        {
+          value: "NG",
+          label: "Nigeria",
+        },
+      ]
+    : countryOptions;
+
   const selectedCountryLabel = watch("country");
-  const selectedCountry = countryOptions.find(
+  const pickupAddressType = watch("pickUpAddressType");
+  const selectedCountry = countriesOptions.find(
     (c) => c.label === selectedCountryLabel,
   );
   const countryCode = selectedCountry?.value?.toLowerCase();
@@ -53,6 +67,17 @@ const ShipperDetailsForm = () => {
     }
   }, [selectedCountry?.value]);
 
+  // For domestic: state only
+  const handleStateSelect = (place: google.maps.places.Place) => {
+    const components = place.addressComponents || [];
+    const state = getAddressComponent(
+      components,
+      "administrative_area_level_1",
+    );
+    setValue("fromState", state);
+    // Optionally auto-fill postal code? Not recommended for state only.
+  };
+
   // ---------- Handlers for autocomplete selection ----------
   const handleCitySelect = (place: google.maps.places.Place) => {
     const components = place.addressComponents || [];
@@ -65,7 +90,9 @@ const ShipperDetailsForm = () => {
       "administrative_area_level_1",
     );
 
-    setValue("stateOrCity", city || state || "");
+    if (isDomestic) {
+      setValue("fromCity", city);
+    } else setValue("stateOrCity", state || city || "");
 
     // Optionally auto-fill postal code
     const postalCode = getAddressComponent(components, "postal_code");
@@ -85,22 +112,22 @@ const ShipperDetailsForm = () => {
     const postalCode = getAddressComponent(components, "postal_code");
 
     setValue("address", place.formattedAddress || "");
-    setValue("stateOrCity", city || state || "");
     setValue("postalCode", postalCode || "");
+
+    if (isDomestic) {
+      setValue("fromState", state || "");
+      setValue("fromCity", city || "");
+    } else {
+      setValue("stateOrCity", state || city || "");
+    }
   };
 
-  const handleFocus = (fieldName: "stateOrCity" | "address") => {
+  const handleFocus = (fieldName: keyof ShipmentDataType) => {
     if (!countryCode) {
-      if (fieldName === "stateOrCity") {
-        setError("stateOrCity", {
-          type: "manual",
-          message: "Please select a country first",
-        });
-      } else
-        setError("address", {
-          type: "manual",
-          message: "Please select a country first",
-        });
+      setError(fieldName, {
+        type: "manual",
+        message: "Please select a country first",
+      });
     } else {
       clearErrors(fieldName);
     }
@@ -164,10 +191,8 @@ const ShipperDetailsForm = () => {
               </Field>
             )}
           />
-        </div>
 
-        {/* country & phone number */}
-        <div className="grid md:grid-cols-2 gap-6 md:gap-10">
+          {/* country & phone number */}
           <Controller
             name="country"
             control={control}
@@ -179,7 +204,7 @@ const ShipperDetailsForm = () => {
 
                 <Combobox
                   autoComplete="new-country"
-                  items={countryOptions}
+                  items={countriesOptions}
                   name={field.name}
                   value={field.value}
                   onValueChange={field.onChange}
@@ -246,42 +271,115 @@ const ShipperDetailsForm = () => {
               </Field>
             )}
           />
-        </div>
 
-        {/* state/city & address */}
-        <div className="grid md:grid-cols-2 gap-6 md:gap-10">
-          <Controller
-            name="stateOrCity"
-            control={control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid} className="gap-1">
-                <FieldLabel htmlFor={field.name} className="form-label">
-                  State/City
-                </FieldLabel>
-                <CityAutocomplete
-                  value={field.value}
-                  onChange={field.onChange}
-                  onFocus={() => handleFocus("stateOrCity")}
-                  onBlur={() => trigger("stateOrCity")}
-                  onSelect={handleCitySelect}
-                  placeholder={
-                    !countryCode
-                      ? "Please select a country first"
-                      : "Start typing city name..."
-                  }
-                  countryCode={countryCode}
-                  readOnly={!countryCode}
-                  inputClassName="form-input h-10 w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                {fieldState.invalid && (
-                  <FieldError
-                    errors={[fieldState.error]}
-                    className="form-error"
-                  />
+          {isDomestic && (
+            <>
+              <Controller
+                name="fromState"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid} className="gap-1">
+                    <FieldLabel htmlFor={field.name} className="form-label">
+                      Origin State
+                    </FieldLabel>
+                    <StateCityAutocomplete
+                      type="state"
+                      value={field.value as string}
+                      onChange={field.onChange}
+                      onFocus={() => handleFocus("fromState")}
+                      onBlur={() => trigger("fromState")}
+                      onSelect={handleStateSelect}
+                      placeholder={
+                        !countryCode
+                          ? "Please select a country first"
+                          : "Start typing State name..."
+                      }
+                      countryCode={countryCode}
+                      readOnly={!countryCode}
+                      inputClassName="form-input h-10 w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="form-error"
+                      />
+                    )}
+                  </Field>
                 )}
-              </Field>
-            )}
-          />
+              />
+
+              <Controller
+                name="fromCity"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid} className="gap-1">
+                    <FieldLabel htmlFor={field.name} className="form-label">
+                      Origin City
+                    </FieldLabel>
+                    <StateCityAutocomplete
+                      value={field.value as string}
+                      onChange={field.onChange}
+                      onFocus={() => handleFocus("fromCity")}
+                      onBlur={() => trigger("fromCity")}
+                      onSelect={handleCitySelect}
+                      placeholder={
+                        !countryCode
+                          ? "Please select a country first"
+                          : "Start typing city name..."
+                      }
+                      countryCode={countryCode}
+                      readOnly={!countryCode}
+                      inputClassName="form-input h-10 w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="form-error"
+                      />
+                    )}
+                  </Field>
+                )}
+              />
+            </>
+          )}
+
+          {/* state/city & address */}
+
+          {shipmentType === "INTERNATIONAL" && (
+            <Controller
+              name="stateOrCity"
+              control={control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid} className="gap-1">
+                  <FieldLabel htmlFor={field.name} className="form-label">
+                    State/City
+                  </FieldLabel>
+                  <StateCityAutocomplete
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    onFocus={() => handleFocus("stateOrCity")}
+                    onBlur={() => trigger("stateOrCity")}
+                    onSelect={handleCitySelect}
+                    placeholder={
+                      !countryCode
+                        ? "Please select a country first"
+                        : "Start typing city name..."
+                    }
+                    countryCode={countryCode}
+                    readOnly={!countryCode}
+                    inputClassName="form-input h-10 w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="form-error"
+                    />
+                  )}
+                </Field>
+              )}
+            />
+          )}
+          
           <Controller
             name="address"
             control={control}
@@ -314,9 +412,7 @@ const ShipperDetailsForm = () => {
               </Field>
             )}
           />
-        </div>
 
-        <div className="grid md:grid-cols-2 gap-6 md:gap-10">
           <Controller
             name="postalCode"
             control={control}
@@ -368,154 +464,158 @@ const ShipperDetailsForm = () => {
               </Field>
             )}
           />
-        </div>
 
-        <div className="grid md:grid-cols-2">
-          <Controller
-            name="pickUpAddressType"
-            control={control}
-            render={({ field, fieldState }) => (
-              <FieldSet>
-                <FieldLegend className="form-label text-sm!">
-                  Pickup Address Type
-                </FieldLegend>
-                <RadioGroup
-                  orientation="horizontal"
-                  name={field.name}
-                  value={field.value}
-                  onValueChange={field.onChange}
-                  className="grid grid-cols-3 gap-2 md:gap-5.5 w-fit"
-                >
-                  {/* home */}
-                  <FieldLabel
-                    htmlFor={`${field.name}-home`}
-                    className="form-label rounded-sm! h-14"
+          <div className={`${shipmentType === "INTERNATIONAL" && "md:col-span-2"}`}>
+            <Controller
+              name="pickUpAddressType"
+              control={control}
+              render={({ field, fieldState }) => (
+                <FieldSet>
+                  <FieldLegend className="form-label text-sm!">
+                    Pickup Address Type
+                  </FieldLegend>
+                  <RadioGroup
+                    orientation="horizontal"
+                    name={field.name}
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    className="grid grid-cols-3 gap-2 md:gap-5.5 w-fit"
                   >
-                    <Field
-                      data-invalid={fieldState.invalid}
-                      orientation="horizontal"
-                      className="md:px-4! h-full gap-[9.5px]"
+                    {/* home */}
+                    <FieldLabel
+                      htmlFor={`${field.name}-home`}
+                      className="form-label rounded-sm! h-14"
                     >
-                      <FieldTitle className="font-normal text-sm text-brand-gray">
-                        Home
-                      </FieldTitle>
-                      <RadioGroupItem
-                        value="HOME"
-                        id={`${field.name}-home`}
-                        aria-invalid={fieldState.invalid}
-                        className="border-brand-gray/90"
-                      />
-                    </Field>
-                  </FieldLabel>
+                      <Field
+                        data-invalid={fieldState.invalid}
+                        orientation="horizontal"
+                        className="md:px-4! h-full gap-[9.5px]"
+                      >
+                        <FieldTitle className="font-normal text-sm text-brand-gray">
+                          Home
+                        </FieldTitle>
+                        <RadioGroupItem
+                          value="HOME"
+                          id={`${field.name}-home`}
+                          aria-invalid={fieldState.invalid}
+                          className="border-brand-gray/90"
+                        />
+                      </Field>
+                    </FieldLabel>
 
-                  {/* office */}
-                  <FieldLabel
-                    htmlFor={`${field.name}-office`}
-                    className="form-label rounded-sm! h-14"
-                  >
-                    <Field
-                      data-invalid={fieldState.invalid}
-                      orientation="horizontal"
-                      className="md:px-4! h-full gap-[9.5px]"
+                    {/* office */}
+                    <FieldLabel
+                      htmlFor={`${field.name}-office`}
+                      className="form-label rounded-sm! h-14"
                     >
-                      <FieldTitle className="font-normal text-sm text-brand-gray">
-                        Office
-                      </FieldTitle>
-                      <RadioGroupItem
-                        value="OFFICE"
-                        id={`${field.name}-office`}
-                        aria-invalid={fieldState.invalid}
-                        className="border-brand-gray/90"
-                      />
-                    </Field>
-                  </FieldLabel>
+                      <Field
+                        data-invalid={fieldState.invalid}
+                        orientation="horizontal"
+                        className="md:px-4! h-full gap-[9.5px]"
+                      >
+                        <FieldTitle className="font-normal text-sm text-brand-gray">
+                          Office
+                        </FieldTitle>
+                        <RadioGroupItem
+                          value="OFFICE"
+                          id={`${field.name}-office`}
+                          aria-invalid={fieldState.invalid}
+                          className="border-brand-gray/90"
+                        />
+                      </Field>
+                    </FieldLabel>
 
-                  {/* drop off */}
-                  <FieldLabel
-                    htmlFor={`${field.name}-dropOff`}
-                    className="form-label rounded-sm! h-14"
-                  >
-                    <Field
-                      data-invalid={fieldState.invalid}
-                      orientation="horizontal"
-                      className="pmd:x-4! h-full gap-[9.5px]"
+                    {/* drop off */}
+                    <FieldLabel
+                      htmlFor={`${field.name}-dropOff`}
+                      className="form-label rounded-sm! h-14"
                     >
-                      <FieldTitle className="font-normal text-sm text-brand-gray ">
-                        Drop Off
-                      </FieldTitle>
-                      <RadioGroupItem
-                        value="DROP_OFF"
-                        id={`${field.name}-dropOff`}
-                        aria-invalid={fieldState.invalid}
-                        className="border-brand-gray/90"
+                      <Field
+                        data-invalid={fieldState.invalid}
+                        orientation="horizontal"
+                        className="pmd:x-4! h-full gap-[9.5px]"
+                      >
+                        <FieldTitle className="font-normal text-sm text-brand-gray ">
+                          Drop Off
+                        </FieldTitle>
+                        <RadioGroupItem
+                          value="DROP_OFF"
+                          id={`${field.name}-dropOff`}
+                          aria-invalid={fieldState.invalid}
+                          className="border-brand-gray/90"
+                        />
+                      </Field>
+                    </FieldLabel>
+                  </RadioGroup>
+
+                  {fieldState.invalid && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="form-error"
+                    />
+                  )}
+                </FieldSet>
+              )}
+            />
+          </div>
+
+          {/* pickup date & time */}
+
+          {pickupAddressType !== "DROP_OFF" && (
+            <>
+              <Controller
+                name="pickupDate"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid} className="gap-1">
+                    <FieldLabel htmlFor={field.name} className="form-label">
+                      Pickup Date
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id={field.name}
+                      aria-invalid={fieldState.invalid}
+                      type="date"
+                      min={new Date().toISOString().split("T")[0]} // Today's date in YYYY-MM-DD format
+                      className="form-input"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="form-error"
                       />
-                    </Field>
-                  </FieldLabel>
-                </RadioGroup>
+                    )}
+                  </Field>
+                )}
+              />
 
-                {fieldState.invalid && (
-                  <FieldError
-                    errors={[fieldState.error]}
-                    className="form-error"
-                  />
+              <Controller
+                name="pickupTime"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid} className="gap-1">
+                    <FieldLabel htmlFor={field.name} className="form-label">
+                      Pickup Time
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id={field.name}
+                      aria-invalid={fieldState.invalid}
+                      type="time"
+                      // placeholder="First Name and Last Name"
+                      className="form-input"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="form-error"
+                      />
+                    )}
+                  </Field>
                 )}
-              </FieldSet>
-            )}
-          />
-        </div>
-
-        {/* pickup date & time */}
-        <div className="grid md:grid-cols-2 gap-6 md:gap-10">
-          <Controller
-            name="pickupDate"
-            control={control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid} className="gap-1">
-                <FieldLabel htmlFor={field.name} className="form-label">
-                  Pickup Date
-                </FieldLabel>
-                <Input
-                  {...field}
-                  id={field.name}
-                  aria-invalid={fieldState.invalid}
-                  type="date"
-                  min={new Date().toISOString().split("T")[0]} // Today's date in YYYY-MM-DD format
-                  className="form-input"
-                />
-                {fieldState.invalid && (
-                  <FieldError
-                    errors={[fieldState.error]}
-                    className="form-error"
-                  />
-                )}
-              </Field>
-            )}
-          />
-          <Controller
-            name="pickupTime"
-            control={control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid} className="gap-1">
-                <FieldLabel htmlFor={field.name} className="form-label">
-                  Pickup Time
-                </FieldLabel>
-                <Input
-                  {...field}
-                  id={field.name}
-                  aria-invalid={fieldState.invalid}
-                  type="time"
-                  // placeholder="First Name and Last Name"
-                  className="form-input"
-                />
-                {fieldState.invalid && (
-                  <FieldError
-                    errors={[fieldState.error]}
-                    className="form-error"
-                  />
-                )}
-              </Field>
-            )}
-          />
+              />
+            </>
+          )}
         </div>
       </FieldSet>
     </div>

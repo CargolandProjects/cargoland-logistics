@@ -8,6 +8,8 @@ import {
   ShipmentDataType,
   shipmentSchema,
   defaultShipmentValues,
+  isTodayOrFuture,
+  isValidPickupTime,
 } from "@/lib/schemas/shipmentSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, FormProvider, DeepPartial, useWatch } from "react-hook-form";
@@ -57,6 +59,7 @@ const ShipmentForm = () => {
   });
 
   const formValues = useWatch({ control: form.control });
+  const isDomestic = shipmentType === "DOMESTIC";
 
   const save = useCallback(
     (value: { step: number; data: DeepPartial<ShipmentDataType> }) => {
@@ -82,13 +85,33 @@ const ShipmentForm = () => {
     step();
 
     // Restore form values
-    form.reset({
+    const restoredData = {
       ...defaultShipmentValues,
       ...formData.data,
-    });
+    };
 
+    // If domestic and country not set, default to Nigeria
+    if (isDomestic) {
+      if (!restoredData.country) {
+        restoredData.country = "Nigeria";
+      }
+      if (!restoredData.receiverCountry) {
+        restoredData.receiverCountry = "Nigeria";
+      }
+    }
+
+    form.reset(restoredData);
     hasHydrated.current = true;
-  }, [form, formData]);
+  }, [form, formData, isDomestic]);
+
+  // React to shipmentType changes during the session
+  useEffect(() => {
+    if (isDomestic) {
+      form.setValue("country", "Nigeria", { shouldValidate: false });
+      form.setValue("receiverCountry", "Nigeria", { shouldValidate: false });
+    }
+    // When switching to INTERNATIONAL, we leave the country as-is (user can change)
+  }, [form, isDomestic]);
 
   //   autosaves form progress
   useEffect(() => {
@@ -109,6 +132,8 @@ const ShipmentForm = () => {
       "country",
       "phoneNumber",
       "stateOrCity",
+      "fromState",
+      "fromCity",
       "address",
       "postalCode",
       "cityCode",
@@ -123,6 +148,8 @@ const ShipmentForm = () => {
       "receiverCountry",
       "receiverNumber",
       "receiverStateOrCity",
+      "toWhereState",
+      "toWhereCity",
       "receiverAddress",
       "recieverCityCode",
       "recieverPostalCode",
@@ -140,6 +167,8 @@ const ShipmentForm = () => {
   ] as const;
 
   const handleNext = async () => {
+    // 1. First, run the standard field validation for the current step
+
     const isValid = await form.trigger(stepFields[step]);
     if (!isValid) {
       console.log("form errors", form.formState.errors);
@@ -147,7 +176,158 @@ const ShipmentForm = () => {
       return;
     }
 
+    // 2. Get current form values
     const data = form.getValues();
+
+    // 3. Step 0 specific cross-field validations
+    if (step === 0) {
+      let hasError = false;
+
+      // 3a. clear pickup date/time if the address is DROP_OFF
+      if (
+        data.pickUpAddressType === "DROP_OFF" &&
+        (data.pickupDate || data.pickupTime)
+      ) {
+        form.setValue("pickupDate", "");
+        form.setValue("pickupTime", "");
+      }
+
+      // 3b. Validate State/City based on shipment type
+      if (shipmentType === "INTERNATIONAL") {
+        if (!data.stateOrCity || data.stateOrCity.trim() === "") {
+          form.setError("stateOrCity", {
+            type: "manual",
+            message: "State/City is required",
+          });
+          hasError = true;
+        }
+      } else if (isDomestic) {
+        if (!data.fromState || data.fromState.trim() === "") {
+          form.setError("fromState", {
+            type: "manual",
+            message: "Origin State is required",
+          });
+          hasError = true;
+        }
+        if (!data.fromCity || data.fromCity.trim() === "") {
+          form.setError("fromCity", {
+            type: "manual",
+            message: "Origin City is required",
+          });
+          hasError = true;
+        }
+      }
+
+      // 3c. Validate Pickup Date/Time based on pickup address type
+      if (data.pickUpAddressType !== "DROP_OFF") {
+        if (!data.pickupDate || data.pickupDate.trim() === "") {
+          form.setError("pickupDate", {
+            type: "manual",
+            message: "Pickup date is required",
+          });
+          hasError = true;
+        }
+        if (!data.pickupTime || data.pickupTime.trim() === "") {
+          form.setError("pickupTime", {
+            type: "manual",
+            message: "Pickup time is required",
+          });
+          hasError = true;
+        }
+      }
+
+      // 3d. Validate date/time validity if both are provided
+      if (data.pickupDate && data.pickupTime) {
+        if (!isTodayOrFuture(data.pickupDate)) {
+          form.setError("pickupDate", {
+            type: "manual",
+            message: "Pickup date must be today or a future date",
+          });
+          hasError = true;
+        }
+        if (!isValidPickupTime(data.pickupTime)) {
+          form.setError("pickupTime", {
+            type: "manual",
+            message: "Pickup time must be between 8:00 AM and 8:00 PM",
+          });
+          hasError = true;
+        }
+        const pickupDateTime = new Date(
+          `${data.pickupDate}T${data.pickupTime}`,
+        );
+        const now = new Date();
+        if (pickupDateTime.getTime() <= now.getTime()) {
+          form.setError("pickupTime", {
+            type: "manual",
+            message: "Pickup date and time must be in the future",
+          });
+          hasError = true;
+        }
+      }
+
+      if (hasError) {
+        // Focus on the first error field
+        const firstError = Object.keys(
+          form.formState.errors,
+        )[0] as keyof ShipmentDataType;
+        if (firstError) {
+          const element = document.querySelector(
+            `[name="${firstError}"]`,
+          ) as HTMLElement;
+          if (element) element.focus();
+        }
+        return;
+      }
+    }
+
+    // 4. Step 1 specific cross-field validations (Receiver details)
+    if (step === 1) {
+      console.log("Manual Validation Reached For Step 1!");
+      let hasError = false;
+
+      // Validate receiver state/city based on shipment type
+      if (shipmentType === "INTERNATIONAL") {
+        if (
+          !data.receiverStateOrCity ||
+          data.receiverStateOrCity.trim() === ""
+        ) {
+          form.setError("receiverStateOrCity", {
+            type: "manual",
+            message: "State/City is required",
+          });
+          hasError = true;
+        }
+      } else if (isDomestic) {
+        if (!data.toWhereState || data.toWhereState.trim() === "") {
+          form.setError("toWhereState", {
+            type: "manual",
+            message: "Destination State is required",
+          });
+          hasError = true;
+        }
+        if (!data.toWhereCity || data.toWhereCity.trim() === "") {
+          form.setError("toWhereCity", {
+            type: "manual",
+            message: "Destination City is required",
+          });
+          hasError = true;
+        }
+      }
+
+      if (hasError) {
+        // Focus on the first error field
+        const firstError = Object.keys(
+          form.formState.errors,
+        )[0] as keyof ShipmentDataType;
+        if (firstError) {
+          const element = document.querySelector(
+            `[name="${firstError}"]`,
+          ) as HTMLElement;
+          if (element) element.focus();
+        }
+        return;
+      }
+    }
 
     cancel(); // stop oending autosave
     save({ step, data }); // save immediately
@@ -164,6 +344,7 @@ const ShipmentForm = () => {
     setStep((prev) => prev - 1);
   };
 
+  // Create Shipment
   const onSubmit = (data: ShipmentDataType) => {
     if (!isAuthenticated) {
       toast.error("Please login to create shipment  payment");
@@ -171,11 +352,24 @@ const ShipmentForm = () => {
       return;
     }
 
-    const payload = {
-      ...data,
-      shipmentType: shipmentType,
-      freightType: freightType,
-    };
+    // remove unnecessary fields depending on shipment type
+    const payload = isDomestic
+      ? {
+          ...data,
+          shipmentType: shipmentType,
+          freightType: freightType,
+          stateOrCity: "",
+          receiverStateOrCity: "",
+        }
+      : {
+          ...data,
+          shipmentType: shipmentType,
+          freightType: freightType,
+          fromState: "",
+          fromCity: "",
+          toWhereState: "",
+          toWhereCity: "",
+        };
     // console.log("IsAuthenticated", payload);
 
     if (isAuthenticated)
@@ -214,6 +408,7 @@ const ShipmentForm = () => {
       });
   };
 
+  // Make Payment
   const handlePayment = () => {
     if (!isAuthenticated) {
       toast.error("Please login to make payment");
@@ -263,7 +458,16 @@ const ShipmentForm = () => {
 
       <FormStep currentStep={step} setStep={setStep} />
       <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} autoComplete="off">
+        <form
+          onSubmit={form.handleSubmit(onSubmit, (errors) => {
+            if (errors.pickupTime?.message?.includes("future")) {
+              toast.error(
+                "Your selected pickup date/time has expired. Please update it on the previous step.",
+              );
+            }
+          })}
+          autoComplete="off"
+        >
           <div className="mt-5 md:mt-7.5 p-4 md:p-6 md:py-8 bg-white rounded-lg">
             {shipmentForms()}
 

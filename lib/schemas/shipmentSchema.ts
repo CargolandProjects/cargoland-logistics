@@ -1,7 +1,7 @@
 import z from "zod";
 
 // Helper function to check if date is today or future
-const isTodayOrFuture = (dateStr: string) => {
+export const isTodayOrFuture = (dateStr: string) => {
   const selectedDate = new Date(dateStr);
   const today = new Date();
   today.setHours(0, 0, 0, 0); // Reset time to start of day
@@ -9,7 +9,7 @@ const isTodayOrFuture = (dateStr: string) => {
 };
 
 // Optional: Check if time is valid (e.g., during business hours)
-const isValidPickupTime = (timeStr: string) => {
+export const isValidPickupTime = (timeStr: string) => {
   if (!timeStr) return false;
   const [hours, minutes] = timeStr.split(":").map(Number);
   const timeInMinutes = hours * 60 + minutes;
@@ -48,7 +48,9 @@ export const shipmentSchema = z
       .min(7, "Phone number is too short")
       .max(15, "Phone number is too long")
       .regex(/^\+?\d+$/, "Phone number must contain only digits"),
-    stateOrCity: z.string().min(2, "State/City is required").max(100),
+    stateOrCity: z.string().optional(),
+    fromState: z.string().optional(),
+    fromCity: z.string().optional(),
     postalCode: z.string().min(2, "Postal code is required").max(100),
     cityCode: z
       .string()
@@ -66,24 +68,8 @@ export const shipmentSchema = z
       "Select a pickup address type",
     ),
 
-    pickupDate: z
-      .string()
-      .min(1, "Pickup date is required")
-      .refine((val) => {
-        if (!val) return true;
-        return isTodayOrFuture(val);
-      }, "Pickup date must be today or a future date")
-      .optional()
-      .or(z.literal("")),
-    pickupTime: z
-      .string()
-      .min(1, "Pickup time is required")
-      .refine((val) => {
-        if (!val) return true;
-        return isValidPickupTime(val);
-      }, "Pickup time must be between 8:00 AM and 8:00 PM")
-      .optional()
-      .or(z.literal("")),
+    pickupDate: z.string().optional(),
+    pickupTime: z.string().optional(),
 
     //  Receiver's Details Starts Here
     receiverName: z
@@ -101,7 +87,9 @@ export const shipmentSchema = z
       .min(7, "Phone number is too short")
       .max(15, "Phone number is too long")
       .regex(/^\+?\d+$/, "Phone number must contain only digits"),
-    receiverStateOrCity: z.string().min(2, "State/City is required").max(100),
+    receiverStateOrCity: z.string().optional(),
+    toWhereState: z.string().optional(),
+    toWhereCity: z.string().optional(),
     receiverAddress: z
       .string()
       .min(5, "Address is too short")
@@ -177,7 +165,7 @@ export const shipmentSchema = z
     },
     {
       message: "Pickup date and time must be in the future",
-      path: ["pickupTime", "pickupDate"], // Error shows on pickupTime field
+      path: ["pickupTime"], // Error shows on pickupTime field
     },
   );
 
@@ -190,10 +178,12 @@ export const defaultShipmentValues = {
   country: "",
   phoneNumber: "",
   stateOrCity: "",
+  fromState: "",
+  fromCity: "",
   postalCode: "",
   cityCode: "",
   address: "",
-  pickUpAddressType: undefined,
+  pickUpAddressType: "DROP_OFF" as const,
   pickupDate: "",
   pickupTime: "",
 
@@ -203,6 +193,8 @@ export const defaultShipmentValues = {
   receiverCountry: "",
   receiverNumber: "",
   receiverStateOrCity: "",
+  toWhereState: "",
+  toWhereCity: "",
   receiverAddress: "",
   recieverCityCode: "",
   recieverPostalCode: "",

@@ -25,16 +25,30 @@ import "intl-tel-input/styles";
 import { useEffect, useRef } from "react";
 import { Iso2 } from "intl-tel-input";
 import { getAddressComponent } from "@/lib/utils";
-import { CityAutocomplete } from "@/components/googlePlaces/CityAutocomplete";
 import { AddressAutocomplete } from "@/components/googlePlaces/AddressAutocomplete";
+import StateCityAutocomplete from "@/components/googlePlaces/StateCityAutocomplete";
+import { useShipmentStore } from "@/lib/stores/useShipmentStore";
 
 const ReceiverDetailsForm = () => {
+  const shipmentType = useShipmentStore((s) => s.shipmentType);
+
   const { control, watch, setValue, setError, clearErrors, trigger } =
     useFormContext<ShipmentDataType>();
   const phoneInputRef = useRef<IntlTelInputRef>(null);
 
+  const isDomestic = shipmentType === "DOMESTIC";
+
+  const countriesOptions = isDomestic
+    ? [
+        {
+          value: "NG",
+          label: "Nigeria",
+        },
+      ]
+    : countryOptions;
+
   const selectedCountryLabel = watch("receiverCountry");
-  const selectedCountry = countryOptions.find(
+  const selectedCountry = countriesOptions.find(
     (c) => c.label === selectedCountryLabel,
   );
   const countryCode = selectedCountry?.value?.toLowerCase();
@@ -51,6 +65,18 @@ const ReceiverDetailsForm = () => {
   }, [selectedCountry?.value]);
 
   // ---------- Handlers for autocomplete selection ----------
+
+  // For domestic: state only
+  const handleStateSelect = (place: google.maps.places.Place) => {
+    const components = place.addressComponents || [];
+    const state = getAddressComponent(
+      components,
+      "administrative_area_level_1",
+    );
+    setValue("toWhereState", state);
+    // Optionally auto-fill postal code? Not recommended for state only.
+  };
+
   const handleCitySelect = (place: google.maps.places.Place) => {
     const components = place.addressComponents || [];
 
@@ -62,7 +88,9 @@ const ReceiverDetailsForm = () => {
       "administrative_area_level_1",
     );
 
-    setValue("receiverStateOrCity", city || state || "");
+    if (isDomestic) {
+      setValue("toWhereCity", city);
+    } else setValue("receiverStateOrCity", state || city || "");
 
     // Optionally auto-fill postal code
     const postalCode = getAddressComponent(components, "postal_code");
@@ -82,24 +110,22 @@ const ReceiverDetailsForm = () => {
     const postalCode = getAddressComponent(components, "postal_code");
 
     setValue("receiverAddress", place.formattedAddress || "");
-    setValue("receiverStateOrCity", city || state || "");
     setValue("recieverPostalCode", postalCode || "");
+
+    if (isDomestic) {
+      setValue("toWhereState", state || "");
+      setValue("toWhereCity", city || "");
+    } else {
+      setValue("receiverStateOrCity", state || city || "");
+    }
   };
 
-  const handleFocus = (
-    fieldName: "receiverStateOrCity" | "receiverAddress",
-  ) => {
+  const handleFocus = (fieldName: keyof ShipmentDataType) => {
     if (!countryCode) {
-      if (fieldName === "receiverStateOrCity") {
-        setError("receiverStateOrCity", {
-          type: "manual",
-          message: "Please select a country first",
-        });
-      } else
-        setError("receiverAddress", {
-          type: "manual",
-          message: "Please select a country first",
-        });
+      setError(fieldName, {
+        type: "manual",
+        message: "Please select a country first",
+      });
     } else {
       clearErrors(fieldName);
     }
@@ -138,6 +164,7 @@ const ReceiverDetailsForm = () => {
               </Field>
             )}
           />
+
           <Controller
             name="receiverEmail"
             control={control}
@@ -162,10 +189,8 @@ const ReceiverDetailsForm = () => {
               </Field>
             )}
           />
-        </div>
 
-        {/* country & phone number */}
-        <div className="grid md:grid-cols-2 gap-6 md:gap-10">
+          {/* country & phone number */}
           <Controller
             name="receiverCountry"
             control={control}
@@ -177,7 +202,7 @@ const ReceiverDetailsForm = () => {
 
                 <Combobox
                   autoComplete="new-country"
-                  items={countryOptions}
+                  items={countriesOptions}
                   name={field.name}
                   value={field.value}
                   onValueChange={field.onChange}
@@ -244,42 +269,114 @@ const ReceiverDetailsForm = () => {
               </Field>
             )}
           />
-        </div>
 
-        {/* state/city & address */}
-        <div className="grid md:grid-cols-2 gap-6 md:gap-10">
-          <Controller
-            name="receiverStateOrCity"
-            control={control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid} className="gap-1">
-                <FieldLabel htmlFor={field.name} className="form-label">
-                  State/City
-                </FieldLabel>
-                <CityAutocomplete
-                  value={field.value}
-                  onChange={field.onChange}
-                  onFocus={() => handleFocus("receiverStateOrCity")}
-                  onBlur={() => trigger("stateOrCity")}
-                  onSelect={handleCitySelect}
-                  placeholder={
-                    !countryCode
-                      ? "Please select a country first"
-                      : "Start typing city name..."
-                  }
-                  countryCode={countryCode}
-                  readOnly={!countryCode}
-                  inputClassName="form-input h-10 w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                {fieldState.invalid && (
-                  <FieldError
-                    errors={[fieldState.error]}
-                    className="form-error"
-                  />
+          {/* state/city & address */}
+          {isDomestic && (
+            <>
+              <Controller
+                name="toWhereState"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid} className="gap-1">
+                    <FieldLabel htmlFor={field.name} className="form-label">
+                      Destination State
+                    </FieldLabel>
+                    <StateCityAutocomplete
+                      type="state"
+                      value={field.value as string}
+                      onChange={field.onChange}
+                      onFocus={() => handleFocus("toWhereState")}
+                      onBlur={() => trigger("toWhereState")}
+                      onSelect={handleStateSelect}
+                      placeholder={
+                        !countryCode
+                          ? "Please select a country first"
+                          : "Start typing State name..."
+                      }
+                      countryCode={countryCode}
+                      readOnly={!countryCode}
+                      inputClassName="form-input h-10 w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="form-error"
+                      />
+                    )}
+                  </Field>
                 )}
-              </Field>
-            )}
-          />
+              />
+
+              <Controller
+                name="toWhereCity"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid} className="gap-1">
+                    <FieldLabel htmlFor={field.name} className="form-label">
+                      Destination City
+                    </FieldLabel>
+                    <StateCityAutocomplete
+                      value={field.value as string}
+                      onChange={field.onChange}
+                      onFocus={() => handleFocus("toWhereCity")}
+                      onBlur={() => trigger("toWhereCity")}
+                      onSelect={handleCitySelect}
+                      placeholder={
+                        !countryCode
+                          ? "Please select a country first"
+                          : "Start typing city name..."
+                      }
+                      countryCode={countryCode}
+                      readOnly={!countryCode}
+                      inputClassName="form-input h-10 w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="form-error"
+                      />
+                    )}
+                  </Field>
+                )}
+              />
+            </>
+          )}
+
+          {shipmentType === "INTERNATIONAL" && (
+            <Controller
+              name="receiverStateOrCity"
+              control={control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid} className="gap-1">
+                  <FieldLabel htmlFor={field.name} className="form-label">
+                    State/City
+                  </FieldLabel>
+                  <StateCityAutocomplete
+                    value={field.value as string}
+                    onChange={field.onChange}
+                    onFocus={() => handleFocus("receiverStateOrCity")}
+                    onBlur={() => trigger("stateOrCity")}
+                    onSelect={handleCitySelect}
+                    placeholder={
+                      !countryCode
+                        ? "Please select a country first"
+                        : "Start typing city name..."
+                    }
+                    countryCode={countryCode}
+                    readOnly={!countryCode}
+                    inputClassName="form-input h-10 w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="form-error"
+                    />
+                  )}
+                </Field>
+              )}
+            />
+          )}
+
           <Controller
             name="receiverAddress"
             control={control}
@@ -312,9 +409,7 @@ const ReceiverDetailsForm = () => {
               </Field>
             )}
           />
-        </div>
 
-        <div className="grid md:grid-cols-2 gap-6 md:gap-10">
           <Controller
             name="recieverPostalCode"
             control={control}
@@ -344,7 +439,10 @@ const ReceiverDetailsForm = () => {
             name="recieverCityCode"
             control={control}
             render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid} className="gap-1">
+              <Field
+                data-invalid={fieldState.invalid}
+                className={`${isDomestic ? "md:col-span-2" : ""} gap-1`}
+              >
                 <FieldLabel htmlFor={field.name} className="form-label">
                   City Code{" "}
                   <span className="form-label text-gray-400!">(Optional)</span>
