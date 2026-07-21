@@ -28,10 +28,12 @@ import Loader from "@/components/Loader";
 import { ImageUploadField } from "./ImageUploadField";
 import { useShipmentStore } from "@/lib/stores/useShipmentStore";
 import { useDebounce } from "@/lib/hooks/useDebounce";
+import { toast } from "sonner";
 
 const ShipmentDetailsForm = () => {
   const { mutate, isPending, data: estimate } = useShipmentEstimate();
   const freightType = useShipmentStore((s) => s.freightType);
+  const shipmentType = useShipmentStore((s) => s.shipmentType);
   const { control, watch, setValue } = useFormContext<ShipmentDataType>();
 
   const shipperEmail = watch("email");
@@ -43,15 +45,22 @@ const ShipmentDetailsForm = () => {
 
   const debouncedWeight = useDebounce(weight);
   const debouncedLength = useDebounce(length);
-  const debouncedHeight = useDebounce(height); 
+  const debouncedHeight = useDebounce(height);
   const debouncedBreadth = useDebounce(breadth);
 
   const totalWeight = estimate?.data.totalShipmentWeight || 0;
 
   const fromCountry = watch("country");
   const toCountry = watch("receiverCountry");
+  const fromState = watch("fromState");
+  const toWhereState = watch("toWhereState");
 
+  const isDomestic = shipmentType === "DOMESTIC";
+
+  // Get shipment estimate
   useEffect(() => {
+    if (!shipmentType || !freightType) return;
+
     if (
       isPending ||
       !debouncedLength ||
@@ -61,16 +70,28 @@ const ShipmentDetailsForm = () => {
     )
       return;
 
+    const location = isDomestic
+      ? { fromCountry, fromState, toWhereState }
+      : { fromCountry, toCountry };
+
     const payload = {
+      shipmentType,
       freightType,
-      fromCountry,
-      toCountry,
+      ...location,
       weight: Number(debouncedWeight),
       length: Number(debouncedLength),
       breadth: Number(debouncedBreadth),
       height: Number(debouncedHeight),
     };
-    mutate(payload);
+    mutate(payload, {
+      onError: (error) => {
+        if (error.message.includes("No pricing configured"))
+          toast.warning("No pricing configured for this weight", {
+            description:
+              " Please kindly contact the cargoland support team for shipmets higher than 10kg",
+          });
+      },
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     mutate,
@@ -81,6 +102,7 @@ const ShipmentDetailsForm = () => {
     debouncedBreadth,
     debouncedHeight,
     debouncedWeight,
+    shipmentType,
   ]);
 
   return (

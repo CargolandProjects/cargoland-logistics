@@ -47,61 +47,85 @@ import { nigeriaStates } from "@/lib/utils/countryOptions";
 const deliveryType = ["DOMESTIC", "INTERNATIONAL"] as const;
 const freightType = ["AIR_FREIGHT", "OCEAN_FREIGHT", "ROAD_FREIGHT"] as const;
 
-const estimateSchema = z.object({
-  weight: z
-    .string("Weight is required")
-    .min(0.1, "Weight must be at least 0.1 kg")
-    .max(10000, "Weight cannot exceed 10000 kg")
-    .regex(/^\d+(\.\d+)?$/, "Must be a valid number"),
+const estimateSchema = z
+  .object({
+    weight: z
+      .string("Weight is required")
+      .min(0.1, "Weight must be at least 0.1 kg")
+      .max(10000, "Weight cannot exceed 10000 kg")
+      .regex(/^\d+(\.\d+)?$/, "Must be a valid number"),
 
-  length: z
-    .string("Length is required")
-    .min(1, "Length must be at least 1 cm")
-    .max(500, "Length cannot exceed 500 cm")
-    .regex(/^\d+(\.\d+)?$/, "Must be a valid number"),
+    length: z
+      .string("Length is required")
+      .min(1, "Length must be at least 1 cm")
+      .max(500, "Length cannot exceed 500 cm")
+      .regex(/^\d+(\.\d+)?$/, "Must be a valid number"),
 
-  breadth: z
-    .string("Breadth is required ")
-    .min(1, "Breadth must be at least 1 cm")
-    .max(500, "Breadth cannot exceed 500 cm")
-    .regex(/^\d+(\.\d+)?$/, "Must be a valid number"),
+    breadth: z
+      .string("Breadth is required ")
+      .min(1, "Breadth must be at least 1 cm")
+      .max(500, "Breadth cannot exceed 500 cm")
+      .regex(/^\d+(\.\d+)?$/, "Must be a valid number"),
 
-  height: z
-    .string("Height is required ")
-    .min(1, "Height must be at least 1 cm")
-    .max(500, "Height cannot exceed 500 cm")
-    .regex(/^\d+(\.\d+)?$/, "Must be a valid number"),
+    height: z
+      .string("Height is required ")
+      .min(1, "Height must be at least 1 cm")
+      .max(500, "Height cannot exceed 500 cm")
+      .regex(/^\d+(\.\d+)?$/, "Must be a valid number"),
 
-  shipmentType: z.enum(deliveryType, "Please select a delivery type"),
-  freightType: z.enum(freightType, "Please select a freight type"),
+    shipmentType: z.enum(deliveryType, "Please select a delivery type"),
+    freightType: z.enum(freightType, "Please select a freight type"),
 
-  fromCountry: z
-    .string("must provid a valid country")
-    .min(2, "pickup zone is required"),
+    fromCountry: z.string().optional(),
+    fromState: z.string().optional(),
+    toCountry: z.string().optional(),
+    toWhereState: z.string().optional(),
 
-  fromCountryText: z
-    .string("must provid a valid country")
-    .min(2, "Country of origin is required")
-    .optional()
-    .or(z.literal("")),
-
-  toCountry: z
-    .string("must provid a valid country")
-    .min(2, "drop-off zone is required"),
-
-  toCountryText: z
-    .string("must provid a valid country")
-    .min(2, "Destination Country is required")
-    .optional()
-    .or(z.literal("")),
-});
+    fromCountryText: z.string().optional(),
+    toCountryText: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    // Conditionally require fields based on shipmentType
+    if (data.shipmentType === "DOMESTIC") {
+      if (!data.fromState || data.fromState.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Origin State is required",
+          path: ["fromState"],
+        });
+      }
+      if (!data.toWhereState || data.toWhereState.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Destination State is required",
+          path: ["toWhereState"],
+        });
+      }
+    } else {
+      // INTERNATIONAL
+      if (!data.fromCountry || data.fromCountry.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Origin Country is required",
+          path: ["fromCountry"],
+        });
+      }
+      if (!data.toCountry || data.toCountry.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Destination Country is required",
+          path: ["toCountry"],
+        });
+      }
+    }
+  });
 
 type EstimateData = z.infer<typeof estimateSchema>;
 
 const EstimatePageContent = () => {
   const { mutate, isPending, data } = useShipmentEstimate();
   const router = useRouter();
-  const { handleSubmit, control, setValue } = useForm<EstimateData>({
+  const { handleSubmit, control, setValue, formState } = useForm<EstimateData>({
     resolver: zodResolver(estimateSchema),
     defaultValues: {
       shipmentType: "INTERNATIONAL",
@@ -116,32 +140,36 @@ const EstimatePageContent = () => {
       weight: "",
     },
   });
-  const [fromCountry, setFromCountry] = useState<Country | null>(null);
-  const [toCountry, setToCountry] = useState<Country | null>(null);
   const [open, setOpen] = useState(false);
 
   const shipmentType = useWatch({ control, name: "shipmentType" });
+  // const isDomestic = shipmentType === "DOMESTIC";
 
   const estimate = data?.data;
 
-  useEffect(() => {
-    if (shipmentType !== "DOMESTIC") return;
+  // console.log("GET ESTIMATE ERRORS:", formState.errors);
 
-    setValue("fromCountry", "");
-    setValue("fromCountryText", "");
-    setValue("toCountry", "");
-    setValue("toCountryText", "");
-  }, [setValue, shipmentType]);
+  // const showFreightType = isDomestic ? ["ROAD_FREIGHT"] : freightType;
 
   const onSubmit = (data: EstimateData) => {
     console.log("Estimate Data: ", data);
 
+    const location =
+      data.shipmentType === "DOMESTIC"
+        ? {
+            fromCountry: data.fromCountryText || "Nigeria",
+            fromState: data.fromState,
+            toWhereState: data.toWhereState,
+          }
+        : {
+            fromCountry: data.fromCountryText || "",
+            toCountry: data.toCountryText,
+          };
+
     const payload = {
       shipmentType: data.shipmentType,
-      fromCountry:
-        shipmentType === "DOMESTIC" ? data.fromCountry : fromCountry?.name,
-      toCountry: shipmentType === "DOMESTIC" ? data.toCountry : toCountry?.name,
       freightType: data.freightType,
+      ...location,
       weight: Number(data.weight),
       length: Number(data.length),
       breadth: Number(data.breadth),
@@ -246,7 +274,10 @@ const EstimatePageContent = () => {
                           className="form-input h-14! capitalize"
                         >
                           <SelectValue
-                            placeholder={field.value || "Air Freight"}
+                            placeholder={
+                              field.value || "Air Freight"
+                              // (isDomestic ? "Road Freight" : "Air Freight")
+                            }
                           />
                         </SelectTrigger>
 
@@ -293,7 +324,6 @@ const EstimatePageContent = () => {
                               defaultValue={field.value}
                               onChange={(country) => {
                                 field.onChange(country.alpha2);
-                                setFromCountry(country);
                                 setValue("fromCountryText", country.name);
                               }}
                               className="form-input gap-3 max-md:px-3!"
@@ -335,7 +365,7 @@ const EstimatePageContent = () => {
                     </div>
                   ) : (
                     <Controller
-                      name="fromCountry"
+                      name="fromState"
                       control={control}
                       render={({ field, fieldState }) => (
                         <Field
@@ -406,7 +436,6 @@ const EstimatePageContent = () => {
                               defaultValue={field.value}
                               onChange={(country) => {
                                 field.onChange(country.alpha2);
-                                setToCountry(country);
                                 setValue("toCountryText", country.name);
                               }}
                               className="form-input gap-3 max-md:px-3!"
@@ -448,7 +477,7 @@ const EstimatePageContent = () => {
                     </div>
                   ) : (
                     <Controller
-                      name="toCountry"
+                      name="toWhereState"
                       control={control}
                       render={({ field, fieldState }) => (
                         <Field
@@ -472,7 +501,7 @@ const EstimatePageContent = () => {
                             <ComboboxInput className="form-input text-brand-black" />
 
                             <ComboboxContent>
-                              <ComboboxEmpty>No country found</ComboboxEmpty>
+                              <ComboboxEmpty>No States found</ComboboxEmpty>
                               <ComboboxList>
                                 {(from) => (
                                   <ComboboxItem
