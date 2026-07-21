@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect, useCallback } from "react";
 import { useMapsLibrary } from "@vis.gl/react-google-maps";
-import { useDebounce } from "@//lib/hooks/useDebounce"; // adjust path if needed
+import { useDebounce } from "@/lib/hooks/useDebounce";
 
 interface CityAutocompleteProps {
   value: string;
@@ -13,11 +13,12 @@ interface CityAutocompleteProps {
   placeholder?: string;
   readOnly?: boolean;
   countryCode?: string;
+  type?: "state" | "city"; // NEW: specify what to search for
   className?: string;
   inputClassName?: string;
 }
 
-export function CityAutocomplete({
+const StateCityAutocomplete = ({
   value,
   onChange,
   onSelect,
@@ -26,9 +27,10 @@ export function CityAutocomplete({
   placeholder,
   readOnly = false,
   countryCode,
+  type = "city", // default to city
   className = "",
   inputClassName = "",
-}: CityAutocompleteProps) {
+}: CityAutocompleteProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const placesLibrary = useMapsLibrary("places");
   const [suggestions, setSuggestions] = useState<
@@ -37,16 +39,20 @@ export function CityAutocomplete({
   const [isLoading, setIsLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
 
-  // Request cancellation: increment on each new request to ignore stale responses
   const requestIdRef = useRef(0);
-
-  // Debounce the input value
   const debouncedValue = useDebounce(value, 300);
 
-  // Fetch suggestions using the new API
+  // Determine which primary types to include based on type prop
+  const getPrimaryTypes = (): string[] => {
+    if (type === "state") {
+      return ["administrative_area_level_1"];
+    }
+    // city: include locality and administrative_area_level_2
+    return ["locality", "administrative_area_level_2"];
+  };
+
   const fetchSuggestions = useCallback(
     async (input: string) => {
-      // Increment request ID to track the latest request
       const currentRequestId = ++requestIdRef.current;
 
       if (!placesLibrary || input.length < 2) {
@@ -59,8 +65,8 @@ export function CityAutocomplete({
         const { AutocompleteSuggestion } = placesLibrary;
         const request: google.maps.places.AutocompleteRequest = {
           input: input,
-          includedPrimaryTypes: ["locality", "administrative_area_level_2"],
-          language: "en", // fixed: use languageCode
+          includedPrimaryTypes: getPrimaryTypes(),
+          language: "en",
         };
 
         if (countryCode) {
@@ -70,12 +76,11 @@ export function CityAutocomplete({
         const { suggestions } =
           await AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
 
-        // Only update state if this request is still the latest
         if (currentRequestId === requestIdRef.current) {
           setSuggestions(suggestions);
         }
       } catch (error) {
-        console.error("Error fetching city suggestions:", error);
+        console.error(`Error fetching ${type} suggestions:`, error);
         if (currentRequestId === requestIdRef.current) {
           setSuggestions([]);
         }
@@ -85,7 +90,8 @@ export function CityAutocomplete({
         }
       }
     },
-    [placesLibrary, countryCode],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [placesLibrary, countryCode, type],
   );
 
   // Trigger fetch when debounced value changes
@@ -94,7 +100,6 @@ export function CityAutocomplete({
     fetchSuggestions(debouncedValue);
   }, [debouncedValue, fetchSuggestions]);
 
-  // Handle selection
   const handleSelect = async (
     suggestion: google.maps.places.AutocompleteSuggestion,
   ) => {
@@ -104,13 +109,27 @@ export function CityAutocomplete({
         await place.fetchFields({
           fields: ["formattedAddress", "addressComponents", "id"],
         });
-        const cityName =
-          place.addressComponents?.find(
-            (c) =>
-              c.types.includes("locality") ||
+
+        // Extract the correct component based on type
+        const components = place.addressComponents || [];
+        let extractedName = "";
+
+        if (type === "state") {
+          extractedName =
+            components.find((c) =>
+              c.types.includes("administrative_area_level_1"),
+            )?.longText || "";
+        } else {
+          // city: prefer locality, fallback to administrative_area_level_2
+          extractedName =
+            components.find((c) => c.types.includes("locality"))?.longText ||
+            components.find((c) =>
               c.types.includes("administrative_area_level_2"),
-          )?.longText || "";
-        onChange(cityName);
+            )?.longText ||
+            "";
+        }
+
+        onChange(extractedName);
         if (onSelect) onSelect(place);
       }
     } catch (error) {
@@ -162,4 +181,6 @@ export function CityAutocomplete({
       )}
     </div>
   );
-}
+};
+
+export default StateCityAutocomplete;

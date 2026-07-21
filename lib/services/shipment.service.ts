@@ -145,6 +145,12 @@ interface AllShipments {
 }
 
 interface EstimateData {
+  shipmentType: string;
+  freightType: string;
+  fromCountry: string;
+  toCountry?: string;
+  fromState?: string;
+  toWhereState?: string;
   weight: number;
   length: number;
   breadth: number;
@@ -247,7 +253,7 @@ export const shipment = {
     const res = await apiClient.get(
       API_ROUTES.shipment.getShipmentInvoice(reference),
       {
-        responseType: "blob", 
+        responseType: "blob",
       },
     );
     return res.data;
