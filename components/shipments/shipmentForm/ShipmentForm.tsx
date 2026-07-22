@@ -50,7 +50,7 @@ const ShipmentForm = () => {
   const hasHydrated = useRef(false);
 
   //   clearShipmentForm();
-  console.log("form data: ", formData);
+  // console.log("form data: ", formData);
 
   const form = useForm<ShipmentDataType>({
     resolver: zodResolver(shipmentSchema),
@@ -171,7 +171,7 @@ const ShipmentForm = () => {
 
     const isValid = await form.trigger(stepFields[step]);
     if (!isValid) {
-      console.log("form errors", form.formState.errors);
+      // console.log("form errors", form.formState.errors);
       //   console.log("IsValid ? ", isValid);
       return;
     }
@@ -282,7 +282,6 @@ const ShipmentForm = () => {
 
     // 4. Step 1 specific cross-field validations (Receiver details)
     if (step === 1) {
-      console.log("Manual Validation Reached For Step 1!");
       let hasError = false;
 
       // Validate receiver state/city based on shipment type

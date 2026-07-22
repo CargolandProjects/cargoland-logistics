@@ -133,7 +133,6 @@ export default function SignupPage() {
     if (!selectedCountry?.name) return;
 
     const payload = { ...data, country: selectedCountry.name };
-    console.log("Signup Data: ", payload);
 
     signUp(payload, {
       onSuccess: (res) => {

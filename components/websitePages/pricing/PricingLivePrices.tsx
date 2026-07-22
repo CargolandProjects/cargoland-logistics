@@ -54,7 +54,7 @@ const PricingLivePrices = () => {
     destination: filters.destination,
     method: filters.method as ShipmentType,
   });
-  console.log("Filters", filters);
+  // console.log("Filters", filters);
   const fromList =
     filters.method === "DOMESTIC"
       ? [{ value: "origin", label: "Origin" }, ...nigeriaStates]

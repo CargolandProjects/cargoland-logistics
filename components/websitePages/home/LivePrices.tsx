@@ -70,7 +70,7 @@ const LivePrices = () => {
   });
 
   const router = useRouter();
-  console.log("Filters: ", filters);
+  // console.log("Filters: ", filters);
   const States = [{ value: "all", label: "All" }, ...nigeriaStates];
 
   const MAX_BRACKETS = 8;

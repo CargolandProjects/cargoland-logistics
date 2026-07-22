@@ -17,8 +17,8 @@ const CreateShipmentPageContent = () => {
   const searchParams = useSearchParams();
   const shipmentTypeQ = searchParams.get("shipmentType");
 
-  console.log("Shipment Type From Query: ", shipmentTypeQ);
-  console.log("Shipment Step: ", shipmentStep);
+  // console.log("Shipment Type From Query: ", shipmentTypeQ);
+  // console.log("Shipment Step: ", shipmentStep);
 
   useEffect(() => {
     if (!shipmentTypeQ) return;
