@@ -207,7 +207,10 @@ const ShipperDetailsForm = () => {
                   items={countriesOptions}
                   name={field.name}
                   value={field.value}
-                  onValueChange={field.onChange}
+                  onValueChange={(value) => {
+                    //  Convert null/undefined to empty string
+                    field.onChange(value ?? "");
+                  }}
                 >
                   <ComboboxInput
                     autoComplete="new-country"
@@ -286,8 +289,11 @@ const ShipperDetailsForm = () => {
                       autoComplete="new-state"
                       items={nigeriaStates}
                       name={field.name}
-                      value={field.value}
-                      onValueChange={field.onChange}
+                      value={field.value ?? ""}
+                      onValueChange={(value) => {
+                        //  Convert null/undefined to empty string
+                        field.onChange(value ?? "");
+                      }}
                     >
                       <ComboboxInput
                         autoComplete="new-state"
@@ -331,7 +337,7 @@ const ShipperDetailsForm = () => {
                       Origin City
                     </FieldLabel>
                     <StateCityAutocomplete
-                      value={field.value as string}
+                      value={field.value ?? ""}
                       onChange={field.onChange}
                       onFocus={() => handleFocus("fromCity")}
                       onBlur={() => trigger("fromCity")}
@@ -369,7 +375,7 @@ const ShipperDetailsForm = () => {
                     State/City
                   </FieldLabel>
                   <StateCityAutocomplete
-                    value={field.value || ""}
+                    value={field.value ?? ""}
                     onChange={field.onChange}
                     onFocus={() => handleFocus("stateOrCity")}
                     onBlur={() => trigger("stateOrCity")}

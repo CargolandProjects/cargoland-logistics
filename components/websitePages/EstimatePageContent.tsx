@@ -152,7 +152,7 @@ const EstimatePageContent = () => {
   // const showFreightType = isDomestic ? ["ROAD_FREIGHT"] : freightType;
 
   const onSubmit = (data: EstimateData) => {
-    console.log("Estimate Data: ", data);
+    // console.log("Estimate Data: ", data);
 
     const location =
       data.shipmentType === "DOMESTIC"

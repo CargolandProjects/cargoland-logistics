@@ -20,7 +20,7 @@ const SelectFreight = () => {
   const setShipmentFlow = useShipmentStore((s) => s.setShipmentFlow);
   const shipmentType = useShipmentStore((s) => s.shipmentType);
 
-  console.log("SHIPMENT TYPE FROM WHERETO:", freightType);
+  // console.log("SHIPMENT TYPE FROM WHERETO:", freightType);
 
   useEffect(() => {
     if (!freightType) return;

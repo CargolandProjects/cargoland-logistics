@@ -205,7 +205,10 @@ const ReceiverDetailsForm = () => {
                   items={countriesOptions}
                   name={field.name}
                   value={field.value}
-                  onValueChange={field.onChange}
+                  onValueChange={(value) => {
+                    //  Convert null/undefined to empty string
+                    field.onChange(value ?? "");
+                  }}
                 >
                   <ComboboxInput
                     autoComplete="new-country"
@@ -285,8 +288,11 @@ const ReceiverDetailsForm = () => {
                       autoComplete="new-state"
                       items={nigeriaStates}
                       name={field.name}
-                      value={field.value}
-                      onValueChange={field.onChange}
+                      value={field.value ?? ""}
+                      onValueChange={(value) => {
+                        //  Convert null/undefined to empty string
+                        field.onChange(value ?? "");
+                      }}
                     >
                       <ComboboxInput
                         autoComplete="new-state"
@@ -329,7 +335,7 @@ const ReceiverDetailsForm = () => {
                       Destination City
                     </FieldLabel>
                     <StateCityAutocomplete
-                      value={field.value as string}
+                      value={field.value ?? ""}
                       onChange={field.onChange}
                       onFocus={() => handleFocus("toWhereCity")}
                       onBlur={() => trigger("toWhereCity")}
@@ -365,7 +371,7 @@ const ReceiverDetailsForm = () => {
                     State/City
                   </FieldLabel>
                   <StateCityAutocomplete
-                    value={field.value as string}
+                    value={field.value ?? ""}
                     onChange={field.onChange}
                     onFocus={() => handleFocus("receiverStateOrCity")}
                     onBlur={() => trigger("stateOrCity")}
