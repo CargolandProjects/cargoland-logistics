@@ -81,13 +81,13 @@ const ShipmentForm = () => {
     if (!formData || hasHydrated.current) return;
 
     //Restore step
-    const step = () => setStep(formData.step ?? 0);
-    step();
+    setStep(formData.step ?? 0);
 
     // Restore form values
     const restoredData = {
       ...defaultShipmentValues,
       ...formData.data,
+      ...(shipmentType && { shipmentType }),
     };
 
     // If domestic and country not set, default to Nigeria
@@ -102,7 +102,7 @@ const ShipmentForm = () => {
 
     form.reset(restoredData);
     hasHydrated.current = true;
-  }, [form, formData, isDomestic]);
+  }, [form, formData, isDomestic, shipmentType]);
 
   // React to shipmentType changes during the session
   useEffect(() => {
@@ -347,7 +347,7 @@ const ShipmentForm = () => {
   // Create Shipment
   const onSubmit = (data: ShipmentDataType) => {
     if (!isAuthenticated) {
-      toast.error("Please login to create shipment  payment");
+      toast.error("Please login to create shipment");
       router.push("/login");
       return;
     }
@@ -363,7 +363,7 @@ const ShipmentForm = () => {
         }
       : {
           ...data,
-          shipmentType: shipmentType,
+          shipmentType: shipmentType!,
           freightType: freightType,
           fromState: "",
           fromCity: "",
@@ -460,9 +460,22 @@ const ShipmentForm = () => {
       <FormProvider {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit, (errors) => {
-            if (errors.pickupTime?.message?.includes("future")) {
+            // Show toast for validation errors
+            const firstErrorKey = Object.keys(
+              errors,
+            )[0] as keyof ShipmentDataType;
+            if (firstErrorKey) {
+              const error = errors[firstErrorKey];
+              if (error?.message) {
+                toast.error(error.message);
+              } else {
+                toast.error(
+                  "Please complete all required fields in previous steps.",
+                );
+              }
+            } else {
               toast.error(
-                "Your selected pickup date/time has expired. Please update it on the previous step.",
+                "Please complete all required fields in previous steps.",
               );
             }
           })}

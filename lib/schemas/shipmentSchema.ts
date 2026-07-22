@@ -103,6 +103,9 @@ export const shipmentSchema = z
       .or(z.literal("")),
 
     //  Package Details Starts Here
+    shipmentType: z.enum(["DOMESTIC", "INTERNATIONAL"], {
+      error: "Please select a shipment type",
+    }),
     packageType: z.enum(packageType, {
       error: "Please select a package type",
     }),
@@ -152,22 +155,92 @@ export const shipmentSchema = z
       .optional()
       .or(z.literal("")),
   })
-  .refine(
-    (data) => {
-      const { pickupDate, pickupTime } = data;
-      // Skip validation if either field is empty (they're optional)
-      if (!pickupDate || !pickupTime) return true;
+  .superRefine((data, ctx) => {
+    const { shipmentType, pickUpAddressType, pickupDate, pickupTime } = data;
 
+    // ----- 1. Date/Time Future Validation -----
+    if (pickupDate && pickupTime) {
       const pickupDateTime = new Date(`${pickupDate}T${pickupTime}`);
       const now = new Date();
+      if (pickupDateTime.getTime() <= now.getTime()) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Pickup date and time must be in the future",
+          path: ["pickupTime"],
+        });
+      }
+    }
 
-      return pickupDateTime.getTime() > now.getTime();
-    },
-    {
-      message: "Pickup date and time must be in the future",
-      path: ["pickupTime"], // Error shows on pickupTime field
-    },
-  );
+    // ----- 2. Sender Location Validation -----
+    if (shipmentType === "DOMESTIC") {
+      if (!data.fromState || data.fromState.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Origin State is required",
+          path: ["fromState"],
+        });
+      }
+      if (!data.fromCity || data.fromCity.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Origin City is required",
+          path: ["fromCity"],
+        });
+      }
+    } else if (shipmentType === "INTERNATIONAL") {
+      if (!data.stateOrCity || data.stateOrCity.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "State/City is required",
+          path: ["stateOrCity"],
+        });
+      }
+    }
+
+    // ----- 3. Receiver Location Validation -----
+    if (shipmentType === "DOMESTIC") {
+      if (!data.toWhereState || data.toWhereState.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Destination State is required",
+          path: ["toWhereState"],
+        });
+      }
+      if (!data.toWhereCity || data.toWhereCity.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Destination City is required",
+          path: ["toWhereCity"],
+        });
+      }
+    } else if (shipmentType === "INTERNATIONAL") {
+      if (!data.receiverStateOrCity || data.receiverStateOrCity.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "State/City is required",
+          path: ["receiverStateOrCity"],
+        });
+      }
+    }
+
+    // ----- 4. Pickup Date/Time Requirements (conditional on address type) -----
+    if (pickUpAddressType !== "DROP_OFF") {
+      if (!pickupDate || pickupDate.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Pickup date is required",
+          path: ["pickupDate"],
+        });
+      }
+      if (!pickupTime || pickupTime.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Pickup time is required",
+          path: ["pickupTime"],
+        });
+      }
+    }
+  });
 
 export type ShipmentDataType = z.infer<typeof shipmentSchema>;
 
@@ -200,6 +273,7 @@ export const defaultShipmentValues = {
   recieverPostalCode: "",
 
   // Package Details
+  shipmentType: undefined,
   packageType: undefined,
   numberOfItems: "",
   weight: "",
