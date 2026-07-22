@@ -12,7 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { ShipmentDataType } from "@/lib/schemas/shipmentSchema";
 import { useFormContext, Controller } from "react-hook-form";
 
-import { countryOptions } from "@/lib/utils/countryOptions";
+import { countryOptions, nigeriaStates } from "@/lib/utils/countryOptions";
 import {
   Combobox,
   ComboboxContent,
@@ -68,15 +68,15 @@ const ShipperDetailsForm = () => {
   }, [selectedCountry?.value]);
 
   // For domestic: state only
-  const handleStateSelect = (place: google.maps.places.Place) => {
-    const components = place.addressComponents || [];
-    const state = getAddressComponent(
-      components,
-      "administrative_area_level_1",
-    );
-    setValue("fromState", state);
-    // Optionally auto-fill postal code? Not recommended for state only.
-  };
+  // const handleStateSelect = (place: google.maps.places.Place) => {
+  //   const components = place.addressComponents || [];
+  //   const state = getAddressComponent(
+  //     components,
+  //     "administrative_area_level_1",
+  //   );
+  //   setValue("fromState", state);
+  //   // Optionally auto-fill postal code? Not recommended for state only.
+  // };
 
   // ---------- Handlers for autocomplete selection ----------
   const handleCitySelect = (place: google.maps.places.Place) => {
@@ -115,7 +115,7 @@ const ShipperDetailsForm = () => {
     setValue("postalCode", postalCode || "");
 
     if (isDomestic) {
-      setValue("fromState", state || "");
+      // setValue("fromState", state || "");
       setValue("fromCity", city || "");
     } else {
       setValue("stateOrCity", state || city || "");
@@ -282,22 +282,36 @@ const ShipperDetailsForm = () => {
                     <FieldLabel htmlFor={field.name} className="form-label">
                       Origin State
                     </FieldLabel>
-                    <StateCityAutocomplete
-                      type="state"
-                      value={field.value as string}
-                      onChange={field.onChange}
-                      onFocus={() => handleFocus("fromState")}
-                      onBlur={() => trigger("fromState")}
-                      onSelect={handleStateSelect}
-                      placeholder={
-                        !countryCode
-                          ? "Please select a country first"
-                          : "Start typing State name..."
-                      }
-                      countryCode={countryCode}
-                      readOnly={!countryCode}
-                      inputClassName="form-input h-10 w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
+                    <Combobox
+                      autoComplete="new-state"
+                      items={nigeriaStates}
+                      name={field.name}
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    >
+                      <ComboboxInput
+                        autoComplete="new-state"
+                        id={field.name}
+                        aria-invalid={fieldState.invalid}
+                        className="form-input h-14!"
+                        placeholder="Select State"
+                      />
+
+                      <ComboboxContent>
+                        <ComboboxEmpty>No state found</ComboboxEmpty>
+                        <ComboboxList>
+                          {(state) => (
+                            <ComboboxItem
+                              key={state.value}
+                              value={state.label}
+                              className="font-roboto"
+                            >
+                              {state.label}
+                            </ComboboxItem>
+                          )}
+                        </ComboboxList>
+                      </ComboboxContent>
+                    </Combobox>
                     {fieldState.invalid && (
                       <FieldError
                         errors={[fieldState.error]}
@@ -379,7 +393,7 @@ const ShipperDetailsForm = () => {
               )}
             />
           )}
-          
+
           <Controller
             name="address"
             control={control}
@@ -465,7 +479,9 @@ const ShipperDetailsForm = () => {
             )}
           />
 
-          <div className={`${shipmentType === "INTERNATIONAL" && "md:col-span-2"}`}>
+          <div
+            className={`${shipmentType === "INTERNATIONAL" && "md:col-span-2"}`}
+          >
             <Controller
               name="pickUpAddressType"
               control={control}
