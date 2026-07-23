@@ -76,7 +76,7 @@ const FundWalletModal = ({ walletId }: { walletId: string }) => {
           </DialogTitle>
         </DialogHeader>
 
-        <div className="">
+        <div>
           <div>
             <label htmlFor="amount" className="form-label">
               Amount (₦)

@@ -32,7 +32,7 @@ import {
 } from "@/lib/utils/countryOptions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MapPin } from "lucide-react";
-import {  useState } from "react";
+import { useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -95,7 +95,7 @@ const IntlPricingTab = () => {
     .find((c) => c.label === toCountryLabel)
     ?.value?.toLowerCase();
 
-  console.log("Selected Weight", selectedWeight);
+  // console.log("Selected Weight", selectedWeight);
 
   const handleStateSelect = (
     place: google.maps.places.Place,
@@ -139,7 +139,6 @@ const IntlPricingTab = () => {
   };
 
   const onSubmit = (data: IntlPricingData) => {
-    console.log(data);
     const { currency: _c, ...rest } = data;
     const payload = {
       ...rest,
@@ -272,7 +271,10 @@ const IntlPricingTab = () => {
                   name="fromCity"
                   control={control}
                   render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid} className="gap-1 max-md:col-span-2">
+                    <Field
+                      data-invalid={fieldState.invalid}
+                      className="gap-1 max-md:col-span-2"
+                    >
                       <div className="relative">
                         <MapPin className="size-4.5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
 
@@ -406,7 +408,10 @@ const IntlPricingTab = () => {
                   name="toCity"
                   control={control}
                   render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid} className="gap-1 max-md:col-span-2">
+                    <Field
+                      data-invalid={fieldState.invalid}
+                      className="gap-1 max-md:col-span-2"
+                    >
                       <div className="relative">
                         <MapPin className="size-4.5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
 
