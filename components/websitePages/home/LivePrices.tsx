@@ -1,43 +1,15 @@
 "use client";
 
-// import { TrendingDown, TrendingUp } from "lucide-react";
-import { ArrowRight, DeliveryTruck, Plane } from "../../icons";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { DeliveryTruck, Plane } from "../../icons";
 import { Button } from "../../ui/button";
 import { useLocalPricing, usePricing } from "@/lib/hooks/queries/usePricing";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import TableSkeleton from "../pricing/TableSkeleton";
-import CardSkeleton from "../pricing/CardSkeleton";
-import { formatMinSecMill } from "@/lib/utils";
+
 import { Bracket, ShipmentType } from "@/lib/services/pricing.service";
-import {
-  Combobox,
-  ComboboxContent,
-  ComboboxEmpty,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxList,
-} from "@/components/ui/combobox";
 import { nigeriaStates } from "@/lib/utils/countryOptions";
-import DomesticCards from "../pricing/DomesticCards";
-import DomesticTable from "../pricing/DomesticTable";
-import InternationalCards from "../pricing/InternationalCards";
-import InternationalTable from "../pricing/InternationalTable";
+import z from "zod";
+import IntlPricingTab from "../pricing/IntlPricingTab";
 
 interface Filter {
   origin?: string;
@@ -50,42 +22,7 @@ const LivePrices = () => {
   const [tab, setTab] = useState<"International" | "Domestic">("International");
   const selectedMethod = method === "all" ? undefined : method;
 
-  const {
-    data: livePrices,
-    isLoading,
-    isError,
-    isSuccess,
-  } = usePricing({
-    method: selectedMethod as ShipmentType,
-  });
-
-  const {
-    data: localLivePrices,
-    isLoading: isLocalLoading,
-    isError: isLocalError,
-    isSuccess: isLocalSuccess,
-  } = useLocalPricing({
-    origin: filters.origin,
-    destination: filters.destination,
-  });
-
   const router = useRouter();
-  // console.log("Filters: ", filters);
-  const States = [{ value: "all", label: "All" }, ...nigeriaStates];
-
-  const MAX_BRACKETS = 8;
-
-  const normalizedLPrice = (localLivePrices || []).map((item) => {
-    const count = Math.max(0, MAX_BRACKETS - item.brackets.length);
-
-    return {
-      ...item,
-      brackets: [
-        ...item.brackets.slice(0, MAX_BRACKETS), // also prevent overflow
-        ...Array(count).fill(null),
-      ] as (Bracket | null)[],
-    };
-  });
 
   return (
     <section className="padding-y padding-x bg-primary">
@@ -117,146 +54,7 @@ const LivePrices = () => {
         </Button>
       </div>
 
-      {tab === "International" && (
-        <div>
-          <div className="mt-6 flex justify-between items-end text-white">
-            <div className="flex max-md:flex-col md:items-center gap-3">
-              <p className="">Filter by method</p>
-
-              <Select
-                onValueChange={(val) => setMethod(val)}
-                defaultValue="all"
-              >
-                <SelectTrigger className="md:min-w-[186px] bg-primary-light text-primary-dark!">
-                  <SelectValue placeholder="Select a value" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
-                  <SelectItem value="INTERNATIONAL">International</SelectItem>
-                  <SelectItem value="DOMESTIC">Domestic</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <p className="leading-6 text-primary-light">
-              Updated: {formatMinSecMill(new Date())}
-            </p>
-          </div>
-          {/* Skeleton loading state for the table */}
-          {isLoading && <TableSkeleton ShipmentType="INTERNATIONAL" />}
-          {/* Desktop Screens */}
-          <InternationalTable
-            livePrices={livePrices ?? []}
-            isLoading={isLoading}
-            isError={isError}
-            isSuccess={isSuccess}
-          />
-          {/* Mobile Screens */}-
-          <InternationalCards
-            livePrices={livePrices ?? []}
-            isLoading={isLoading}
-            isError={isError}
-            isSuccess={isSuccess}
-          />
-        </div>
-      )}
-
-      {tab === "Domestic" && (
-        <>
-          <div className="mt-6 p-6 rounded-[12px] bg-white">
-            <h3 className="text-base font-roboto font-bold ">Filters</h3>
-            {/* Filters */}
-            <div className="mt-4 flex max-sm:flex-col gap-2 md:gap-4">
-              {/* Origin */}
-              <div>
-                <p className="text-base text-gray-500">Origin</p>
-                <Combobox
-                  items={States}
-                  value={filters.origin}
-                  defaultValue="All"
-                  onValueChange={(val) => {
-                    setFilters((prev) => ({
-                      ...prev,
-                      origin:
-                        val === "All" || val === null
-                          ? undefined
-                          : (val as string),
-                    }));
-                  }}
-                >
-                  <ComboboxInput className="mt-3 py-[5.5px]! h-auto px-1.5 text-primary-dark! font-roboto [&_input]:text-sm!" />
-
-                  <ComboboxContent>
-                    <ComboboxEmpty>No state found</ComboboxEmpty>
-                    <ComboboxList>
-                      {(country) => (
-                        <ComboboxItem
-                          key={country.value}
-                          value={country.label}
-                          className="font-roboto"
-                        >
-                          {country.label}
-                        </ComboboxItem>
-                      )}
-                    </ComboboxList>
-                  </ComboboxContent>
-                </Combobox>
-              </div>
-              {/* Destination */}
-              <div className="space-y-">
-                <p className="text-base text-gray-500">Destination</p>
-                <Combobox
-                  items={States}
-                  value={filters.origin}
-                  defaultValue="All"
-                  onValueChange={(val) => {
-                    setFilters((prev) => ({
-                      ...prev,
-                      destination:
-                        val === "All" || val === null
-                          ? undefined
-                          : (val as string),
-                    }));
-                  }}
-                >
-                  <ComboboxInput className="mt-3 py-[5.5px]! h-auto px-1.5 text-primary-dark! font-roboto [&_input]:text-sm!" />
-
-                  <ComboboxContent>
-                    <ComboboxEmpty>No state found</ComboboxEmpty>
-                    <ComboboxList>
-                      {(country) => (
-                        <ComboboxItem
-                          key={country.value}
-                          value={country.label}
-                          className="font-roboto"
-                        >
-                          {country.label}
-                        </ComboboxItem>
-                      )}
-                    </ComboboxList>
-                  </ComboboxContent>
-                </Combobox>
-              </div>
-            </div>
-          </div>
-          {/* Skeleton loading state for the table */}
-          {isLoading && <TableSkeleton colCount={6} ShipmentType="DOMESTIC" />}
-
-          <DomesticTable
-            localPrices={normalizedLPrice}
-            isLoading={isLocalLoading}
-            isError={isLocalError}
-            isSuccess={isLocalSuccess}
-          />
-
-          {/* Mobile Screens */}
-          <DomesticCards
-            localPrices={normalizedLPrice}
-            isLoading={isLocalLoading}
-            isError={isLocalError}
-            isSuccess={isLocalSuccess}
-          />
-        </>
-      )}
+      {tab === "International" && <IntlPricingTab />}
 
       <div className="flex justify-center">
         <Button

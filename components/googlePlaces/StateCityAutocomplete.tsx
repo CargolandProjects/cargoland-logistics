@@ -54,7 +54,7 @@ const StateCityAutocomplete = ({
   const fetchSuggestions = useCallback(
     async (input: string) => {
       const currentRequestId = ++requestIdRef.current;
-
+ 
       if (!placesLibrary || input.length < 2) {
         setSuggestions([]);
         return;

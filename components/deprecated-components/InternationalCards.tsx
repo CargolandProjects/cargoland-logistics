@@ -2,7 +2,7 @@ import { ArrowRight } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Pricing } from "@/lib/services/pricing.service";
 import { useRouter } from "next/navigation";
-import CardSkeleton from "./CardSkeleton";
+import CardSkeleton from "../websitePages/pricing/CardSkeleton";
 
 const InternationalCards = ({
   livePrices,
