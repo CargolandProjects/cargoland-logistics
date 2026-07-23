@@ -8,12 +8,23 @@ countries.registerLocale(localeData);
 
 const names = countries.getNames("en", { select: "official" });
 
+// Normalization map – maps official name → expected backend name
+const countryNameNormalization: Record<string, string> = {
+  "People's Republic of China": "China",
+  "Taiwan, Province of China": "Taiwan",
+};
+
 export const countryOptions = Object.entries(names)
   .filter(([code]) => code !== "AQ")
   .map(([code, name]) => ({
     value: code,
     label: name,
   }));
+
+// Helper function to normalize country name for backend
+export const normalizeCountryName = (officialName: string): string => {
+  return countryNameNormalization[officialName] || officialName;
+};
 
 const nigeriaStatesList = [
   "Abia",

@@ -2,7 +2,7 @@ import { ArrowRight } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Pricing } from "@/lib/services/pricing.service";
 import { useRouter } from "next/navigation";
-import CardSkeleton from "./CardSkeleton";
+import CardSkeleton from "../websitePages/pricing/CardSkeleton";
 
 const InternationalCards = ({
   livePrices,
@@ -75,7 +75,7 @@ const InternationalCards = ({
                         Air/kg
                       </p>
                       <p className="text-base font-bold">
-                        ₦{price.airFreightRate}
+                        {/* ₦{price.airFreightRate} */}
                       </p>
                     </div>
                     <div className="space-y-2">
@@ -83,7 +83,7 @@ const InternationalCards = ({
                         Land/kg
                       </p>
                       <p className="text-base font-bold">
-                        ₦{price.roadFreightRate}
+                        {/* ₦{price.roadFreightRate} */}
                       </p>
                     </div>
                     <div className="space-y-2">
@@ -91,7 +91,7 @@ const InternationalCards = ({
                         Ocean/kg
                       </p>
                       <p className="text-base font-bold">
-                        ₦{price.oceanFreightRate}
+                        {/* ₦{price.oceanFreightRate} */}
                       </p>
                     </div>
                   </div>

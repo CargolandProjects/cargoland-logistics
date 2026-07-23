@@ -118,9 +118,13 @@ export const shipmentSchema = z
 
     weight: z
       .string("Weight is required")
-      .min(0.1, "Weight must be at least 0.1 kg")
-      .max(10000, "Weight cannot exceed 10000 kg")
-      .regex(/^\d+(\.\d+)?$/, "Must be a valid number"),
+      .regex(/^\d+(\.\d+)?$/, "Must be a valid number")
+      .refine((val) => Number(val) >= 0.5, {
+        error: "Weight must be at least 0.5kg",
+      })
+      .refine((val) => Number(val) <= 1000, {
+        error: "Weight cannot exceed 1000 kg",
+      }),
 
     length: z
       .string("Length is required")
@@ -165,7 +169,7 @@ export const shipmentSchema = z
       if (pickupDateTime.getTime() <= now.getTime()) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Pickup date and time must be in the future",
+          error: "Pickup date and time must be in the future",
           path: ["pickupTime"],
         });
       }
@@ -176,14 +180,14 @@ export const shipmentSchema = z
       if (!data.fromState || data.fromState.trim() === "") {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Origin State is required",
+          error: "Origin State is required",
           path: ["fromState"],
         });
       }
       if (!data.fromCity || data.fromCity.trim() === "") {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Origin City is required",
+          error: "Origin City is required",
           path: ["fromCity"],
         });
       }
@@ -191,7 +195,7 @@ export const shipmentSchema = z
       if (!data.stateOrCity || data.stateOrCity.trim() === "") {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "State/City is required",
+          error: "State/City is required",
           path: ["stateOrCity"],
         });
       }
@@ -202,14 +206,14 @@ export const shipmentSchema = z
       if (!data.toWhereState || data.toWhereState.trim() === "") {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Destination State is required",
+          error: "Destination State is required",
           path: ["toWhereState"],
         });
       }
       if (!data.toWhereCity || data.toWhereCity.trim() === "") {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Destination City is required",
+          error: "Destination City is required",
           path: ["toWhereCity"],
         });
       }
@@ -217,7 +221,7 @@ export const shipmentSchema = z
       if (!data.receiverStateOrCity || data.receiverStateOrCity.trim() === "") {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "State/City is required",
+          error: "State/City is required",
           path: ["receiverStateOrCity"],
         });
       }
@@ -228,14 +232,14 @@ export const shipmentSchema = z
       if (!pickupDate || pickupDate.trim() === "") {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Pickup date is required",
+          error: "Pickup date is required",
           path: ["pickupDate"],
         });
       }
       if (!pickupTime || pickupTime.trim() === "") {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Pickup time is required",
+          error: "Pickup time is required",
           path: ["pickupTime"],
         });
       }

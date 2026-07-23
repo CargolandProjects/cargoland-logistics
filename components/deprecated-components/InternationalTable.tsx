@@ -2,7 +2,6 @@ import { ArrowRight } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Pricing } from "@/lib/services/pricing.service";
 import { useRouter } from "next/navigation";
-import CardSkeleton from "./CardSkeleton";
 import {
   Table,
   TableBody,
@@ -95,7 +94,7 @@ const InternationalTable = ({
                             </p>
                           </div> */}
                   </TableCell>
-                  <TableCell className="text-base font-bold">
+                  {/* <TableCell className="text-base font-bold">
                     ₦{Number(price.airFreightRate).toLocaleString()}
                   </TableCell>
                   <TableCell className="text-base font-bold">
@@ -103,7 +102,7 @@ const InternationalTable = ({
                   </TableCell>
                   <TableCell className="text-base font-bold">
                     ₦{Number(price.oceanFreightRate).toLocaleString()}
-                  </TableCell>
+                  </TableCell> */}
                   {/* Trend cell */}
                   {/* <TableCell
                           className={`${price.trend < 0 ? " text-red-500" : " text-green-500"} text-base font-bold`}

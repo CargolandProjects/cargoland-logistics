@@ -51,9 +51,13 @@ const estimateSchema = z
   .object({
     weight: z
       .string("Weight is required")
-      .min(0.1, "Weight must be at least 0.1 kg")
-      .max(10000, "Weight cannot exceed 10000 kg")
-      .regex(/^\d+(\.\d+)?$/, "Must be a valid number"),
+      .regex(/^\d+(\.\d+)?$/, "Must be a valid number")
+      .refine((val) => parseFloat(val) >= 0.5, {
+        error: "Weight must be at least 0.5kg",
+      })
+      .refine((val) => parseFloat(val) <= 1000, {
+        message: "Weight cannot exceed 1000 kg",
+      }),
 
     length: z
       .string("Length is required")
