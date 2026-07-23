@@ -54,7 +54,7 @@ const StateCityAutocomplete = ({
   const fetchSuggestions = useCallback(
     async (input: string) => {
       const currentRequestId = ++requestIdRef.current;
- 
+
       if (!placesLibrary || input.length < 2) {
         setSuggestions([]);
         return;
@@ -158,7 +158,7 @@ const StateCityAutocomplete = ({
           setTimeout(() => setShowDropdown(false), 150);
         }}
         placeholder={placeholder}
-        readOnly={readOnly || !placesLibrary}
+        readOnly={readOnly}
         className={inputClassName}
       />
       {showDropdown && (suggestions.length > 0 || isLoading) && (

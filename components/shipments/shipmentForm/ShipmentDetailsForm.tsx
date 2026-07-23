@@ -29,6 +29,7 @@ import { ImageUploadField } from "./ImageUploadField";
 import { useShipmentStore } from "@/lib/stores/useShipmentStore";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { toast } from "sonner";
+import { normalizeCountryName } from "@/lib/utils/countryOptions";
 
 const ShipmentDetailsForm = () => {
   const { mutate, isPending, data: estimate } = useShipmentEstimate();
@@ -71,8 +72,15 @@ const ShipmentDetailsForm = () => {
       return;
 
     const location = isDomestic
-      ? { fromCountry, fromState, toWhereState }
-      : { fromCountry, toCountry };
+      ? {
+          fromCountry: normalizeCountryName(fromCountry),
+          fromState,
+          toWhereState,
+        }
+      : {
+          fromCountry: normalizeCountryName(fromCountry),
+          toCountry: normalizeCountryName(toCountry),
+        };
 
     const payload = {
       shipmentType,

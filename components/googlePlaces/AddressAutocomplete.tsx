@@ -125,7 +125,7 @@ export function AddressAutocomplete({
           setTimeout(() => setShowDropdown(false), 150);
         }}
         placeholder={placeholder}
-        readOnly={readOnly || !placesLibrary}
+        readOnly={readOnly}
         className={inputClassName}
       />
       {showDropdown && (suggestions.length > 0 || isLoading) && (

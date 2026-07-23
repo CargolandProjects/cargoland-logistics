@@ -26,11 +26,17 @@ import { toast } from "sonner";
 import AuthPrompt from "../AuthPrompt";
 import { ArrowLeft } from "@/components/icons";
 import ConfirmDialog from "@/components/ConfirmDialog";
+import PaymentModal from "./PaymentModal";
+import { useChargeWallet } from "@/lib/hooks/mutation/useWallet";
+import { normalizeCountryName } from "@/lib/utils/countryOptions";
+
+export type PaymentMethod = "WALLET" | "ONLINE";
 
 const ShipmentForm = () => {
   const { mutate: createShipment } = useCreateShipment();
   const { mutate: createShipmentUser } = useCreateShipmentUser();
   const { mutate: makePayment, isPending: isPaying } = useMakePayment();
+  const { mutate: chargeWallet, isPending: isCharging } = useChargeWallet();
   const formData = useShipmentStore((s) => s.formData);
   const createdShipment = useShipmentStore((s) => s.createdShipment);
   const setShipmentFlow = useShipmentStore((s) => s.setShipmentFlow);
@@ -38,11 +44,12 @@ const ShipmentForm = () => {
   const shipmentType = useShipmentStore((s) => s.shipmentType);
   const saveShipmentData = useShipmentStore((s) => s.setFormData);
   const saveCreatedShipment = useShipmentStore((s) => s.setCreatedShipment);
-  const cancelShipment = useShipmentStore((s) => s.clearShipment);
+  const clearShipment = useShipmentStore((s) => s.clearShipment);
   const { isAuthenticated } = useSession();
   const router = useRouter();
 
   const [step, setStep] = useState(3);
+  const [open, setOpen] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -359,6 +366,9 @@ const ShipmentForm = () => {
           freightType: freightType,
           stateOrCity: "",
           receiverStateOrCity: "",
+          // Normalize or return country name
+          country: normalizeCountryName(data.country),
+          receiverCountry: normalizeCountryName(data.receiverCountry),
         }
       : {
           ...data,
@@ -368,6 +378,9 @@ const ShipmentForm = () => {
           fromCity: "",
           toWhereState: "",
           toWhereCity: "",
+          // Normalize or return country name
+          country: normalizeCountryName(data.country),
+          receiverCountry: normalizeCountryName(data.receiverCountry),
         };
     // console.log("IsAuthenticated", payload);
 
@@ -408,7 +421,7 @@ const ShipmentForm = () => {
   };
 
   // Make Payment
-  const handlePayment = () => {
+  const handlePayment = (method: PaymentMethod) => {
     if (!isAuthenticated) {
       toast.error("Please login to make payment");
       router.push("/login");
@@ -417,18 +430,37 @@ const ShipmentForm = () => {
 
     if (!createdShipment?.id) return;
 
-    makePayment(createdShipment.id, {
-      onSuccess: (res) => {
-        const authUrl = res.data.data.authorization_url;
+    if (method === "WALLET")
+      chargeWallet(
+        {
+          amount: createdShipment.price,
+          shipmentId: createdShipment.id,
+        },
+        {
+          onSuccess: (res) => {
+            toast.success(res.message || "Payment SUccessful");
+            clearShipment();
+            setTimeout(
+              () => router.push(`/my-shipment/${createdShipment.id}`),
+              500,
+            );
+          },
+        },
+      );
 
-        if (!authUrl) {
-          toast.error("Payment initiation failed");
-          return;
-        }
+    if (method === "ONLINE")
+      makePayment(createdShipment.id, {
+        onSuccess: (res) => {
+          const authUrl = res.data.data.authorization_url;
 
-        window.location.href = authUrl;
-      },
-    });
+          if (!authUrl) {
+            toast.error("Payment initiation failed");
+            return;
+          }
+
+          window.location.href = authUrl;
+        },
+      });
   };
 
   const shipmentForms = () => {
@@ -483,6 +515,7 @@ const ShipmentForm = () => {
           <div className="mt-5 md:mt-7.5 p-4 md:p-6 md:py-8 bg-white rounded-lg">
             {shipmentForms()}
 
+            {/* Action Buttons */}
             <div className="flex max-md:flex-col justify-between gap-4 w-full mt-12 md:mt-12.5">
               <Button
                 onClick={() => setShowConfirm(true)}
@@ -516,7 +549,7 @@ const ShipmentForm = () => {
 
               {step === 3 && (
                 <Button
-                  onClick={handlePayment}
+                  onClick={() => setOpen(true)}
                   disabled={isPaying}
                   type="button"
                   className="w-full md:w-[215px] h-13.75 rounded-md"
@@ -529,10 +562,16 @@ const ShipmentForm = () => {
         </form>
       </FormProvider>
 
+      <PaymentModal
+        open={open}
+        setOpen={setOpen}
+        handlePayment={handlePayment}
+      />
+
       <ConfirmDialog
         open={showConfirm}
         onOpenChange={setShowConfirm}
-        onConfirm={cancelShipment}
+        onConfirm={clearShipment}
         desc="You are about to cancel this shipment. This action may stop delivery processing and cannot always be reversed. Do you want to proceed?"
       />
     </div>

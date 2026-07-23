@@ -43,12 +43,8 @@ export const wallet = {
     );
     return res.data;
   },
-  async chargeWallet(data: {
-    amount: string;
-    walletId: string;
-    shipmentId: string;
-  }) {
-    const res = await apiClient.post(API_ROUTES.wallet.fundWallet, data);
+  async chargeWallet(data: { amount: string; shipmentId: string }) {
+    const res = await apiClient.post(API_ROUTES.wallet.chargeWallet, data);
     return res.data;
   },
   async getBalance() {
