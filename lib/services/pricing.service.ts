@@ -1,7 +1,6 @@
 import apiClient from "../api/client";
 import { API_ROUTES } from "../api/endpoints";
 import { APIResponse } from "./auth.service";
-import { shipment } from "./shipment.service";
 
 export type ShipmentType = "DOMESTIC" | "INTERNATIONAL";
 
@@ -20,7 +19,7 @@ export interface Pricing {
 export interface Bracket {
   id: string;
   minWeight: string;
-  maxWeight: string;  
+  maxWeight: string;
   airFreightRate: string;
   oceanFreightRate: string;
   roadFreightRate: string;
@@ -36,7 +35,12 @@ export interface LocalPricing {
   adminId: string;
   createdAt: string;
   updatedAt: string;
-  brackets: (Bracket | null)[];
+  brackets: {
+    id: string;
+    minWeight: string;
+    maxWeight: string;
+    ratePerkg: string;
+  }[];
 }
 
 type PricingRes = APIResponse<Pricing[]> & {
@@ -68,6 +72,16 @@ export interface GetAllPricingData {
   toCity?: string;
   weight?: string;
 }
+export interface GetLocalPricingData {
+  page?: number;
+  limit?: number;
+  shipmentType?: ShipmentType;
+  fromState?: string;
+  fromCity?: string;
+  toWhereState?: string;
+  toWhereCity?: string;
+  weight?: string;
+}
 
 export const pricing = {
   async getAllPricing(data: GetAllPricingData) {
@@ -91,22 +105,19 @@ export const pricing = {
     return res.data;
   },
 
-  async getAllLocalPricing(
-    page: number,
-    limit: number,
-    origin?: string,
-    destination?: string,
-    shipmentType?: string,
-  ) {
+  async getAllLocalPricing(data: GetLocalPricingData) {
     const res = await apiClient.get<LocalPricingRes>(
       API_ROUTES.pricing.getAllLocalPricing,
       {
         params: {
-          page,
-          limit,
-          ...(origin && { fromState: origin }),
-          ...(destination && { toWhereState: destination }),
-          ...(shipmentType && { shipmentType }),
+          page: data.page ?? 1,
+          limit: data.limit ?? 10,
+          ...(data.shipmentType && { shipmentType: data.shipmentType }),
+          ...(data.weight && { weight: data.weight }),
+          ...(data.fromState && { fromState: data.fromState }),
+          // ...(data.fromCity && { fromCity: data.fromCity }),
+          ...(data.toWhereState && { toWhereState: data.toWhereState }),
+          // ...(data.toWhereCity && { toWhereCity: data.toWhereCity }),
         },
       },
     );

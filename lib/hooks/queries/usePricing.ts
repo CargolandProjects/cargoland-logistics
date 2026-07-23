@@ -68,14 +68,7 @@ export const useLocalPricing = ({
       "localPricing",
       { page, limit, origin, destination, shipmentType },
     ],
-    queryFn: () =>
-      pricing.getAllLocalPricing(
-        page,
-        limit,
-        origin,
-        destination,
-        shipmentType,
-      ),
+    queryFn: () => pricing.getAllLocalPricing({}),
     select: (res) => res.data,
   });
 };

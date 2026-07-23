@@ -6,3 +6,9 @@ export const useGetAllPricing = () => {
     mutationFn: pricing.getAllPricing,
   });
 };
+
+export const useGetLocalPricing = () => {
+  return useMutation({
+    mutationFn: pricing.getAllLocalPricing,
+  });
+};

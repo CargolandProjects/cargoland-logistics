@@ -1,5 +1,4 @@
 import StateCityAutocomplete from "@/components/googlePlaces/StateCityAutocomplete";
-import { Location } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
   Combobox,
@@ -33,7 +32,7 @@ import {
 } from "@/lib/utils/countryOptions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MapPin } from "lucide-react";
-import { useMemo, useState } from "react";
+import {  useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -169,16 +168,16 @@ const IntlPricingTab = () => {
       {view === "form" && (
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="mt-6 p-10 rounded-[12px] bg-white"
+          className="mt-6 p-4 sm:p-6 md:p-10 rounded-[12px] bg-white"
         >
-          <FieldSet className="gap-10">
+          <FieldSet className="gap-6 md:gap-10">
             {/*  Shipping from */}
             <FieldGroup className="gap-0">
               <FieldTitle className="text-base font-bold leading-6 font-roboto text-[#2F3237]">
                 Where are you shipping from?
               </FieldTitle>
 
-              <div className="mt-3 grid md:grid-cols-3 gap-4">
+              <div className="mt-3 grid grid-cols-2 md:grid-cols-3 gap-4">
                 <Controller
                   name="fromCountry"
                   control={control}
@@ -273,7 +272,7 @@ const IntlPricingTab = () => {
                   name="fromCity"
                   control={control}
                   render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid} className="gap-1">
+                    <Field data-invalid={fieldState.invalid} className="gap-1 max-md:col-span-2">
                       <div className="relative">
                         <MapPin className="size-4.5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
 
@@ -314,7 +313,7 @@ const IntlPricingTab = () => {
               <FieldTitle className="text-base font-bold leading-6 font-roboto text-[#2F3237]">
                 Where are you shipping to?
               </FieldTitle>
-              <div className="mt-3 grid md:grid-cols-3 gap-4">
+              <div className="mt-3 grid grid-cols-2 md:grid-cols-3 gap-4">
                 <Controller
                   name="toCountry"
                   control={control}
@@ -407,7 +406,7 @@ const IntlPricingTab = () => {
                   name="toCity"
                   control={control}
                   render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid} className="gap-1">
+                    <Field data-invalid={fieldState.invalid} className="gap-1 max-md:col-span-2">
                       <div className="relative">
                         <MapPin className="size-4.5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
 
@@ -518,7 +517,7 @@ const IntlPricingTab = () => {
           <div className="mt-10 flex justify-center">
             <Button
               disabled={isPending}
-              className="submit-button w-[222px]! font-normal!"
+              className="submit-button w-55.5! font-normal!"
             >
               Get Price
             </Button>

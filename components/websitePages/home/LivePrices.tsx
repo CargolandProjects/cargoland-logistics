@@ -10,6 +10,7 @@ import { Bracket, ShipmentType } from "@/lib/services/pricing.service";
 import { nigeriaStates } from "@/lib/utils/countryOptions";
 import z from "zod";
 import IntlPricingTab from "../pricing/IntlPricingTab";
+import DomesticPricingTab from "../pricing/DomesticPricingTab";
 
 interface Filter {
   origin?: string;
@@ -55,6 +56,7 @@ const LivePrices = () => {
       </div>
 
       {tab === "International" && <IntlPricingTab />}
+      {tab === "Domestic" && <DomesticPricingTab />}
 
       <div className="flex justify-center">
         <Button
