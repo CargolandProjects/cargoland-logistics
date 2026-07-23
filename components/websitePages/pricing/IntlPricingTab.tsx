@@ -37,6 +37,7 @@ import { useMemo, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
+import { RoutePricing } from "./RoutePricing";
 
 const intlPricingSchema = z.object({
   shipmentType: z.enum(["INTERNATIONAL"], {
@@ -158,12 +159,17 @@ const IntlPricingTab = () => {
     });
   };
 
+  const pricingData = data?.data || [];
+
+  // console.log("Rates: ", freightPrices);
+  const weightNum = parseFloat(selectedWeight) || 0;
+
   return (
-    <div className="">
-      {view === "form" && !data && (
+    <div>
+      {view === "form" && (
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="mt-6 p-10  rounded-[12px] bg-white"
+          className="mt-6 p-10 rounded-[12px] bg-white"
         >
           <FieldSet className="gap-10">
             {/*  Shipping from */}
@@ -520,6 +526,48 @@ const IntlPricingTab = () => {
         </form>
       )}
 
+      {view === "result" && data && (
+        <div className="mt-6 p-4 sm:p-6 md:p-10 rounded-[12px] bg-white">
+          <h3 className="text-lg md:text-2xl font-semibold md:font-bold leading-7 md:leading-8 font-roboto">
+            Avaliable Rates
+          </h3>
+
+          {pricingData.length === 0 && (
+            <div className="mt-6 md:mt-10 p-4 border rounded-lg bg-gray-50 text-center">
+              <p className="text-xl font-medium leading-7">
+                {fromCountryLabel} → {toCountryLabel}
+              </p>
+              <p className="mt-1 text-gray-500">
+                No freight options for this weight
+              </p>
+            </div>
+          )}
+
+          {pricingData.length > 0 && (
+            <div className="mt-6 md:mt-10 grid gap-6">
+              {pricingData.map((freightPrice) => (
+                <RoutePricing
+                  key={freightPrice.id}
+                  fromWhere={freightPrice.fromWhere}
+                  toWhere={freightPrice.toWhere}
+                  brackets={freightPrice.brackets}
+                  isPopularRoute={freightPrice.isPopularRoute}
+                  weight={weightNum}
+                />
+              ))}
+            </div>
+          )}
+
+          <div className="mt-6 md:mt-10 flex justify-center ">
+            <Button
+              onClick={() => setView("form")}
+              className="px-12 py-4.5 h-auto text-primary bg-primary/28 hover:bg-primary/33"
+            >
+              Get Another Price
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -35,6 +35,7 @@ import LocationPin from "./LocationPin";
 import Wallet from "./Wallet";
 import ArrowUpRight from "./ArrowUpRight";
 import ArrowDownLeft from "./ArrowDownLeft";
+import CurveArrowRight from "./CurveArrowRight";
 
 export {
   Location,
@@ -74,4 +75,5 @@ export {
   Wallet,
   ArrowUpRight,
   ArrowDownLeft,
+  CurveArrowRight,
 };

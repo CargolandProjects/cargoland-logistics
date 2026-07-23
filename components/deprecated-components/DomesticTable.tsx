@@ -95,9 +95,9 @@ const DomesticTable = ({
                   {price.brackets.map((b, idx) => (
                     <TableCell
                       key={idx}
-                      className={`${!b?.ratePerkg && "text-center"} text-base p-4`}
+                      // className={`${!b?.ratePerkg && "text-center"} text-base p-4`}
                     >
-                      {b?.ratePerkg ? `₦${b.ratePerkg}` : "-"}
+                      {/* {b?.ratePerkg ? `₦${b.ratePerkg}` : "-"} */}
                     </TableCell>
                   ))}
                   <TableCell className="sticky z-10 right-0 bg-white pr-10.5">

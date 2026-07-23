@@ -60,7 +60,7 @@ const DomesticCards = ({
                         0-3(kg)
                       </p>
                       <p className="text-base font-bold">
-                        ₦{price.brackets[0]?.ratePerkg}
+                        {/* ₦{price.brackets[0]?.ratePerkg} */}
                       </p>
                     </div>
 
@@ -70,9 +70,9 @@ const DomesticCards = ({
                           {idx + 3} (kg)
                         </p>
                         <p
-                          className={`${!b?.ratePerkg && "text-center"} text-base font-bold`}
+                          // className={`${!b?.ratePerkg && "text-center"} text-base font-bold`}
                         >
-                          {b?.ratePerkg ? ` ₦${b.ratePerkg}` : "-"}
+                          {/* {b?.ratePerkg ? ` ₦${b.ratePerkg}` : "-"} */}
                         </p>
                       </div>
                     ))}

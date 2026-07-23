@@ -44,17 +44,8 @@ interface Filter {
 const PricingLivePrices = () => {
   const [filters, setFilters] = useState<Filter>({});
   const router = useRouter();
-  const {
-    data: livePrices,
-    isLoading,
-    isError,
-    isSuccess,
-  } = usePricing({
-    origin: filters.origin,
-    destination: filters.destination,
-    method: filters.method as ShipmentType,
-  });
-  // console.log("Filters", filters);
+  const { data: livePrices, isLoading, isError, isSuccess } = usePricing();
+  console.log("Filters", filters);
   const fromList =
     filters.method === "DOMESTIC"
       ? [{ value: "origin", label: "Origin" }, ...nigeriaStates]
@@ -227,58 +218,6 @@ const PricingLivePrices = () => {
                   </TableCell>
                 </TableRow>
               )}
-
-              {livePrices.length > 0 &&
-                livePrices.map((price, idx) => (
-                  <TableRow key={idx} className="border hover:bg-muted">
-                    <TableCell className="pl-4 pr-0 py-3">
-                      <div className="flex gap-3.5 items-center line-clamp-1">
-                        <p className="text-base capitalize">
-                          {price.fromWhere}
-                        </p>
-                        <ArrowRight className="size-4.5 text-primary shrink-0" />
-                        <p className="text-base capitalize">{price.toWhere}</p>
-                      </div>
-
-                      {/* <div className="mt-2 flex gap-1 items-center">
-                      <p className="text-gray-400">{price.airFreightRate}</p>
-                      <div className="size-1 rounded-full bg-neutral-200" />
-                      <p className="text-gray-400">{price.oceanFreightRate}</p>
-                    </div> */}
-                    </TableCell>
-                    <TableCell className="text-base font-bold">
-                      ₦{Number(price.airFreightRate).toLocaleString()}
-                    </TableCell>
-                    <TableCell className="text-base font-bold">
-                      ₦{Number(price.roadFreightRate).toLocaleString()}
-                    </TableCell>
-                    <TableCell className="text-base font-bold">
-                      ₦{Number(price.oceanFreightRate).toLocaleString()}
-                    </TableCell>
-                    {/* Trend cell */}
-                    {/* <TableCell
-                  className={`${price.trend < 0 ? " text-red-500" : " text-green-500"} text-base font-bold`}
-                >
-                  <div className="flex gap-0.75 items-center">
-                    {price.trend < 0 ? (
-                      <TrendingDown className="size-4.5" />
-                    ) : (
-                      <TrendingUp className="size-4.5" />
-                    )}
-                    {price.pricingShippingType > 0 ? `+${price.trend}` : price.trend}%
-                  </div>
-                </TableCell> */}
-                    <TableCell className="pr-10.5 pl-4">
-                      <Button
-                        onClick={() => router.push("/shipment")}
-                        variant="outline"
-                        className="py-3 h-auto w-18 border-primary text-base font-normal text-primary hover:text-primary"
-                      >
-                        Book
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
             </>
           )}
         </TableBody>
@@ -305,83 +244,9 @@ const PricingLivePrices = () => {
             {livePrices.length === 0 && (
               <div className="p-6 text-center">No data found</div>
             )}
-
-            <div>
-              {livePrices.map((price, idx) => (
-                <div
-                  key={idx}
-                  className={`${idx !== livePrices.length - 1 && "border-b"} p-6 `}
-                >
-                  <div className="flex justify-between">
-                    <div className="flex items-center gap-3.5">
-                      <p className="text-base capitalize">{price.fromWhere}</p>
-                      <ArrowRight className="size-4.5 text-primary" />
-                      <p className="text-base capitalize">{price.toWhere}</p>
-                    </div>
-                    {/* Trend */}
-                    {/* <p
-                      className={`${price.trend < 0 ? " text-red-500" : " text-green-500"} text-base font-bold flex gap-0.75 items-center`}
-                    >
-                      {price.trend < 0 ? (
-                        <TrendingDown className="size-4.5" />
-                      ) : (
-                        <TrendingUp className="size-4.5" />
-                      )}
-                      {price.trend > 0 ? `+${price.trend}` : price.trend}%
-                    </p> */}
-                  </div>
-
-                  {/* <div className="mt-2 flex gap-1 items-center">
-                    <p className="text-gray-400">{price.routeAir}</p>
-                    <div className="size-1 rounded-full bg-neutral-200" />
-                    <p className="text-gray-400">{price.routeOcean}</p>
-                  </div> */}
-                  <div className="mt-4.5 flex gap-2 max-xxs:justify-between xxs:gap-6">
-                    <div className="space-y-2">
-                      <p className="text-lg font-semibold leading-6.5 uppercase">
-                        Air/kg
-                      </p>
-                      <p className="text-base font-bold">
-                        ₦{price.airFreightRate}
-                      </p>
-                    </div>
-                    <div className="space-y-2">
-                      <p className="text-lg font-semibold leading-6.5 uppercase">
-                        Land/kg
-                      </p>
-                      <p className="text-base font-bold">
-                        ₦{price.roadFreightRate}
-                      </p>
-                    </div>
-                    <div className="space-y-2">
-                      <p className="text-lg font-semibold leading-6.5 uppercase">
-                        Ocean/kg
-                      </p>
-                      <p className="text-base font-bold">
-                        ₦{price.oceanFreightRate}
-                      </p>
-                    </div>
-                  </div>
-
-                  <Button
-                    onClick={() => router.push("/shipment")}
-                    variant="outline"
-                    className="mt-6 py-3 h-auto w-full border-primary text-base font-normal text-primary hover:text-primary"
-                  >
-                    Book Now
-                  </Button>
-                </div>
-              ))}
-            </div>
           </>
         )}
       </div>
-
-      {/* {livePrices.length === 0 && (
-        <div className="mt-4 px-6 py-3 bg-muted/80 rounded-lg">
-          <p className="">No prices data for the filter selection </p>
-        </div>
-      )} */}
     </div>
   );
 };

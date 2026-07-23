@@ -7,10 +7,10 @@ export type ShipmentType = "DOMESTIC" | "INTERNATIONAL";
 
 export interface Pricing {
   id: string;
-  shipmentType: string;
+  shipmentType: ShipmentType;
   fromWhere: string;
   toWhere: string;
-  isPopularRoute: false;
+  isPopularRoute: boolean;
   adminId: string;
   createdAt: string;
   updatedAt: string;
