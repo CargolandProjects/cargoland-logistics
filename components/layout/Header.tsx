@@ -78,6 +78,7 @@ const homeLinks = [
 const Header = () => {
   const { isAuthenticated, signOut } = useSession();
   const [open, setOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const router = useRouter();
   const pathName = usePathname();
@@ -192,7 +193,7 @@ const Header = () => {
 
           {/* Mobile nav links */}
           {isMobile && (
-            <Sheet>
+            <Sheet open={openMenu} onOpenChange={setOpenMenu}>
               <SheetTrigger asChild className="group">
                 <button className="p-0">
                   <Menu className="hover:cursor-pointer block group-data-[state=open]:hidden" />
@@ -209,7 +210,10 @@ const Header = () => {
                 <ul>
                   {displayLinks.map((link, idx) => (
                     <Fragment key={idx}>
-                      <li className="text-base font-normal hover:text-primary duration-200 cursor-pointer">
+                      <li
+                        onClick={() => setOpenMenu(false)}
+                        className="text-base font-normal hover:text-primary duration-200 cursor-pointer"
+                      >
                         <Link
                           href={link.href}
                           className="leading-6 w-full! block"

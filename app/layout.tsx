@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import Providers from "./Providers";
 import ContactHeader from "@/components/layout/ContactHeader";
 import JsonLd from "@/components/JsonLd";
+import Header from "@/components/layout/Header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -65,7 +66,7 @@ export const metadata: Metadata = {
     "freight forwarding West Africa",
     "logistics solutions West Africa",
   ],
-  
+
   authors: [
     { name: "Cargoland Logistics", url: "https://www.cargoland.africa/" },
   ],
@@ -147,6 +148,7 @@ export default function RootLayout({
         <JsonLd />
         <Providers>
           <ContactHeader />
+          <Header />
           <main className="flex-1 flex flex-col">{children}</main>
         </Providers>
       </body>

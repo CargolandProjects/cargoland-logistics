@@ -53,6 +53,7 @@ const ShipmentPageContent = ({ id }: { id: string }) => {
           onSuccess: (res) => {
             toast.success(res.message || "Payment SUccessful");
             queryClient.invalidateQueries({ queryKey: ["shipment", id] });
+            setOpen(false);
           },
         },
       );
@@ -249,6 +250,7 @@ const ShipmentPageContent = ({ id }: { id: string }) => {
       <PaymentModal
         open={open}
         setOpen={setOpen}
+        isCharging={isCharging || isPaying}
         handlePayment={handlePayment}
       />
     </>

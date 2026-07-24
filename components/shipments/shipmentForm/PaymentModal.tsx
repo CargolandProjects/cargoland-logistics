@@ -16,14 +16,20 @@ import Loader from "@/components/Loader";
 
 interface PaymentModalProps {
   open: boolean;
+  isCharging: boolean;
   setOpen: (val: boolean) => void;
   handlePayment: (method: PaymentMethod) => void;
 }
 
-const PaymentModal = ({ open, setOpen, handlePayment }: PaymentModalProps) => {
+const PaymentModal = ({
+  open,
+  setOpen,
+  handlePayment,
+  isCharging,
+}: PaymentModalProps) => {
   const { isPending, data } = useWalletBalance();
   const [method, setMethod] = useState<PaymentMethod>("WALLET");
-  console.log("METHOD: ", method);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="px-8 pt-15 pb-10 gap-6 md:max-w-128.5! rounded-[16px]">
@@ -89,6 +95,7 @@ const PaymentModal = ({ open, setOpen, handlePayment }: PaymentModalProps) => {
 
         <Button
           onClick={() => handlePayment(method)}
+          disabled={isCharging}
           className="submit-button font-medium!"
         >
           Pay

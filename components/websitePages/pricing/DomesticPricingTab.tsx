@@ -55,7 +55,7 @@ const DomesticPricingTab = () => {
       resolver: zodResolver(localPricingSchema),
       defaultValues: {
         shipmentType: "DOMESTIC",
-        fromState: "",
+        fromState: "Lagos",
         fromCity: "",
         toWhereState: "",
         toWhereCity: "",
@@ -222,7 +222,7 @@ const DomesticPricingTab = () => {
               </div>
             </FieldGroup>
 
-            {/* Shipping from */}
+            {/* Shipping to */}
             <FieldGroup className="gap-0">
               <FieldTitle className="text-base font-bold leading-6 font-roboto text-[#2F3237]">
                 Where are you shipping to?
