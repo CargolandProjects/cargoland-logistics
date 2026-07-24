@@ -440,10 +440,7 @@ const ShipmentForm = () => {
           onSuccess: (res) => {
             toast.success(res.message || "Payment SUccessful");
             clearShipment();
-            setTimeout(
-              () => router.push(`/my-shipment/${createdShipment.id}`),
-              500,
-            );
+            router.push(`/my-shipment/${createdShipment.id}`);
           },
         },
       );
@@ -550,7 +547,7 @@ const ShipmentForm = () => {
               {step === 3 && (
                 <Button
                   onClick={() => setOpen(true)}
-                  disabled={isPaying}
+                  disabled={isPaying || isCharging}
                   type="button"
                   className="w-full md:w-[215px] h-13.75 rounded-md"
                 >
