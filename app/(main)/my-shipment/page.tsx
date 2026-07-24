@@ -48,14 +48,14 @@ export default function MyShipmentPage() {
     isLoading: isLoadingAll,
     isError: isErrorAll,
   } = useAllShipments(currentPage);
-  const [tblView, setTblView] = useState<ShipmentStatus | null>(null);
+  const [tabView, setTabView] = useState<ShipmentStatus | null>(null);
   const [search, setSearch] = useState("");
   const {
     data: myShipments,
     isLoading,
     isError,
     isSuccess,
-  } = useMyShipments(tblView || "");
+  } = useMyShipments(tabView || "");
   const router = useRouter();
 
   const { isChecking } = useProtectedRoute();
@@ -89,7 +89,7 @@ export default function MyShipmentPage() {
 
   const dashboardStats = getDashboardStats();
 
-  const isFiltered = tblView !== null;
+  const isFiltered = tabView !== null;
 
   const isLoadingActive = isFiltered ? isLoading : isLoadingAll;
   const isErrorActive = isFiltered ? isError : isErrorAll;
@@ -97,11 +97,10 @@ export default function MyShipmentPage() {
 
   const allShipments = shipments?.shipments || [];
   const currentData = isFiltered ? myShipments || [] : allShipments;
+  const pagination = shipments?.pagination;
 
-  //   const pagination = currentData?.pagination;
-
-  // const totalPages = pagination?.totalPages || 1;
-  // const page = pagination?.page || 1;
+  const totalPages = pagination?.totalPages || 1;
+  const page = pagination?.page || 1;
 
   const searchableFields: (keyof Shipment)[] = [
     "shipmentType",
@@ -215,21 +214,21 @@ export default function MyShipmentPage() {
           {/* Tabs */}
           <div className="overflow-x-auto md:max-w-[513px] flex hide-scrollbar border rounded-md ">
             <Button
-              onClick={() => setTblView(null)}
+              onClick={() => setTabView(null)}
               variant="ghost"
               className={` ${
-                !tblView ? "bg-neutral-200/50 " : "bg-white"
+                !tabView ? "bg-neutral-200/50 " : "bg-white"
               } px-4 h-13 text-black border-r border-r-border rounded-none capitalize font-roboto`}
             >
               All Shipment
             </Button>
 
             {statuses.map((status, idx) => {
-              const isActive = status === tblView;
+              const isActive = status === tabView;
 
               return (
                 <Button
-                  onClick={() => setTblView(status)}
+                  onClick={() => setTabView(status)}
                   variant="ghost"
                   key={idx}
                   className={`${
@@ -264,7 +263,7 @@ export default function MyShipmentPage() {
           <div className="mt-3 min-h-[237px] md:min-h-[337px] flex flex-col rounded-lg bg-white">
             <p className="text-red-600 font-roboto p-4">
               Failed to fetch{" "}
-              {isFiltered ? tblView.replace("_", " ").toLowerCase() : "all"}{" "}
+              {isFiltered ? tabView.replace("_", " ").toLowerCase() : "all"}{" "}
               shipments
             </p>
           </div>
@@ -323,19 +322,19 @@ export default function MyShipmentPage() {
         )}
       </section>
 
-      {/* {isSuccess && totalPages > 1 && (
-        <div className="mt-9.5">
+      {!isFiltered && isSuccessAll && totalPages > 1 && (
+        <div className="mt-9.25 mb-10">
           <Pagination
             currentPage={page}
             totalPages={totalPages}
             onPageChange={handlePageChange}
             siblings={totalPages > 3 ? 1 : 0}
           />
-          <div className="text-center text-sm text-gray-500 mt-2">
-            Showing {allShipments.length} of {totalPages} shipments
-          </div>
+          {/* <div className="text-center text-sm text-gray-500 mt-2">
+                Showing {allShipments.length} of {totalPages} shipments
+              </div> */}
         </div>
-      )} */}
+      )}
     </div>
   );
 }

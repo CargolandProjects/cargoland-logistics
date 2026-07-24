@@ -8,15 +8,70 @@ import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { notFound, useRouter } from "next/navigation";
 import LoadingOverlay from "../LoadingOverlay";
+import { useState } from "react";
+import { useChargeWallet } from "@/lib/hooks/mutation/useWallet";
+import { useMakePayment } from "@/lib/hooks/mutation/useMutateShipment";
+import { toast } from "sonner";
+import { PaymentMethod } from "./shipmentForm/ShipmentForm";
+import PaymentModal from "./shipmentForm/PaymentModal";
+import { useQueryClient } from "@tanstack/react-query";
 
 const ShipmentPageContent = ({ id }: { id: string }) => {
   const { data: shipmentData, isLoading, isError, isSuccess } = useShipment(id);
+  const { mutate: makePayment, isPending: isPaying } = useMakePayment();
+  const { mutate: chargeWallet, isPending: isCharging } = useChargeWallet();
+  const queryClient = useQueryClient();
+
+  const [open, setOpen] = useState(false);
   const router = useRouter();
 
   const isCancelled = shipmentData?.status === "CANCELLED";
   const images = shipmentData?.imageUrl || [];
 
   if (isError) return notFound();
+
+  const isPaid = shipmentData?.paymentStatus === "SUCCESS";
+
+  const handleClck = () => {
+    if (isPaid) {
+      router.push(`/track-shipment?trackingId=${shipmentData?.trackingId}`);
+    } else {
+      setOpen(true);
+    }
+  };
+
+  const handlePayment = (method: PaymentMethod) => {
+    if (!shipmentData?.id) return;
+
+    if (method === "WALLET")
+      chargeWallet(
+        {
+          amount: shipmentData.price,
+          shipmentId: shipmentData.id,
+        },
+        {
+          onSuccess: (res) => {
+            toast.success(res.message || "Payment SUccessful");
+            queryClient.invalidateQueries({ queryKey: ["shipment", id] });
+            setOpen(false);
+          },
+        },
+      );
+
+    if (method === "ONLINE")
+      makePayment(shipmentData.id, {
+        onSuccess: (res) => {
+          const authUrl = res.data.data.authorization_url;
+
+          if (!authUrl) {
+            toast.error("Payment initiation failed");
+            return;
+          }
+
+          window.location.href = authUrl;
+        },
+      });
+  };
 
   return (
     <>
@@ -181,13 +236,23 @@ const ShipmentPageContent = ({ id }: { id: string }) => {
                   Reach via Whatsapp
                 </Button>
               )}
-              <Button className="mt-10 submit-button w-fit! px-[87px]">
-                Done
+              <Button
+                onClick={handleClck}
+                className="mt-10 submit-button w-fit! px-[87px]"
+              >
+                {isPaid ? "Track" : "Pay Now"}
               </Button>
             </div>
           </div>
         </div>
       )}
+
+      <PaymentModal
+        open={open}
+        setOpen={setOpen}
+        isCharging={isCharging || isPaying}
+        handlePayment={handlePayment}
+      />
     </>
   );
 };

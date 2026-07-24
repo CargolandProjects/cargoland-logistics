@@ -23,8 +23,8 @@ const WhereTo = () => {
   useEffect(() => {
     if (!shipmentType) return;
 
-    const setSType = () => setValue(shipmentType);
-    setSType();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setValue(shipmentType);
   }, [shipmentType]);
 
   const handleNext = () => {

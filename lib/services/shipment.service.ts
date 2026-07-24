@@ -77,7 +77,7 @@ export type Shipment = {
   estimatedTime: string | null;
   routeOrigin: string | null;
   routeDestination: string | null;
-  paymentStatus: "PENDING" | "PAID" | "FAILED";
+  paymentStatus: "PENDING" | "SUCCESS" | "FAILED";
 };
 
 // export type Shipment = ShipmentDataType & {

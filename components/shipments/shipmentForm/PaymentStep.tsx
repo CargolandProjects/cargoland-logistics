@@ -7,7 +7,7 @@ import { useState } from "react";
 import { ImageAsset, RenderExistingImage } from "./ImageUploadField";
 import { toast } from "sonner";
 
-const Payment = () => {
+const PaymentStep = () => {
   const freightType = useShipmentStore((s) => s.freightType);
   const shipmentData = useShipmentStore((s) => s.createdShipment);
   const formData = useShipmentStore((s) => s.formData);
@@ -167,4 +167,4 @@ const Payment = () => {
   );
 };
 
-export default Payment;
+export default PaymentStep;

@@ -34,16 +34,16 @@ export const RoutePricing = ({
 }: RoutePricingProps) => {
   const router = useRouter();
 
-  // Find matching bracket
-  const matchingBracket = brackets.find((b) => {
+  // Find ALL brackets that match the weight range
+  const matchingBrackets = brackets.filter((b) => {
     const min = parseFloat(b.minWeight);
     const max = parseFloat(b.maxWeight);
     return weight >= min && weight <= max;
   });
 
-  if (!matchingBracket) {
+  if (matchingBrackets.length === 0) {
     return (
-      <div className="mt-6 md:mt-10 p-4 border rounded-lg bg-gray-50 text-center">
+      <div className="p-4 border rounded-lg bg-gray-50 text-center">
         <p className="text-xl font-medium leading-7">
           {fromWhere} → {toWhere}
         </p>
@@ -52,52 +52,76 @@ export const RoutePricing = ({
     );
   }
 
-  // Determine which fields are present
-  const hasInternationalRates =
-    matchingBracket.airFreightRate !== undefined ||
-    matchingBracket.oceanFreightRate !== undefined ||
-    matchingBracket.roadFreightRate !== undefined;
+  // Collect all freight prices from all matching brackets
+  const freightPrices: { key: string; label: string; rate: number }[] = [];
 
-  let freightPrices: { key: string; label: string; rate: number }[] = [];
+  matchingBrackets.forEach((bracket) => {
+    const hasInternationalRates =
+      bracket.airFreightRate !== undefined ||
+      bracket.oceanFreightRate !== undefined ||
+      bracket.roadFreightRate !== undefined;
 
-  if (hasInternationalRates) {
-    const rates = {
-      air: parseFloat(matchingBracket.airFreightRate || "0") || 0,
-      ocean: parseFloat(matchingBracket.oceanFreightRate || "0") || 0,
-      road: parseFloat(matchingBracket.roadFreightRate || "0") || 0,
-    };
-    freightPrices = [
-      { key: "air", label: "Air Freight", rate: rates.air },
-      { key: "ocean", label: "Ocean Freight", rate: rates.ocean },
-      { key: "road", label: "Road Freight", rate: rates.road },
-    ].filter(({ rate }) => rate > 0);
-  } else if (matchingBracket.ratePerkg !== undefined) {
-    const rate = parseFloat(matchingBracket.ratePerkg) || 0;
-    if (rate > 0) {
-      freightPrices = [{ key: "domestic", label: "Road Freight", rate }];
+    if (hasInternationalRates) {
+      const rates = {
+        air: parseFloat(bracket.airFreightRate || "0") || 0,
+        ocean: parseFloat(bracket.oceanFreightRate || "0") || 0,
+        road: parseFloat(bracket.roadFreightRate || "0") || 0,
+      };
+
+      if (rates.air > 0) {
+        freightPrices.push({
+          key: "air",
+          label: "Air Freight",
+          rate: rates.air,
+        });
+      }
+      if (rates.ocean > 0) {
+        freightPrices.push({
+          key: "ocean",
+          label: "Ocean Freight",
+          rate: rates.ocean,
+        });
+      }
+      if (rates.road > 0) {
+        freightPrices.push({
+          key: "road",
+          label: "Road Freight",
+          rate: rates.road,
+        });
+      }
+    } else if (bracket.ratePerkg !== undefined) {
+      const rate = parseFloat(bracket.ratePerkg) || 0;
+      if (rate > 0) {
+        freightPrices.push({ key: "domestic", label: "Road Freight", rate });
+      }
     }
-  }
+  });
+
+  // Remove duplicates (in case the same rate appears in multiple brackets)
+  const uniqueFreightPrices = freightPrices.filter(
+    (item, index, self) => index === self.findIndex((t) => t.key === item.key),
+  );
 
   // console.log("Freight Prices: ", freightPrices);
 
-  if (freightPrices.length === 0) {
+  if (uniqueFreightPrices.length === 0) {
     return (
-      <div className="p-4 border rounded-lg bg-gray-50 text-center text-gray-500">
-        <p className="font-medium">
+      <div className="p-4 border rounded-lg bg-gray-50 text-center">
+        <p className="text-xl font-medium leading-7">
           {fromWhere} → {toWhere}
         </p>
-        <p className="text-sm">No freight options for this weight</p>
+        <p className="mt-1 text-gray-500">No freight options for this weight</p>
       </div>
     );
   }
 
-  const route = hasInternationalRates
-    ? "/shipment"
+  const route = uniqueFreightPrices.some((p) => p.key !== "domestic")
+    ? "/shipment?shipmentType=INTERNATIONAL"
     : "/shipment?shipmentType=DOMESTIC";
 
   return (
     <div className="space-y-6">
-      {freightPrices.map((price) => (
+      {uniqueFreightPrices.map((price) => (
         <div key={price.key} className="p-4 rounded-lg bg-gray-200">
           <div className="px-4 py-4.5 flex max-md:flex-col justify-between rounded-lg bg-white">
             {/* origin - destination & freight Type */}

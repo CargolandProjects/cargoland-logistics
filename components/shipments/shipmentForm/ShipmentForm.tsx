@@ -3,7 +3,7 @@ import FormStep from "./FormStep";
 import ShipperDetailsForm from "./ShipperDetailsForm";
 import ReceiverDetailsForm from "./ReceiverDetailsForm";
 import ShipmentDetailsForm from "./ShipmentDetailsForm";
-import Payment from "./Payment";
+import PaymentStep from "./PaymentStep";
 import {
   ShipmentDataType,
   shipmentSchema,
@@ -116,6 +116,7 @@ const ShipmentForm = () => {
     if (isDomestic) {
       form.setValue("country", "Nigeria", { shouldValidate: false });
       form.setValue("receiverCountry", "Nigeria", { shouldValidate: false });
+      form.setValue("fromState", "Lagos", { shouldValidate: false });
     }
     // When switching to INTERNATIONAL, we leave the country as-is (user can change)
   }, [form, isDomestic]);
@@ -440,10 +441,7 @@ const ShipmentForm = () => {
           onSuccess: (res) => {
             toast.success(res.message || "Payment SUccessful");
             clearShipment();
-            setTimeout(
-              () => router.push(`/my-shipment/${createdShipment.id}`),
-              500,
-            );
+            router.push(`/my-shipment/${createdShipment.id}`);
           },
         },
       );
@@ -472,7 +470,7 @@ const ShipmentForm = () => {
       case 2:
         return <ShipmentDetailsForm />;
       case 3:
-        return <Payment />;
+        return <PaymentStep />;
     }
   };
 
@@ -550,7 +548,7 @@ const ShipmentForm = () => {
               {step === 3 && (
                 <Button
                   onClick={() => setOpen(true)}
-                  disabled={isPaying}
+                  disabled={isPaying || isCharging}
                   type="button"
                   className="w-full md:w-[215px] h-13.75 rounded-md"
                 >
@@ -565,6 +563,7 @@ const ShipmentForm = () => {
       <PaymentModal
         open={open}
         setOpen={setOpen}
+        isCharging={isCharging || isPaying}
         handlePayment={handlePayment}
       />
 

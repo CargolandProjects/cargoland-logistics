@@ -58,14 +58,14 @@ const LivePrices = () => {
       {tab === "International" && <IntlPricingTab />}
       {tab === "Domestic" && <DomesticPricingTab />}
 
-      <div className="flex justify-center">
+      {/* <div className="flex justify-center">
         <Button
           onClick={() => router.push("/pricing")}
           className="mt-6 py-3 h-auto text-base font-normal border-white "
         >
           See more
         </Button>
-      </div>
+      </div> */}
     </section>
   );
 };
