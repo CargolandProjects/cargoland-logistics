@@ -304,12 +304,12 @@ export default function MyShipmentPage() {
                 handleRoute={handleRoute}
                 handleTrack={handleTrack}
                 handleView={handleView}
-                shipments={allShipments}
+                shipments={activeData}
               />
             </div>
             {/* Mobile screen */}
             <div className="md:hidden mt-3 rounded-[16px] bg-white">
-              {allShipments.map((shipment, idx) => (
+              {activeData.map((shipment, idx) => (
                 <ShipmentCard
                   key={idx}
                   shipment={shipment}
@@ -322,7 +322,7 @@ export default function MyShipmentPage() {
         )}
       </section>
 
-      {!isFiltered && isSuccessAll && totalPages > 1 && (
+      {!isFiltered && isSuccessAll && (
         <div className="mt-9.25 mb-10">
           <Pagination
             currentPage={page}

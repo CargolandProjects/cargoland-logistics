@@ -16,7 +16,7 @@ export default function PricingPage() {
   return (
     <div>
       <PricingHero />
-      <PopularRoutes />
+      {/* <PopularRoutes /> */}
       <PricingLivePrices />
     </div>
   );

@@ -100,8 +100,8 @@ const DomesticPricingTab = () => {
 
   const onSubmit = (data: LocalPricingData) => {
     console.log(data);
-
-    mutate(data, {
+    const payload = { ...data, weight: parseFloat(data.weight) };
+    mutate(payload, {
       onError: (error) => {
         toast.error(error.message || "Failed to get pricing");
       },

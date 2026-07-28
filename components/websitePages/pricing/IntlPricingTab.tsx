@@ -142,6 +142,7 @@ const IntlPricingTab = () => {
     const { currency: _c, ...rest } = data;
     const payload = {
       ...rest,
+      weight: parseFloat(data.weight),
       fromCountry: normalizeCountryName(data.fromCountry),
       toCountry: normalizeCountryName(data.toCountry),
     };
