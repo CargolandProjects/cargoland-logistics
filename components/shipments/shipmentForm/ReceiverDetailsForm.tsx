@@ -214,7 +214,7 @@ const ReceiverDetailsForm = () => {
                     autoComplete="new-country"
                     id={field.name}
                     aria-invalid={fieldState.invalid}
-                    className="form-input h-14!"
+                    className="form-input h-14! ring-0! focus-within:border-primary!"
                   />
 
                   <ComboboxContent>
@@ -257,7 +257,7 @@ const ReceiverDetailsForm = () => {
                   initialCountry={(selectedCountry?.value as Iso2) || "ng"}
                   loadUtils={() => import("intl-tel-input/utils")}
                   inputProps={{
-                    className: "form-input border",
+                    className: "form-input border-none focus:outline-primary outline-1",
                     inputMode: "tel",
                     id: field.name,
                   }}
@@ -298,7 +298,7 @@ const ReceiverDetailsForm = () => {
                         autoComplete="new-state"
                         id={field.name}
                         aria-invalid={fieldState.invalid}
-                        className="form-input h-14!"
+                        className="form-input h-14! ring-0! focus-within:border-primary!"
                       />
 
                       <ComboboxContent>
@@ -347,7 +347,7 @@ const ReceiverDetailsForm = () => {
                       }
                       countryCode={countryCode}
                       readOnly={!countryCode}
-                      inputClassName="form-input h-10 w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      inputClassName="form-input h-10 w-full rounded-md px-3 py-2 focus:outline-primary outline-1"
                     />
                     {fieldState.invalid && (
                       <FieldError
@@ -383,7 +383,7 @@ const ReceiverDetailsForm = () => {
                     }
                     countryCode={countryCode}
                     readOnly={!countryCode}
-                    inputClassName="form-input h-10 w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    inputClassName="form-input h-10 w-full rounded-md px-3 py-2 focus:outline-primary outline-1"
                   />
                   {fieldState.invalid && (
                     <FieldError
@@ -417,7 +417,7 @@ const ReceiverDetailsForm = () => {
                   }
                   countryCode={countryCode}
                   readOnly={!countryCode}
-                  inputClassName="form-input h-10 w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  inputClassName="form-input h-10 w-full rounded-md px-3 py-2 focus:outline-primary outline-1"
                 />
                 {fieldState.invalid && (
                   <FieldError

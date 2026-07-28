@@ -154,7 +154,7 @@ const DomesticPricingTab = () => {
                             autoComplete="new-state"
                             id={field.name}
                             aria-invalid={fieldState.invalid}
-                            className="form-input h-14! pl-8! [&>input]:placeholder:text-sm"
+                            className="form-input h-14! pl-8! ring-0! focus-within:border-primary!"
                             placeholder="Select State"
                           />
 
@@ -207,7 +207,7 @@ const DomesticPricingTab = () => {
                           }
                           countryCode={countryCode}
                           readOnly={!countryCode}
-                          inputClassName="form-input h-10 w-full border rounded-md pl-10.5! py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          inputClassName="form-input h-10 w-full rounded-md pl-10.5! py-2 focus:outline-primary outline-1"
                         />
                       </div>
                       {fieldState.invalid && (
@@ -249,7 +249,7 @@ const DomesticPricingTab = () => {
                             autoComplete="new-state"
                             id={field.name}
                             aria-invalid={fieldState.invalid}
-                            className="form-input h-14! pl-8! [&>input]:placeholder:text-sm"
+                            className="form-input h-14! pl-8! ring-0! focus-within:border-primary!"
                             placeholder="Select State"
                           />
 
@@ -304,7 +304,7 @@ const DomesticPricingTab = () => {
                           }
                           countryCode={countryCode}
                           readOnly={!countryCode}
-                          inputClassName="form-input h-10 w-full border rounded-md pl-10.5! py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          inputClassName="form-input h-10 w-full rounded-md pl-10.5! py-2 focus:outline-primary outline-1"
                         />
                       </div>
                       {fieldState.invalid && (
