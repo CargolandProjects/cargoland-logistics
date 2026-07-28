@@ -8,21 +8,23 @@ import { useQuery } from "@tanstack/react-query";
 export const usePricing = ({
   page = 1,
   limit = 10,
+  weight,
   fromCountry,
   fromState,
   fromCity,
-  shipmentType,
+  shipmentType = "INTERNATIONAL",
   toCountry,
   toState,
   toCity,
-  weight,
-}: GetAllPricingData = {}) => {
+  enabled,
+}: GetAllPricingData & { enabled: boolean }) => {
   return useQuery({
     queryKey: [
       "pricing",
       {
         page,
         limit,
+        weight,
         fromCountry,
         fromState,
         fromCity,
@@ -30,13 +32,13 @@ export const usePricing = ({
         toCountry,
         toState,
         toCity,
-        weight,
       },
     ],
     queryFn: () =>
       pricing.getAllPricing({
         page,
         limit,
+        weight,
         fromCountry,
         fromState,
         fromCity,
@@ -44,31 +46,44 @@ export const usePricing = ({
         toCountry,
         toState,
         toCity,
-        weight,
       }),
-    select: (res) => res.data,
+    placeholderData: (prev) => prev,
+    enabled: enabled,
   });
 };
 
 export const useLocalPricing = ({
   page = 1,
   limit = 10,
-  origin,
-  destination,
+  weight,
+  fromState,
+  toWhereState,
   shipmentType = "DOMESTIC",
+  enabled = false,
 }: {
   page?: number;
   limit?: number;
-  origin?: string;
-  destination?: string;
+  weight?: number;
+  fromState?: string;
+  toWhereState?: string;
   shipmentType?: ShipmentType;
-} = {}) => {
+  enabled: boolean;
+}) => {
   return useQuery({
     queryKey: [
       "localPricing",
-      { page, limit, origin, destination, shipmentType },
+      { page, limit, weight, fromState, toWhereState, shipmentType },
     ],
-    queryFn: () => pricing.getAllLocalPricing({}),
-    select: (res) => res.data,
+    queryFn: () =>
+      pricing.getAllLocalPricing({
+        page,
+        limit,
+        weight,
+        fromState,
+        toWhereState,
+        shipmentType,
+      }),
+    placeholderData: (prev) => prev,
+    enabled: enabled,
   });
 };

@@ -25,9 +25,16 @@ export interface Bracket {
   roadFreightRate: string;
 }
 
+export interface LocalBracket {
+  id: string;
+  minWeight: string;
+  maxWeight: string;
+  ratePerkg: string;
+}
+
 export interface LocalPricing {
   id: string;
-  shipmentType: string;
+  shipmentType: ShipmentType;
   fromState: string;
   fromCity: string;
   toWhereState: string;
@@ -35,12 +42,7 @@ export interface LocalPricing {
   adminId: string;
   createdAt: string;
   updatedAt: string;
-  brackets: {
-    id: string;
-    minWeight: string;
-    maxWeight: string;
-    ratePerkg: string;
-  }[];
+  brackets: LocalBracket[];
 }
 
 type PricingRes = APIResponse<Pricing[]> & {
@@ -63,6 +65,7 @@ type LocalPricingRes = APIResponse<LocalPricing[]> & {
 export interface GetAllPricingData {
   page?: number;
   limit?: number;
+  weight?: number;
   shipmentType?: ShipmentType;
   fromCountry?: string;
   fromState?: string;
@@ -70,17 +73,16 @@ export interface GetAllPricingData {
   toCountry?: string;
   toState?: string;
   toCity?: string;
-  weight?: string;
 }
 export interface GetLocalPricingData {
   page?: number;
   limit?: number;
+  weight?: number;
   shipmentType?: ShipmentType;
   fromState?: string;
   fromCity?: string;
   toWhereState?: string;
   toWhereCity?: string;
-  weight?: string;
 }
 
 export const pricing = {

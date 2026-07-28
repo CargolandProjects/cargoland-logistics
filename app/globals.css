@@ -244,6 +244,10 @@ body {
     @apply font-normal text-base text-neutral-600 leading-5
   }
 
+  .focus-border {
+    @apply focus-within:ring-primary! focus-within:ring-1! focus-within:border-none!
+  }
+
   .form-error {
     @apply font-roboto mt-0.5
   }

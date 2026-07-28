@@ -41,17 +41,6 @@ export const RoutePricing = ({
     return weight >= min && weight <= max;
   });
 
-  if (matchingBrackets.length === 0) {
-    return (
-      <div className="p-4 border rounded-lg bg-gray-50 text-center">
-        <p className="text-xl font-medium leading-7">
-          {fromWhere} → {toWhere}
-        </p>
-        <p className="mt-1 text-gray-500">No freight options for this weight</p>
-      </div>
-    );
-  }
-
   // Collect all freight prices from all matching brackets
   const freightPrices: { key: string; label: string; rate: number }[] = [];
 
