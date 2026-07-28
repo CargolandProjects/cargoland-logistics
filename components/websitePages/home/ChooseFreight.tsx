@@ -12,13 +12,13 @@ const freights = [
   {
     title: "Ocean Freight",
     desc: "Reliable ocean freight shipping with large capacity and affordability.",
-    action: "Ship via air",
+    action: "Ship via ocean",
     icon: Ship,
   },
   {
     title: "Road Freight",
     desc: "Reliable road freight with tracked vehicles and delivery.",
-    action: "Ship via air",
+    action: "Ship via road",
     icon: DeliveryTruck,
   },
 ];
