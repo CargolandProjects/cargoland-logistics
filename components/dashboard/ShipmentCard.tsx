@@ -28,6 +28,7 @@ const ShipmentCard = ({
       <div className="space-y-2">
         <div className="flex justify-between">
           <p className="text-xs leading-5">{shipment.trackingId}</p>
+        
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -37,7 +38,7 @@ const ShipmentCard = ({
                 <MoreVertical />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="center">
+            <DropdownMenuContent align="start">
               <DropdownMenuItem
                 onClick={(e) => handleView(e, shipment.id)}
                 className="cursor-pointer"
