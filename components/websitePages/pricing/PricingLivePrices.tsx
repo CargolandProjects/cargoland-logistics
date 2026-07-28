@@ -174,6 +174,16 @@ const PricingLivePrices = () => {
 
   // console.log("Filters", filters);
 
+  const isActiveLoading = tab === "INTERNATIONAL" ? isLoading : isLocalLoading;
+  const isActiveSuccess = tab === "INTERNATIONAL" ? isSuccess : isLocalSuccess;
+  const isActiveError = tab === "INTERNATIONAL" ? isError : isLocalError;
+
+  const pagination =
+    tab === "INTERNATIONAL" ? intlPrices?.meta : localPrices?.meta;
+
+  const totalPages = pagination?.totalPages || 1;
+  const page = pagination?.page || 1;
+
   const fromList =
     tab === "DOMESTIC"
       ? [{ value: "origin", label: "Origin" }, ...nigeriaStates]
@@ -191,16 +201,6 @@ const PricingLivePrices = () => {
 
   const flattenedPrices = flattenPricingData(filteredIntlPrices, weight);
   const flattenedLocalPrices = flattenPricingData(filteredLocalPrices, weight);
-
-  const isActiveLoading = tab === "INTERNATIONAL" ? isLoading : isLocalLoading;
-  const isActiveSuccess = tab === "INTERNATIONAL" ? isSuccess : isLocalSuccess;
-  const isActiveError = tab === "INTERNATIONAL" ? isError : isLocalError;
-
-  const pagination =
-    tab === "INTERNATIONAL" ? intlPrices?.meta : localPrices?.meta;
-
-  const totalPages = pagination?.totalPages || 1;
-  const page = pagination?.page || 1;
 
   const activePrices =
     tab === "INTERNATIONAL" ? flattenedPrices : flattenedLocalPrices;
@@ -221,7 +221,7 @@ const PricingLivePrices = () => {
   // console.log("Filtered Live Prices: ", flattenedPrices);
   return (
     <div className="padding-x py-20 bg-[#F5F7F8]">
-      <div className="flex max-md:flex-col justify-between">
+      <div className="flex max-md:flex-col justify-between gap-2">
         <div>
           <h2 className="sec-heading md:text-start!">Live Prices Today</h2>
           <p className="sec-paragraph md:max-w-none! md:text-start!">
