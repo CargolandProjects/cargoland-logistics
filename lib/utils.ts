@@ -74,8 +74,10 @@ export const statusStyles: Partial<
 };
 
 export function getAddressComponent(
-  components: google.maps.places.AddressComponent[],
+  components: google.maps.places.AddressComponent[] | undefined,
   type: string,
 ): string {
-  return components.find((c) => c.types.includes(type))?.longText || "";
+  if (!components) return "";
+  const comp = components.find((c) => c.types.includes(type));
+  return comp?.longText || comp?.shortText || "";
 }

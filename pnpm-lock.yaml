@@ -77,9 +77,6 @@ importers:
       react-dom:
         specifier: 19.2.4
         version: 19.2.4(react@19.2.4)
-      react-google-places-autocomplete-modern:
-        specifier: ^0.1.4
-        version: 0.1.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react-hook-form:
         specifier: ^7.74.0
         version: 7.76.1(react@19.2.4)
@@ -3493,12 +3490,6 @@ packages:
     resolution: {integrity: sha512-AXJdLo8kgMbimY95O2aKQqsz2iWi9jMgKJhRBAxECE4IFxfcazB2LmzloIoibJI3C12IlY20+KFaLv+71bUJeQ==}
     peerDependencies:
       react: ^19.2.4
-
-  react-google-places-autocomplete-modern@0.1.4:
-    resolution: {integrity: sha512-coL0dkflLLRcQnV47ECafNbADb9HPFdNr7+YkUKq08cbGO1CdHs3EoY52Xl8heiehYRlA0qCboqJMIZ20f3UJA==}
-    peerDependencies:
-      react: '>=17'
-      react-dom: '>=17'
 
   react-hook-form@7.76.1:
     resolution: {integrity: sha512-rYM7tPiWlu3nZchkR/ex7piyzui2vFPyaLnXnI/RnblB/L4qfMmyses8llJVtF1NpE9WBBsJlGtcSZzPCXW1qQ==}
@@ -7603,11 +7594,6 @@ snapshots:
     dependencies:
       react: 19.2.4
       scheduler: 0.27.0
-
-  react-google-places-autocomplete-modern@0.1.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
-    dependencies:
-      react: 19.2.4
-      react-dom: 19.2.4(react@19.2.4)
 
   react-hook-form@7.76.1(react@19.2.4):
     dependencies:
