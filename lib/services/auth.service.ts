@@ -23,7 +23,7 @@ export interface User {
   isActive: boolean;
   termsAndCondition: boolean;
   otpVerifiedAt: string | null;
-  role: "USER";
+  role: "B2B" | "USER";
   createdAt: string;
   updatedAt: string;
 }

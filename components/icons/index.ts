@@ -36,6 +36,9 @@ import Wallet from "./Wallet";
 import ArrowUpRight from "./ArrowUpRight";
 import ArrowDownLeft from "./ArrowDownLeft";
 import CurveArrowRight from "./CurveArrowRight";
+import Building from "./Building";
+import BuildingFill from "./BuildingFill";
+import User from "./User";
 
 export {
   Location,
@@ -76,4 +79,7 @@ export {
   ArrowUpRight,
   ArrowDownLeft,
   CurveArrowRight,
+  Building,
+  BuildingFill,
+  User,
 };

@@ -36,7 +36,7 @@ const loginSchema = z.object({
     .regex(/(?=.*\d)/, "Password must contain at least one number")
     .regex(
       /(?=.*[!@#$%^&*])/,
-      "Password must contain at least one special character"
+      "Password must contain at least one special character",
     ),
 });
 
@@ -44,7 +44,7 @@ export type LoginData = z.infer<typeof loginSchema>;
 
 export default function LogInPage() {
   const { mutate, isPending } = useLogIn();
-  const { setUser, setTokens, isAuthenticated } = useSession();
+  const { setUser, setTokens, isAuthenticated, session } = useSession();
   const router = useRouter();
   const [isVisible, setIsVisible] = useState({
     createPassword: false,
@@ -62,9 +62,10 @@ export default function LogInPage() {
   // route user to dashboard if authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      router.push("/dashboard");
+      if (session?.role === "USER") router.replace("/dashboard");
+      if (session?.role === "B2B") router.replace("/b2b/dashboard");
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, router, session]);
 
   const onSubmit = (data: LoginData) => {
     // console.log(data);
@@ -78,7 +79,8 @@ export default function LogInPage() {
         setTokens(tokens);
         setUser(user);
         toast.success(res.message || "Login successful!");
-        router.replace("/dashboard");
+        if (user.role === "USER") router.replace("/dashboard");
+        if (user.role === "B2B") router.replace("/b2b/dashboard");
       },
       onError: (res) => {
         toast.error(res.message || "Login failed!");
