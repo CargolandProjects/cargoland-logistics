@@ -12,6 +12,7 @@ import FileDownload from "./FileDownload";
 import Orders from "./Orders";
 import DeliveryTruckSpeed from "./DeliveryTruckSpeed";
 import DeliveryTruckBolt from "./DeliveryTruckBolt";
+import DeliveryTruckStripe from "./DeliveryTruckStripe";
 import PendingClipboard from "./PendingClipboard";
 import EyeOff from "./EyeOff";
 import ArrowLeft from "./ArrowLeft";
@@ -39,6 +40,12 @@ import CurveArrowRight from "./CurveArrowRight";
 import Building from "./Building";
 import BuildingFill from "./BuildingFill";
 import User from "./User";
+import BarChart from "./BarChart";
+import Home from "./Home";
+import Locations from "./Locations";
+import Wallet2 from "./Wallet2";
+import HelpCircle from "./HelpCircle";
+import Bell from "./Bell";
 
 export {
   Location,
@@ -55,6 +62,7 @@ export {
   Orders,
   DeliveryTruckSpeed,
   DeliveryTruckBolt,
+  DeliveryTruckStripe,
   PendingClipboard,
   EyeOff,
   ArrowLeft,
@@ -82,4 +90,10 @@ export {
   Building,
   BuildingFill,
   User,
+  BarChart,
+  Home,
+  Locations,
+  Wallet2,
+  HelpCircle,
+  Bell
 };

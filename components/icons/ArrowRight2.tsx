@@ -11,7 +11,7 @@ const ArrowRight2 = (props: React.SVGProps<SVGSVGElement>) => {
     >
       <path
         d="M6.00003 4C6.00003 4 10 6.94593 10 8C10 9.05413 6 12 6 12"
-        stroke="#5F6574"
+        stroke="currentColor"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
