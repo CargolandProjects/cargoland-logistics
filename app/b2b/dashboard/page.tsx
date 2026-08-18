@@ -97,7 +97,7 @@ export default function B2BDashboardPage() {
 
   const handleView = (e: MouseEvent, id: string) => {
     e.stopPropagation();
-    handleRoute(`/my-shipment/${id}`);
+    handleRoute(`/b2b/my-shipment/${id}`);
   };
   const handleTrack = (e: MouseEvent, trackingId: string) => {
     e.stopPropagation();

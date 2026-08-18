@@ -78,7 +78,7 @@ const ShipmentPageContent = ({ id }: { id: string }) => {
       <LoadingOverlay loading={isLoading} />
 
       {isSuccess && (
-        <div className="mt-15 md:mt-16.5 padding-x rounded-lg">
+        <div className="rounded-lg">
           <Button
             onClick={() => router.back()}
             variant="ghost"

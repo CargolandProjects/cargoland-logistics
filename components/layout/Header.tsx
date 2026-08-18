@@ -236,7 +236,7 @@ const Header = () => {
 
               <SheetContent
                 side="left"
-                className="p-5 max-w-[277px] flex flex-col justify-between"
+                className="p-5 max-w-[277px]! flex flex-col justify-between"
               >
                 <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
 

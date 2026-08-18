@@ -1,6 +1,6 @@
 import ShipmentPageContent from "@/components/shipments/ShipmentPageContent";
 
-export default async function ShipmentPage({
+export default async function B2BShipmentPage({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -9,9 +9,5 @@ export default async function ShipmentPage({
 
   // console.log("Shipment ID: ", id);
 
-  return (
-    <div className="mt-15 md:mt-16.5 padding-x ">
-      <ShipmentPageContent id={id} />
-    </div>
-  );
+  return <ShipmentPageContent id={id} />;
 }

@@ -8,11 +8,11 @@ import { redirect } from "next/navigation";
 export default function MainLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const { session} = useSession();
+  const { session, isAuthenticated } = useSession();
 
   if (status === "loading") return null;
 
-  if (session?.role !== "USER") {
+  if (isAuthenticated && session?.role !== "USER") {
     redirect("/");
   }
 
