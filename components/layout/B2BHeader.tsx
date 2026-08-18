@@ -1,8 +1,6 @@
 "use client";
 
-import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 import { useSession } from "@/lib/hooks/useSession";
-import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
   DropdownMenu,
@@ -11,35 +9,17 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import Link from "next/link";
-import { CircleQuestionMark, Search, UserCircleIcon } from "lucide-react";
-import { ArrowDown, Bell, HelpCircle } from "../icons";
+import { Menu, Search, UserCircleIcon } from "lucide-react";
+import { Bell, HelpCircle } from "../icons";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import SignOutModal from "../SignOutModal";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
-// const b2bLinks = [
-//   {
-//     title: "Book Shipment",
-//     href: "/shipment",
-//   },
-//   {
-//     title: "Track",
-//     href: "/track-shipment",
-//   },
-//   {
-//     title: "Get Quote",
-//     href: "/estimate",
-//   },
-// ];
-
-const B2BHeader = () => {
+const B2BHeader = ({ setOpenMenu }: { setOpenMenu: (v: boolean) => void }) => {
   const { isAuthenticated, session, signOut } = useSession();
   const [open, setOpen] = useState(false);
-  const [openMenu, setOpenMenu] = useState(false);
-  const isMobile = useMediaQuery("(max-width: 768px)");
-  const router = useRouter();
-  const pathName = usePathname();
+
   const businessName = "Apex Logistics LLC";
 
   const initials =
@@ -56,8 +36,12 @@ const B2BHeader = () => {
   return (
     <header className="px-4 md:px-10 py-4 bg-white">
       <div className="container flex gap-2 items-center justify-between">
+        <button onClick={() => setOpenMenu(true)} className="lg:hidden">
+          <Menu />
+        </button>
+
         {/* Search bar */}
-        <div className="relative flex-1 max-w-[316px]">
+        <div className="max-lg:hidden relative flex-1 max-w-79">
           <Search className="absolute size-5 left-3 top-1/2 -translate-y-1/2 text-gray-700" />
           <Input
             placeholder="Search here"
@@ -84,7 +68,7 @@ const B2BHeader = () => {
           </ul>
         </nav> */}
 
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3 md:gap-6">
           <div className="px-4 py-2 flex items-center gap-1.5 bg-primary-light rounded-md text-primary">
             <HelpCircle className="size-4" />
             <p className="font-medium">24/7 Priority Support</p>
@@ -99,7 +83,8 @@ const B2BHeader = () => {
             <Bell className="size-5" />
           </Button>
 
-          <div className=" w-px h-6 bg-gray-200" />
+          {/* Vertical bar */}
+          <div className="max-md:hidden w-px h-6 bg-gray-200" />
 
           {/*  Desktop dropdown menu */}
           <DropdownMenu>
@@ -115,7 +100,8 @@ const B2BHeader = () => {
                       {initials}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex items-center ">
+
+                  <div className="max-md:hidden flex items-center ">
                     <div>
                       <p className="font-medium">
                         {session?.firstName} {session?.lastName}

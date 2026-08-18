@@ -117,7 +117,8 @@ export default function DashboardPage() {
         </p>
       </section>
 
-      <section className="mt-5 md:mt-6 grid sm:grid-cols-2 md:grid-cols-4 gap-6 ">
+      {/* Dashboard Stats */}
+      <section className="mt-5 md:mt-6 grid grid-cols-2 md:grid-cols-4 gap-6 ">
         {dashboardStats.map((shipment, idx) => (
           <DashboardStat
             key={idx}
@@ -131,7 +132,9 @@ export default function DashboardPage() {
 
       <section ref={shipmentsRef} className="mt-10 md:mt-8">
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-semibold leading-7">Recent Shipments</h2>
+          <h2 className="text-base md:text-xl font-semibold leading-7">
+            Recent Shipments
+          </h2>
           <Button
             onClick={() => router.push("/my-shipment")}
             variant="outline"
@@ -159,7 +162,7 @@ export default function DashboardPage() {
           <div className="mt-3 min-h-[437px] flex flex-col rounded-lg bg-white">
             <div className="flex-1 flex flex-col items-center justify-center">
               {/* Image */}
-              <div className="size-40 relative">
+              <div className="size-25 md:size-40 relative">
                 <Image
                   src={boxChecked}
                   alt="box package checked icon"
@@ -168,12 +171,12 @@ export default function DashboardPage() {
                 />
               </div>
 
-              <div className="mt-4 space-y-2 max-w-[370px] ">
-                <h3 className="text-xl font-normal leading-6 font-roboto text-center">
+              <div className="mt-4 max-w-[370px] ">
+                <h3 className="text-base md:text-xl font-semibold md:font-normal leading-6 font-roboto text-center">
                   No Recent Orders
                 </h3>
 
-                <p className="text-base font-light leading-6 text-center text-neutral-700">
+                <p className="mt-1 md:mt-2 text-sm md:text-base font-light md:leading-6 text-center text-neutral-700">
                   Manage your shipments easily with fast tracking and reliable
                   delivery.
                 </p>

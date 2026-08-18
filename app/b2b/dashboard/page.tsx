@@ -3,7 +3,6 @@
 import { boxChecked, verifiedUser } from "@/assets/images";
 import DashboardStat from "@/components/dashboard/DashboardStat";
 import {
-  ArrowRight2,
   DeliveryTruckBolt,
   DeliveryTruckSpeed,
   Orders,
@@ -111,12 +110,12 @@ export default function B2BDashboardPage() {
 
   return (
     <div>
-      <section className="flex max-md:flex-col gap-2 justify-between md:items-end">
+      <section className="flex max-md:flex-col md:gap-2 justify-between md:items-end">
         <div>
-          <h1 className="text-xl leading-7 mb-2  font-bold">
+          <h1 className="text-lg md:text-xl leading-7 font-bold">
             Welcome, {fullName}
           </h1>
-          <p className="text-base font-light leading-6">
+          <p className="mt-1.5 md:mt-2 text-sm md:text-base font-light md:leading-6">
             Manage your shipments easily with fast tracking and reliable
             delivery.
           </p>
@@ -124,31 +123,34 @@ export default function B2BDashboardPage() {
 
         <Button
           onClick={() => router.push("/shipment")}
-          className="max-md:mt-5 w-fit text-base h-13.75 px-10.5 font-medium font-roboto py-4"
+          className="max-md:mt-5 md:w-fit text-base h-10 md:h-13.75 px-10.5 font-medium font-roboto py-4"
         >
-          Book a Shipment
+          Book Shipment
         </Button>
       </section>
 
       <Link
         href="/b2b/settings?tab=verification"
-        className="relative mt-6 pr-3 md:pr-5.5 flex items-center justify-between rounded-[16px] bg-[#FFFBF0] overflow-hidden border border-[#FFB703]"
+        className="relative mt-5 md:mt-7 pr-3 md:pr-5.5 flex items-center justify-between rounded-[16px] bg-[#FFFBF0] overflow-hidden border border-[#FFB703]"
       >
-        <div className="absolute top-1.75 -left-6 size-[87.79px] rotate-[21.86deg]">
+        <div className="absolute top-1.75 -left-6 size-[72px] md:size-[87.79px] rotate-[21.86deg]">
           <Image
             src={verifiedUser}
             alt="verified user image"
             className="size-full object-cover"
           />
         </div>
-        <p className="py-6 pl-17.5 text-base font-montserrat font-medium">
-          Verify your business identity to unlock all platform features and
-          services.
-        </p>
+        <div className="py-5.5 md:py-6 pl-12.5 md:pl-17.5 ">
+          <h3 className="text-xs md:text-base font-semibold font-montserrat ">Identity Verification Required</h3>
+          <p className="mt-0.5 text-[10px] md:text-sm font-roboto font-light">
+            Verify your business identity to unlock all services.
+          </p>
+        </div>
         <ChevronRight className="size-6 text-[#BF8902]" />
       </Link>
 
-      <section className="mt-5 md:mt-6 grid sm:grid-cols-2 md:grid-cols-4 gap-6 ">
+      {/* Dashboard Stats */}
+      <section className="mt-5 md:mt-7 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
         {dashboardStats.map((shipment, idx) => (
           <DashboardStat
             key={idx}
@@ -160,9 +162,11 @@ export default function B2BDashboardPage() {
         ))}
       </section>
 
-      <section ref={shipmentsRef} className="mt-10 md:mt-8">
+      <section ref={shipmentsRef} className="mt-5 md:mt-8">
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-semibold leading-7">Recent Shipments</h2>
+          <h2 className="text-base md:text-xl font-semibold leading-7">
+            Recent Shipments
+          </h2>
           <Button
             onClick={() => router.push("/my-shipment")}
             variant="outline"
@@ -190,7 +194,7 @@ export default function B2BDashboardPage() {
           <div className="mt-3 min-h-[437px] flex flex-col rounded-lg bg-white">
             <div className="flex-1 flex flex-col items-center justify-center">
               {/* Image */}
-              <div className="size-40 relative">
+              <div className="size-25 md:size-40 relative">
                 <Image
                   src={boxChecked}
                   alt="box package checked icon"
@@ -199,12 +203,12 @@ export default function B2BDashboardPage() {
                 />
               </div>
 
-              <div className="mt-4 space-y-2 max-w-[370px] ">
-                <h3 className="text-xl font-normal leading-6 font-roboto text-center">
+              <div className="mt-4 max-w-[370px] ">
+                <h3 className="text-base md:text-xl font-semibold md:font-normal leading-6 font-roboto text-center">
                   No Recent Orders
                 </h3>
 
-                <p className="text-base font-light leading-6 text-center text-neutral-700">
+                <p className="mt-1 md:mt-2 text-sm md:text-base font-light md:leading-6 text-center text-neutral-700">
                   Manage your shipments easily with fast tracking and reliable
                   delivery.
                 </p>
