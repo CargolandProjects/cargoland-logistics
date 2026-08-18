@@ -30,7 +30,7 @@ const b2bLinks = [
       },
       {
         title: "Wallet",
-        href: "/estimate",
+        href: "/b2b/wallet",
         icon: Wallet2,
       },
       {
@@ -70,11 +70,11 @@ const B2BSidebar = ({
 
   return (
     <>
-      <aside className="w-68 max-lg:hidden bg-secondary fixed h-screen">
+      <aside className="w-68 max-lg:hidden bg-secondary fixed h-screen z-10">
         {/* Logo */}
         <Link
           href="/"
-          className="relative mt-7 ml-6 w-28 md:w-[151px] h-10 md:h-12 shrink-0 inline-flex"
+          className="relative mt-7 ml-6 w-28 md:w-[151px] h-10 md:h-12 shrink-0 flex"
         >
           <Image
             src={cargolandLogo.src}
@@ -99,12 +99,12 @@ const B2BSidebar = ({
                     const isActive = link.href === pathName;
 
                     return (
-                      <li
-                        key={idx}
-                        className={`px-4 py-3 flex gap-3 rounded-md  ${isActive ? "bg-[#17204F]" : ""}`}
-                      >
-                        <link.icon className="size-5 text-white" />
-                        <Link href={link.href} className="text-white">
+                      <li key={idx}>
+                        <Link
+                          href={link.href}
+                          className={` ${isActive ? "bg-[#17204F]" : ""} px-4 py-3 flex gap-3 text-white rounded-md`}
+                        >
+                          <link.icon className="size-5 text-white" />
                           {link.title}
                         </Link>
                       </li>
@@ -122,7 +122,7 @@ const B2BSidebar = ({
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetContent
             side="left"
-            className="w-68 bg-secondary max-w-[277px]!"
+            className="w-68 bg-secondary max-w-[277px]! gap-0"
           >
             <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
 
@@ -154,12 +154,12 @@ const B2BSidebar = ({
                         const isActive = link.href === pathName;
 
                         return (
-                          <li
-                            key={idx}
-                            className={`px-4 py-3 flex gap-3 rounded-md  ${isActive ? "bg-[#17204F]" : ""}`}
-                          >
-                            <link.icon className="size-5 text-white" />
-                            <Link href={link.href} className="text-white">
+                          <li key={idx} onClick={() => setOpen(false)}>
+                            <Link
+                              href={link.href}
+                              className={` ${isActive ? "bg-[#17204F]" : ""} px-4 py-3 flex gap-3 text-white rounded-md`}
+                            >
+                              <link.icon className="size-5 text-white" />
                               {link.title}
                             </Link>
                           </li>
