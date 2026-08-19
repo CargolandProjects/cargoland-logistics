@@ -35,7 +35,7 @@ const b2bLinks = [
       },
       {
         title: "Track Shipment",
-        href: "/track-shipment",
+        href: "/b2b/track-shipment",
         icon: Locations,
       },
       {

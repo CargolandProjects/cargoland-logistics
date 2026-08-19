@@ -133,7 +133,7 @@ const B2BHeader = ({ setOpenMenu }: { setOpenMenu: (v: boolean) => void }) => {
             </DropdownMenuTrigger>
 
             {isAuthenticated && (
-              <DropdownMenuContent className="max-md:hidden space-y-2 p-2">
+              <DropdownMenuContent sideOffset={8} className=" space-y-2 p-2">
                 <DropdownMenuItem
                   asChild
                   className="p-0 font-medium leading-5.5 hover:p-2 hover:bg-primary/8! duration-200 cursor-pointer"

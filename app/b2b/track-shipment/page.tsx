@@ -1,5 +1,5 @@
 import TrackShipmentPageContent from "@/components/sharedPages/TrackShipmentPageContent";
 
-export default function TrackShipmentPage() {
+export default function B2BTrackShipmentPage() {
   return <TrackShipmentPageContent />;
 }
