@@ -28,7 +28,7 @@ const mainAuthLinks = [
   },
   {
     title: "Shipment",
-    href: "/shipment",
+    href: "/book-shipment",
   },
   {
     title: "Track",
@@ -59,7 +59,7 @@ const b2bAuthLinks = [
   },
   {
     title: "Shipment",
-    href: "/b2b/shipment",
+    href: "/b2b/book-shipment",
   },
   {
     title: "Track",

@@ -39,7 +39,11 @@ const statuses: ShipmentStatus[] = [
 
 export type Mode = "USER" | "B2B";
 
-export default function MyShipmentPageContent({ mode = "USER" }: { mode?: Mode }) {
+export default function MyShipmentPageContent({
+  mode = "USER",
+}: {
+  mode?: Mode;
+}) {
   const [currentPage, setCurrentPage] = useState(1);
   const shipmentsRef = useRef<HTMLElement>(null);
   const { data, isLoading: isLoadingStats } = useDashboardStats();
@@ -177,6 +181,13 @@ export default function MyShipmentPageContent({ mode = "USER" }: { mode?: Mode }
     handleRoute(`/track-shipment/?trackingId=${trackingId}`);
   };
 
+  const shipmentRoute = () => {
+    if (mode === "USER") return "/book-shipment";
+    if (mode === "B2B") return "/b2b/book-shipment";
+
+    return "";
+  };
+
   if (isChecking) {
     return null;
   }
@@ -192,7 +203,7 @@ export default function MyShipmentPageContent({ mode = "USER" }: { mode?: Mode }
           </p>
         </div>
         <Button
-          onClick={() => router.push("/shipment")}
+          onClick={() => router.push(shipmentRoute())}
           className="max-md:mt-5 w-fit text-base h-13.75 px-10.5 font-medium font-roboto py-4"
         >
           Book a Shipment

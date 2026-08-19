@@ -10,7 +10,7 @@ import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect } from "react";
 import { ShipmentType } from "@/lib/services/pricing.service";
 
-const CreateShipmentPageContent = () => {
+const BookShipmentContent = () => {
   const shipmentStep = useShipmentStore((s) => s.step);
   const setShipmentType = useShipmentStore((s) => s.setShipmentType);
   const { isAuthenticated } = useSession();
@@ -38,11 +38,7 @@ const CreateShipmentPageContent = () => {
   };
 
   return (
-    <div
-      className={`padding-x text-brand-black pb-6 ${
-        isAuthenticated ? "mt-7.5" : "mt-15 md:mt-10"
-      } `}
-    >
+    <div className="text-brand-black">
       <div className="max-w-[888.5px] mx-auto">
         {!isAuthenticated && shipmentStep !== "shipmentForm" && <AuthPrompt />}
         <div className="mt-5">{shipmentStage()}</div>
@@ -51,10 +47,10 @@ const CreateShipmentPageContent = () => {
   );
 };
 
-export default function CreateShipmentPage() {
+export default function BookShipmentPageContent() {
   return (
     <Suspense>
-      <CreateShipmentPageContent />
+      <BookShipmentContent />
     </Suspense>
   );
 }
