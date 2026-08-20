@@ -166,17 +166,17 @@ export default function SignupPage() {
           <h1 className="text-xl font-semibold leading-6 text-center">
             Ready to ship? Let&apos;s begin.🌍
           </h1>
-          <div className="p-10 max-w-[468px] mx-auto rounded-lg bg-white flex flex-col">
+          <div className="mt-6 p-4 sm:p-10 max-w-[468px] mx-auto rounded-lg bg-white flex flex-col">
             <h2 className="text-base font-medium text-center">
               Which of these best describes you?
             </h2>
 
             {/* Select rolses buttons */}
-            <div className="mt-6 flex gap-4">
+            <div className="mt-6 flex max-sm:flex-col gap-3">
               <Button
                 onClick={() => setRole("B2B")}
                 variant="ghost"
-                className={`${role === "B2B" ? " text-primary bg-primary-light border-primary/30 hover:text-primary hover:bg-primary-light" : ""} p-4! h-auto flex-col gap-6 items-start`}
+                className={`${role === "B2B" ? " text-primary bg-primary-light border-primary/30 hover:text-primary hover:bg-primary-light" : ""} p-4! h-auto flex-col gap-4 sm:gap-6 items-start border-gray-200/80`}
               >
                 {role === "B2B" ? (
                   <BuildingFill className="size-6" />
@@ -187,10 +187,11 @@ export default function SignupPage() {
                   Logistics business (B2B)
                 </span>
               </Button>
+
               <Button
                 onClick={() => setRole("USER")}
                 variant="ghost"
-                className={`${role === "USER" ? " text-primary bg-primary-light border-primary/30 hover:text-primary hover:bg-primary-light [&>svg]:fill-primary" : ""} p-4! h-auto flex-col gap-6 items-start`}
+                className={`${role === "USER" ? " text-primary bg-primary-light border-primary/30 hover:text-primary hover:bg-primary-light [&>svg]:fill-primary" : ""} p-4! h-auto flex-col gap-4 sm:gap-6 items-start border-gray-200/80`}
               >
                 <User className="size-6" />
 
@@ -200,7 +201,7 @@ export default function SignupPage() {
 
             {/* Roles descriptions */}
             {role === "B2B" && (
-              <div className="mt-5 p-4 border border-slate-300 rounded-lg">
+              <div className="mt-6 sm:mt-5 p-4 border border-slate-300 rounded-lg">
                 <h4 className="text-xs font-medium leading-5">
                   Save up to 50% on shipping with a Cargoland Express Business
                   Account. Sign up today!
@@ -227,7 +228,7 @@ export default function SignupPage() {
               </div>
             )}
             {role === "USER" && (
-              <div className="mt-5 p-4 border border-slate-300 rounded-lg">
+              <div className="mt-6 sm:mt-5 p-4 border border-slate-300 rounded-lg">
                 <h4 className="text-xs font-medium leading-5">
                   Individual / Personal
                 </h4>
@@ -262,7 +263,7 @@ export default function SignupPage() {
       {step === "SIGNUP" && (
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="p-6 bg-white rounded-lg max-w-[747px] mx-auto"
+          className="p-4 md:p-6 bg-white rounded-lg max-w-[747px] mx-auto"
         >
           <FieldSet className="gap-0">
             <div className="flex flex-col items-center">
@@ -279,7 +280,7 @@ export default function SignupPage() {
             </div>
 
             <FieldGroup className="mt-8 gap-6">
-              <div className="grid grid-cols-2 gap-4.5">
+              <div className="grid grid-cols-2 gap-3 md:gap-4.5">
                 <Controller
                   name="firstName"
                   control={control}
@@ -357,14 +358,14 @@ export default function SignupPage() {
                 )}
               />
 
-              <div className="flex gap-4.5">
+              <div className="flex gap-3 md:gap-4.5">
                 <Controller
                   name="country"
                   control={control}
                   render={({ field, fieldState }) => (
                     <Field
                       data-invalid={fieldState.invalid}
-                      className="min-w-20 md:min-w-[108px] flex-1"
+                      className="min-w-20 md:min-w-[108px] flex-1 gap-1"
                     >
                       <FieldLabel className="form-label">Country</FieldLabel>
                       <CountryDropdown
