@@ -1,6 +1,6 @@
 "use client";
 
-import { EyeOff } from "@/components/icons";
+import { Building, BuildingFill, EyeOff, User } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Country, CountryDropdown } from "@/components/ui/country-dropdown";
 import {
@@ -19,6 +19,7 @@ import { useSignUp } from "@/lib/hooks/mutation/useAuth";
 import { useSession } from "@/lib/hooks/useSession";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, Eye } from "lucide-react";
+import { RocknRoll_One } from "next/font/google";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -90,6 +91,8 @@ export type SignUpData = z.infer<typeof signUpSchema>;
 
 export default function SignupPage() {
   const { mutate: signUp, isPending } = useSignUp();
+  const [step, setStep] = useState<"ROLE" | "SIGNUP">("ROLE");
+  const [role, setRole] = useState<"USER" | "B2B" | null>(null);
   const router = useRouter();
   const { isAuthenticated } = useSession();
 
@@ -132,7 +135,7 @@ export default function SignupPage() {
   const onSubmit = (data: SignUpData) => {
     if (!selectedCountry?.name) return;
 
-    const payload = { ...data, country: selectedCountry.name };
+    const payload = { ...data, role: "B2B", country: selectedCountry.name };
 
     signUp(payload, {
       onSuccess: (res) => {
@@ -147,391 +150,506 @@ export default function SignupPage() {
     });
   };
 
+  const handleNext = () => {
+    if (!role) {
+      toast.error("Please select a role");
+      return;
+    }
+
+    setStep("SIGNUP");
+  };
+
   return (
     <div className="margin-y padding-x">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="p-6 bg-white rounded-lg max-w-[747px] mx-auto "
-      >
-        <FieldSet className="gap-0">
-          <div className="flex flex-col items-center">
-            <FieldTitle className="font-heading text-2xl font-bold leading-8 text-center">
-              Create Your CargoLand Account
-            </FieldTitle>
-            <FieldLegend className="mt-2 font-roboto text-brand-gray text-base font-normal leading-6 text-center">
-              Sign up to start shipping smarter and track every delivery with
-              ease.
-            </FieldLegend>
-          </div>
+      {step === "ROLE" && (
+        <div className="">
+          <h1 className="text-xl font-semibold leading-6 text-center">
+            Ready to ship? Let&apos;s begin.🌍
+          </h1>
+          <div className="p-10 max-w-[468px] mx-auto rounded-lg bg-white flex flex-col">
+            <h2 className="text-base font-medium text-center">
+              Which of these best describes you?
+            </h2>
 
-          <FieldGroup className="mt-8 gap-6">
-            <div className="grid grid-cols-2 gap-4.5">
-              <Controller
-                name="firstName"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid} className="gap-1">
-                    <FieldLabel htmlFor={field.name} className="form-label">
-                      First Name
-                    </FieldLabel>
-                    <Input
-                      {...field}
-                      id={field.name}
-                      aria-invalid={fieldState.invalid}
-                      placeholder="First Name"
-                      className="form-input"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError
-                        errors={[fieldState.error]}
-                        className="form-error"
-                      />
-                    )}
-                  </Field>
-                )}
-              />
-
-              <Controller
-                name="lastName"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid} className="gap-1">
-                    <FieldLabel htmlFor={field.name} className="form-label">
-                      Last Name
-                    </FieldLabel>
-                    <Input
-                      {...field}
-                      id={field.name}
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Last Name"
-                      className="form-input"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError
-                        errors={[fieldState.error]}
-                        className="form-error"
-                      />
-                    )}
-                  </Field>
-                )}
-              />
-            </div>
-
-            <Controller
-              name="email"
-              control={control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name} className="form-label">
-                    Email Address
-                  </FieldLabel>
-                  <Input
-                    {...field}
-                    id={field.name}
-                    type="email"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="Email Address"
-                    className="form-input"
-                  />
-                  {fieldState.invalid && (
-                    <FieldError
-                      errors={[fieldState.error]}
-                      className="form-error"
-                    />
-                  )}
-                </Field>
-              )}
-            />
-
-            <div className="flex gap-4.5">
-              <Controller
-                name="country"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <Field
-                    data-invalid={fieldState.invalid}
-                    className="min-w-20 md:min-w-[108px] flex-1"
-                  >
-                    <FieldLabel className="form-label">Country</FieldLabel>
-                    <CountryDropdown
-                      defaultValue={field.value}
-                      onChange={(country) => {
-                        field.onChange(country.alpha2);
-                        setSelectedCountry(country);
-                        setValue("phoneNumber", country.countryCallingCodes[0]);
-                      }}
-                      className="form-input gap-3"
-                      slim
-                    />
-                    {fieldState.invalid && (
-                      <FieldError
-                        errors={[fieldState.error]}
-                        className="form-error"
-                      />
-                    )}
-                  </Field>
-                )}
-              />
-
-              <Controller
-                name="phoneNumber"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid} className="gap-1">
-                    <FieldLabel htmlFor={field.name} className="form-label">
-                      Phone Number
-                    </FieldLabel>
-                    <PhoneInput
-                      {...field}
-                      value={field.value}
-                      onChange={field.onChange}
-                      defaultCountry={selectedCountry?.alpha2}
-                      onCountryChange={(country) => {
-                        if (!country) return;
-                        setSelectedCountry(country as Country);
-                        setValue("country", country?.alpha2);
-                      }}
-                      inline
-                      aria-invalid={fieldState.invalid}
-                      className="form-input border"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError
-                        errors={[fieldState.error]}
-                        className="form-error"
-                      />
-                    )}
-                  </Field>
-                )}
-              />
-            </div>
-
-            <Controller
-              name="password"
-              control={control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name} className="form-label">
-                    Create Password
-                  </FieldLabel>
-                  <div className="relative">
-                    <Input
-                      {...field}
-                      id={field.name}
-                      type={isVisible.createPassword ? "text" : "password"}
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Create Password"
-                      className="form-input"
-                    />
-                    <button
-                      onClick={() =>
-                        setIsVisible((prev) => ({
-                          ...prev,
-                          createPassword: !prev.createPassword,
-                        }))
-                      }
-                      type="button"
-                      className="absolute right-4 top-1/2 -translate-y-1/2"
-                    >
-                      {isVisible.createPassword ? (
-                        <Eye className="size-6 text-slate-600/85" />
-                      ) : (
-                        <EyeOff className="size-6 text-slate-600/85" />
-                      )}
-                    </button>
-                  </div>
-                  {fieldState.invalid && (
-                    <FieldError
-                      errors={[fieldState.error]}
-                      className="form-error"
-                    />
-                  )}
-                </Field>
-              )}
-            />
-
-            <Controller
-              name="confirmPassword"
-              control={control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name} className="form-label">
-                    Confirm Password
-                  </FieldLabel>
-                  <div className="relative">
-                    <Input
-                      {...field}
-                      id={field.name}
-                      type={isVisible.confirmPassword ? "text" : "password"}
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Confirm Password"
-                      className="form-input"
-                    />
-                    <button
-                      onClick={() =>
-                        setIsVisible((prev) => ({
-                          ...prev,
-                          confirmPassword: !prev.confirmPassword,
-                        }))
-                      }
-                      type="button"
-                      className="absolute right-4 top-1/2 -translate-y-1/2"
-                    >
-                      {isVisible.confirmPassword ? (
-                        <Eye className="size-6 text-slate-600/85" />
-                      ) : (
-                        <EyeOff className="size-6 text-slate-600/85" />
-                      )}
-                    </button>
-                  </div>
-                  {fieldState.invalid && (
-                    <FieldError
-                      errors={[fieldState.error]}
-                      className="form-error"
-                    />
-                  )}
-                </Field>
-              )}
-            />
-          </FieldGroup>
-        </FieldSet>
-
-        <div className="mt-6">
-          <h3 className="font-roboto text-sm font-normal leading-5.25 uppercase text-slate-700 ">
-            Requirements:
-          </h3>
-
-          <div className="flex flex-wrap gap-y-3 gap-x-4 max-w-[348px]">
-            <div className="flex gap-2.5 items-center min-w-[148px]">
-              <Check
-                className={`${
-                  passwordReq.characterCount
-                    ? "text-cargo-success"
-                    : "text-brand-gray"
-                } size-4.5 `}
-              />
-              <p
-                className={`${
-                  passwordReq.characterCount
-                    ? "text-brand-black"
-                    : "text-brand-gray"
-                }`}
+            {/* Select rolses buttons */}
+            <div className="mt-6 flex gap-4">
+              <Button
+                onClick={() => setRole("B2B")}
+                variant="ghost"
+                className={`${role === "B2B" ? " text-primary bg-primary-light border-primary/30 hover:text-primary hover:bg-primary-light" : ""} p-4! h-auto flex-col gap-6 items-start`}
               >
-                8 Characters (20 max)
-              </p>
+                {role === "B2B" ? (
+                  <BuildingFill className="size-6" />
+                ) : (
+                  <Building className="size-6" />
+                )}
+                <span className="font-montserrat">
+                  Logistics business (B2B)
+                </span>
+              </Button>
+              <Button
+                onClick={() => setRole("USER")}
+                variant="ghost"
+                className={`${role === "USER" ? " text-primary bg-primary-light border-primary/30 hover:text-primary hover:bg-primary-light [&>svg]:fill-primary" : ""} p-4! h-auto flex-col gap-6 items-start`}
+              >
+                <User className="size-6" />
+
+                <span className="font-montserrat">Individual / Personal</span>
+              </Button>
             </div>
 
-            <div className="flex gap-2.5 items-center min-w-[148px]">
-              <Check
-                className={`${
-                  passwordReq.letterAndNumber
-                    ? "text-cargo-success"
-                    : "text-brand-gray"
-                } size-4.5 `}
-              />
-              <p
-                className={`${
-                  passwordReq.letterAndNumber
-                    ? "text-brand-black"
-                    : "text-brand-gray"
-                }`}
-              >
-                1 letter and 1 number
-              </p>
-            </div>
+            {/* Roles descriptions */}
+            {role === "B2B" && (
+              <div className="mt-5 p-4 border border-slate-300 rounded-lg">
+                <h4 className="text-xs font-medium leading-5">
+                  Save up to 50% on shipping with a Cargoland Express Business
+                  Account. Sign up today!
+                </h4>
 
-            <div className="flex gap-2.5 items-center min-w-[148px]">
-              <Check
-                className={`${
-                  passwordReq.specialCharacter
-                    ? "text-cargo-success"
-                    : "text-brand-gray"
-                } size-4.5 `}
-              />
-              <p
-                className={`${
-                  passwordReq.specialCharacter
-                    ? "text-brand-black"
-                    : "text-brand-gray"
-                }`}
-              >
-                1 special character (e.g #,*,%)
-              </p>
-            </div>
+                <ul className="mt-2.5 space-y-3">
+                  <li className="flex gap-2 items-center text-[10px] font-light leading-3.5">
+                    <div className="size-1 rounded-full bg-primary" />
+                    Preferential Business Shipping Rates{" "}
+                  </li>
+                  <li className="flex gap-2 items-center text-[10px] font-light leading-3.5">
+                    <div className="size-1 rounded-full bg-primary" />
+                    Flexible Delivery Options{" "}
+                  </li>
+                  <li className="flex gap-2 items-center text-[10px] font-light leading-3.5">
+                    <div className="size-1 rounded-full bg-primary" />
+                    Easy International Shipping{" "}
+                  </li>
+                  <li className="flex gap-2 items-center text-[10px] font-light leading-3.5">
+                    <div className="size-1 rounded-full bg-primary" />
+                    Trusted Advisor{" "}
+                  </li>
+                </ul>
+              </div>
+            )}
+            {role === "USER" && (
+              <div className="mt-5 p-4 border border-slate-300 rounded-lg">
+                <h4 className="text-xs font-medium leading-5">
+                  Individual / Personal
+                </h4>
+
+                <ul className="mt-2.5 space-y-3">
+                  <li className="flex gap-2 items-center text-[10px] font-light leading-3.5">
+                    <div className="size-1 rounded-full bg-primary" />
+                    Sending items to friends and family.
+                  </li>
+                  <li className="flex gap-2 items-center text-[10px] font-light leading-3.5">
+                    <div className="size-1 rounded-full bg-primary" />
+                    Receiving items from international brands.{" "}
+                  </li>
+                  <li className="flex gap-2 items-center text-[10px] font-light leading-3.5">
+                    <div className="size-1 rounded-full bg-primary" />
+                    Accessing packaging items for deliveries.{" "}
+                  </li>
+                </ul>
+              </div>
+            )}
+
+            <Button
+              onClick={handleNext}
+              className="mt-10 submit-button max-w-[248px] mx-auto"
+            >
+              Next Step
+            </Button>
           </div>
         </div>
+      )}
 
-        <Controller
-          name="termsAndCondition"
-          control={control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <div className="flex items-center gap-4 mt-6">
-                <FieldLabel
-                  htmlFor={field.name}
-                  className="flex items-center gap-2 cursor-pointer"
-                >
-                  <Input
-                    id={field.name}
-                    type="checkbox"
-                    checked={field.value}
-                    onChange={(e) => field.onChange(e.target.checked)}
-                    aria-invalid={fieldState.invalid}
-                    className="peer hidden"
-                  />
-
-                  <div className="size-4.5 border-2 shrink-0 border-slate-600/90 rounded-[2px] peer-checked:bg-primary peer-checked:border-primary peer-checked:[&>svg]:block flex items-center justify-center">
-                    <svg
-                      className="hidden text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="3"
-                    >
-                      <path d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                </FieldLabel>
-                <FieldDescription className="text-slate-600/85 block">
-                  By signing up, you agree to our
-                  <Link
-                    href="/terms-conditions"
-                    className="text-primary underline-offset-[1.5px]! "
-                  >
-                    {" "}
-                    Terms of Service{" "}
-                  </Link>{" "}
-                  and
-                  <Link
-                    href="/privacy-policy"
-                    className="text-primary underline-offset-[1.5px]!"
-                  >
-                    {" "}
-                    Privacy Policy,{" "}
-                  </Link>
-                  and consent to receive important shipping updates from
-                  Cargoland Africa.
-                </FieldDescription>
-              </div>
-              {fieldState.invalid && (
-                <FieldError
-                  errors={[fieldState.error]}
-                  className="form-error"
-                />
-              )}
-            </Field>
-          )}
-        />
-
-        <Button
-          disabled={isPending}
-          type="submit"
-          className="mt-6 submit-button"
+      {step === "SIGNUP" && (
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="p-6 bg-white rounded-lg max-w-[747px] mx-auto"
         >
-          Sign Up
-        </Button>
-      </form>
+          <FieldSet className="gap-0">
+            <div className="flex flex-col items-center">
+              <FieldTitle className="font-heading text-2xl font-bold leading-8 text-center">
+                {role === "USER"
+                  ? " Create Your CargoLand Account"
+                  : "Get Started for Business"}
+              </FieldTitle>
+              <FieldLegend className="mt-2 font-roboto text-brand-gray text-base font-normal leading-6 text-center">
+                {role === "USER"
+                  ? "Sign up to start shipping smarter and track every delivery with ease."
+                  : "Simplify your business shipping with one powerful platform."}
+              </FieldLegend>
+            </div>
+
+            <FieldGroup className="mt-8 gap-6">
+              <div className="grid grid-cols-2 gap-4.5">
+                <Controller
+                  name="firstName"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid} className="gap-1">
+                      <FieldLabel htmlFor={field.name} className="form-label">
+                        First Name
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id={field.name}
+                        aria-invalid={fieldState.invalid}
+                        placeholder="First Name"
+                        className="form-input"
+                      />
+                      {fieldState.invalid && (
+                        <FieldError
+                          errors={[fieldState.error]}
+                          className="form-error"
+                        />
+                      )}
+                    </Field>
+                  )}
+                />
+
+                <Controller
+                  name="lastName"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid} className="gap-1">
+                      <FieldLabel htmlFor={field.name} className="form-label">
+                        Last Name
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id={field.name}
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Last Name"
+                        className="form-input"
+                      />
+                      {fieldState.invalid && (
+                        <FieldError
+                          errors={[fieldState.error]}
+                          className="form-error"
+                        />
+                      )}
+                    </Field>
+                  )}
+                />
+              </div>
+
+              <Controller
+                name="email"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor={field.name} className="form-label">
+                      Email Address
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id={field.name}
+                      type="email"
+                      aria-invalid={fieldState.invalid}
+                      placeholder="Email Address"
+                      className="form-input"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="form-error"
+                      />
+                    )}
+                  </Field>
+                )}
+              />
+
+              <div className="flex gap-4.5">
+                <Controller
+                  name="country"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Field
+                      data-invalid={fieldState.invalid}
+                      className="min-w-20 md:min-w-[108px] flex-1"
+                    >
+                      <FieldLabel className="form-label">Country</FieldLabel>
+                      <CountryDropdown
+                        defaultValue={field.value}
+                        onChange={(country) => {
+                          field.onChange(country.alpha2);
+                          setSelectedCountry(country);
+                          setValue(
+                            "phoneNumber",
+                            country.countryCallingCodes[0],
+                          );
+                        }}
+                        className="form-input gap-3"
+                        slim
+                      />
+                      {fieldState.invalid && (
+                        <FieldError
+                          errors={[fieldState.error]}
+                          className="form-error"
+                        />
+                      )}
+                    </Field>
+                  )}
+                />
+
+                <Controller
+                  name="phoneNumber"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid} className="gap-1">
+                      <FieldLabel htmlFor={field.name} className="form-label">
+                        Phone Number
+                      </FieldLabel>
+                      <PhoneInput
+                        {...field}
+                        value={field.value}
+                        onChange={field.onChange}
+                        defaultCountry={selectedCountry?.alpha2}
+                        onCountryChange={(country) => {
+                          if (!country) return;
+                          setSelectedCountry(country as Country);
+                          setValue("country", country?.alpha2);
+                        }}
+                        inline
+                        aria-invalid={fieldState.invalid}
+                        className="form-input border"
+                      />
+                      {fieldState.invalid && (
+                        <FieldError
+                          errors={[fieldState.error]}
+                          className="form-error"
+                        />
+                      )}
+                    </Field>
+                  )}
+                />
+              </div>
+
+              <Controller
+                name="password"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor={field.name} className="form-label">
+                      Create Password
+                    </FieldLabel>
+                    <div className="relative">
+                      <Input
+                        {...field}
+                        id={field.name}
+                        type={isVisible.createPassword ? "text" : "password"}
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Create Password"
+                        className="form-input"
+                      />
+                      <button
+                        onClick={() =>
+                          setIsVisible((prev) => ({
+                            ...prev,
+                            createPassword: !prev.createPassword,
+                          }))
+                        }
+                        type="button"
+                        className="absolute right-4 top-1/2 -translate-y-1/2"
+                      >
+                        {isVisible.createPassword ? (
+                          <Eye className="size-6 text-slate-600/85" />
+                        ) : (
+                          <EyeOff className="size-6 text-slate-600/85" />
+                        )}
+                      </button>
+                    </div>
+                    {fieldState.invalid && (
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="form-error"
+                      />
+                    )}
+                  </Field>
+                )}
+              />
+
+              <Controller
+                name="confirmPassword"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor={field.name} className="form-label">
+                      Confirm Password
+                    </FieldLabel>
+                    <div className="relative">
+                      <Input
+                        {...field}
+                        id={field.name}
+                        type={isVisible.confirmPassword ? "text" : "password"}
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Confirm Password"
+                        className="form-input"
+                      />
+                      <button
+                        onClick={() =>
+                          setIsVisible((prev) => ({
+                            ...prev,
+                            confirmPassword: !prev.confirmPassword,
+                          }))
+                        }
+                        type="button"
+                        className="absolute right-4 top-1/2 -translate-y-1/2"
+                      >
+                        {isVisible.confirmPassword ? (
+                          <Eye className="size-6 text-slate-600/85" />
+                        ) : (
+                          <EyeOff className="size-6 text-slate-600/85" />
+                        )}
+                      </button>
+                    </div>
+                    {fieldState.invalid && (
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="form-error"
+                      />
+                    )}
+                  </Field>
+                )}
+              />
+            </FieldGroup>
+          </FieldSet>
+
+          <div className="mt-6">
+            <h3 className="font-roboto text-sm font-normal leading-5.25 uppercase text-slate-700 ">
+              Requirements:
+            </h3>
+
+            <div className="flex flex-wrap gap-y-3 gap-x-4 max-w-[348px]">
+              <div className="flex gap-2.5 items-center min-w-[148px]">
+                <Check
+                  className={`${
+                    passwordReq.characterCount
+                      ? "text-cargo-success"
+                      : "text-brand-gray"
+                  } size-4.5 `}
+                />
+                <p
+                  className={`${
+                    passwordReq.characterCount
+                      ? "text-brand-black"
+                      : "text-brand-gray"
+                  }`}
+                >
+                  8 Characters (20 max)
+                </p>
+              </div>
+
+              <div className="flex gap-2.5 items-center min-w-[148px]">
+                <Check
+                  className={`${
+                    passwordReq.letterAndNumber
+                      ? "text-cargo-success"
+                      : "text-brand-gray"
+                  } size-4.5 `}
+                />
+                <p
+                  className={`${
+                    passwordReq.letterAndNumber
+                      ? "text-brand-black"
+                      : "text-brand-gray"
+                  }`}
+                >
+                  1 letter and 1 number
+                </p>
+              </div>
+
+              <div className="flex gap-2.5 items-center min-w-[148px]">
+                <Check
+                  className={`${
+                    passwordReq.specialCharacter
+                      ? "text-cargo-success"
+                      : "text-brand-gray"
+                  } size-4.5 `}
+                />
+                <p
+                  className={`${
+                    passwordReq.specialCharacter
+                      ? "text-brand-black"
+                      : "text-brand-gray"
+                  }`}
+                >
+                  1 special character (e.g #,*,%)
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <Controller
+            name="termsAndCondition"
+            control={control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <div className="flex items-center gap-4 mt-6">
+                  <FieldLabel
+                    htmlFor={field.name}
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
+                    <Input
+                      id={field.name}
+                      type="checkbox"
+                      checked={field.value}
+                      onChange={(e) => field.onChange(e.target.checked)}
+                      aria-invalid={fieldState.invalid}
+                      className="peer hidden"
+                    />
+
+                    <div className="size-4.5 border-2 shrink-0 border-slate-600/90 rounded-[2px] peer-checked:bg-primary peer-checked:border-primary peer-checked:[&>svg]:block flex items-center justify-center">
+                      <svg
+                        className="hidden text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                      >
+                        <path d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                  </FieldLabel>
+                  <FieldDescription className="text-slate-600/85 block">
+                    By signing up, you agree to our
+                    <Link
+                      href="/terms-conditions"
+                      className="text-primary underline-offset-[1.5px]! "
+                    >
+                      {" "}
+                      Terms of Service{" "}
+                    </Link>{" "}
+                    and
+                    <Link
+                      href="/privacy-policy"
+                      className="text-primary underline-offset-[1.5px]!"
+                    >
+                      {" "}
+                      Privacy Policy,{" "}
+                    </Link>
+                    and consent to receive important shipping updates from
+                    Cargoland Africa.
+                  </FieldDescription>
+                </div>
+                {fieldState.invalid && (
+                  <FieldError
+                    errors={[fieldState.error]}
+                    className="form-error"
+                  />
+                )}
+              </Field>
+            )}
+          />
+
+          <Button
+            disabled={isPending}
+            type="submit"
+            className="mt-6 submit-button"
+          >
+            Sign Up
+          </Button>
+        </form>
+      )}
     </div>
   );
 }

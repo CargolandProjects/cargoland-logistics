@@ -6,11 +6,21 @@ import { ArrowRight } from "../../icons";
 import Image from "next/image";
 import { heroImg } from "@/assets/images";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+// import { auth } from "@/lib/services/auth.service";
 
 const Hero = () => {
   const [trakingId, setTrackingId] = useState("");
   const router = useRouter();
+  // const hasTracked = useRef(false);
+
+  // useEffect(() => {
+  //   // Guard to prevent double-firing in React Strict Mode (development only)
+  //   if (hasTracked.current) return;
+
+  //   hasTracked.current = true;
+  //   auth.markVisitor().catch(() => {});
+  // }, []);
 
   const handleTrack = () => {
     if (!trakingId) return;

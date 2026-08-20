@@ -21,14 +21,14 @@ import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
 import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 import SignOutModal from "../SignOutModal";
 
-const authenticatedLinks = [
+const mainAuthLinks = [
   {
     title: "Dashboard",
     href: "/dashboard",
   },
   {
     title: "Shipment",
-    href: "/shipment",
+    href: "/book-shipment",
   },
   {
     title: "Track",
@@ -52,10 +52,41 @@ const authenticatedLinks = [
   },
 ];
 
+const b2bAuthLinks = [
+  {
+    title: "Dashboard",
+    href: "/b2b/dashboard",
+  },
+  {
+    title: "Shipment",
+    href: "/b2b/book-shipment",
+  },
+  {
+    title: "Track",
+    href: "/track-shipment",
+  },
+  {
+    title: "My Shipments",
+    href: "/b2b/my-shipment",
+  },
+  {
+    title: "Get Quote",
+    href: "/estimate",
+  },
+  {
+    title: "Wallet",
+    href: "/b2b/wallet",
+  },
+  {
+    title: "Profile",
+    href: "/profile",
+  },
+];
+
 const homeLinks = [
   {
     title: "Shipment",
-    href: "/shipment",
+    href: "/book-shipment",
   },
   {
     title: "Tracking",
@@ -76,7 +107,7 @@ const homeLinks = [
 ];
 
 const Header = () => {
-  const { isAuthenticated, signOut } = useSession();
+  const { isAuthenticated, signOut, session } = useSession();
   const [open, setOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -87,7 +118,8 @@ const Header = () => {
     signOut();
     setOpen(false);
   };
-
+  const authenticatedLinks =
+    session?.role === "USER" ? mainAuthLinks : b2bAuthLinks;
   const displayLinks = isAuthenticated ? authenticatedLinks : homeLinks; // check if user is a
   const desktopLinks = displayLinks.filter(
     (link) => link.title !== "Profile" && link.title !== "Wallet",
@@ -96,6 +128,7 @@ const Header = () => {
   return (
     <header className="py-2 md:py-4 padding-x bg-white">
       <div className="container flex gap-2 items-center justify-between">
+        {/* Logo */}
         <Link
           href="/"
           className="relative w-28 md:w-[151px] h-10 md:h-12 shrink-0"
@@ -203,7 +236,7 @@ const Header = () => {
 
               <SheetContent
                 side="left"
-                className="p-5 max-w-[277px] flex flex-col justify-between"
+                className="p-5 max-w-[277px]! flex flex-col justify-between"
               >
                 <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
 

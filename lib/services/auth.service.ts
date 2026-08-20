@@ -23,7 +23,7 @@ export interface User {
   isActive: boolean;
   termsAndCondition: boolean;
   otpVerifiedAt: string | null;
-  role: "USER";
+  role: "B2B" | "USER";
   createdAt: string;
   updatedAt: string;
 }
@@ -86,7 +86,7 @@ export const auth = {
   async updateProfile(data: ProfileUpdateData) {
     const res = await apiClient.post<UpdateProfileRes>(
       API_ROUTES.auth.updateProfile,
-      data
+      data,
     );
     return res.data;
   },
@@ -94,7 +94,7 @@ export const auth = {
   async requestPasswordReset(email: { email: string }) {
     const res = await apiClient.post(
       API_ROUTES.auth.requestPasswordReset,
-      email
+      email,
     );
     return res.data;
   },
@@ -106,6 +106,11 @@ export const auth = {
 
   async changePassword(data: ChangePasswordData) {
     const res = await apiClient.post(API_ROUTES.auth.changePassword, data);
+    return res.data;
+  },
+
+  async markVisitor() {
+    const res = await apiClient.get(API_ROUTES.auth.visitor);
     return res.data;
   },
 };

@@ -3,9 +3,7 @@ import { Geist, Geist_Mono, Montserrat, Roboto } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import Providers from "./Providers";
-import ContactHeader from "@/components/layout/ContactHeader";
 import JsonLd from "@/components/JsonLd";
-import Header from "@/components/layout/Header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -147,8 +145,6 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <JsonLd />
         <Providers>
-          <ContactHeader />
-          <Header />
           <main className="flex-1 flex flex-col">{children}</main>
         </Providers>
       </body>

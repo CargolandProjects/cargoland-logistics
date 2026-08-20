@@ -9,5 +9,9 @@ export default async function ShipmentPage({
 
   // console.log("Shipment ID: ", id);
 
-  return <ShipmentPageContent id={id} />;
+  return (
+    <div className="mt-15 md:mt-16.5 padding-x ">
+      <ShipmentPageContent id={id} />
+    </div>
+  );
 }

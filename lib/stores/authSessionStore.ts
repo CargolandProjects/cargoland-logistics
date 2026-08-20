@@ -95,16 +95,7 @@ export const useAuthSessionStore = create<AuthSessionState>((set, get) => ({
 
     // Clear user-specific query cache
     if (queryClient) {
-      queryClient.removeQueries({ queryKey: ["cart"] });
-      queryClient.removeQueries({ queryKey: ["orders"] });
-      queryClient.removeQueries({ queryKey: ["orderDetails"] });
-      queryClient.removeQueries({ queryKey: ["trackOrder"] });
-      queryClient.removeQueries({ queryKey: ["favourites"] });
-      queryClient.removeQueries({ queryKey: ["addresses"] });
-      queryClient.removeQueries({ queryKey: ["walletBalance"] });
-      queryClient.removeQueries({ queryKey: ["transactionRecords"] });
-      queryClient.removeQueries({ queryKey: ["checkoutPreview"] });
-      queryClient.removeQueries({ queryKey: ["reviews"] });
+      queryClient.clear();
     }
 
     set({ user: null, status: "unauthenticated" });

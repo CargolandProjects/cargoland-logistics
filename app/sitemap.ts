@@ -3,7 +3,7 @@ import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   // Base URL
-  const baseUrl = "https://cargoland.africa";
+  const baseUrl = "https://www.cargoland.africa";
 
   return [
     // --- HIGH PRIORITY (Main entry points) ---

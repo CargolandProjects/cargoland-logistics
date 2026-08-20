@@ -88,8 +88,9 @@ const UpdateProfile = ({ setShowMobile }: ProfileUpdateFormProps) => {
     );
     if (!defaultCountry) return;
 
-    const setCountry = () => setSelectedCountry(defaultCountry);
-    setCountry();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSelectedCountry(defaultCountry);
+
     setValue("country", defaultCountry?.alpha2 || "");
   }, [isAuthenticated, session, setValue, setValues]);
 

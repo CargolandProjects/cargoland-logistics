@@ -10,6 +10,7 @@ export const API_ROUTES = {
     getUserById: (id: string) => `/users/${id}`,
     updateProfile: "/users/update-profile",
     changePassword: "/users/change-password",
+    visitor: "/users/visitor",
   },
 
   shipment: {
