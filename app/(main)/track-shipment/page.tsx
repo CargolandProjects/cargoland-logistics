@@ -1,5 +1,9 @@
 import TrackShipmentPageContent from "@/components/sharedPages/TrackShipmentPageContent";
 
 export default function TrackShipmentPage() {
-  return <TrackShipmentPageContent />;
+  return (
+    <div className="sec-mt padding-x">
+      <TrackShipmentPageContent />
+    </div>
+  );
 }

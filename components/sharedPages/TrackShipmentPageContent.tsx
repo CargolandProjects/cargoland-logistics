@@ -161,7 +161,7 @@ const TrackShipmentContent = () => {
   };
 
   return (
-    <div className="sec-mt padding-x">
+    <div>
       {step === "details" && (
         <Button
           onClick={() => setStep("track")}

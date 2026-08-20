@@ -122,7 +122,7 @@ export default function B2BDashboardPage() {
         </div>
 
         <Button
-          onClick={() => router.push("/shipment")}
+          onClick={() => router.push("/b2b/book-shipment")}
           className="max-md:mt-5 md:w-fit text-base h-10 md:h-13.75 px-10.5 font-medium font-roboto py-4"
         >
           Book Shipment

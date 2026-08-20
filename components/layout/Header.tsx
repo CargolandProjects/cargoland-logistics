@@ -86,7 +86,7 @@ const b2bAuthLinks = [
 const homeLinks = [
   {
     title: "Shipment",
-    href: "/shipment",
+    href: "/book-shipment",
   },
   {
     title: "Tracking",
