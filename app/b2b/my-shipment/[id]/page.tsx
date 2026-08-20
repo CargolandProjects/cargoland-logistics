@@ -9,5 +9,5 @@ export default async function B2BShipmentPage({
 
   // console.log("Shipment ID: ", id);
 
-  return <ShipmentPageContent id={id} />;
+  return <ShipmentPageContent id={id} mode="B2B" />;
 }

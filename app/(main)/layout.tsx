@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 export default function MainLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const { session, isAuthenticated } = useSession();
+  const { session, isAuthenticated, status } = useSession();
 
   if (status === "loading") return null;
 

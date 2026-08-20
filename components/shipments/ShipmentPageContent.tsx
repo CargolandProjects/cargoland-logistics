@@ -15,8 +15,15 @@ import { toast } from "sonner";
 import { PaymentMethod } from "./shipmentForm/ShipmentForm";
 import PaymentModal from "./shipmentForm/PaymentModal";
 import { useQueryClient } from "@tanstack/react-query";
+import { Mode } from "../sharedPages/MyShipmentPageContent";
 
-const ShipmentPageContent = ({ id }: { id: string }) => {
+const ShipmentPageContent = ({
+  id,
+  mode = "USER",
+}: {
+  id: string;
+  mode?: Mode;
+}) => {
   const { data: shipmentData, isLoading, isError, isSuccess } = useShipment(id);
   const { mutate: makePayment, isPending: isPaying } = useMakePayment();
   const { mutate: chargeWallet, isPending: isCharging } = useChargeWallet();
@@ -34,7 +41,12 @@ const ShipmentPageContent = ({ id }: { id: string }) => {
 
   const handleClck = () => {
     if (isPaid) {
-      router.push(`/track-shipment?trackingId=${shipmentData?.trackingId}`);
+      if (mode === "USER")
+        router.push(`/track-shipment?trackingId=${shipmentData?.trackingId}`);
+      if (mode === "B2B")
+        router.push(
+          `/b2b/track-shipment?trackingId=${shipmentData?.trackingId}`,
+        );
     } else {
       setOpen(true);
     }
