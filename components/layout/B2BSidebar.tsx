@@ -51,7 +51,7 @@ const b2bLinks = [
     links: [
       {
         title: "Settings",
-        href: "#",
+        href: "/b2b/settings",
         icon: Settings,
       },
     ],
