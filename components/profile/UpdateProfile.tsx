@@ -346,7 +346,7 @@ const UpdateProfile = ({
                           type="email"
                           disabled
                           aria-invalid={fieldState.invalid}
-                          placeholder="Last Name"
+                          placeholder="Email Address"
                           className="form-input"
                         />
                         {fieldState.invalid && (

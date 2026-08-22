@@ -14,6 +14,12 @@ export const API_ROUTES = {
     visitor: "/users/visitor",
   },
 
+  team: {
+    inviteMember: "/users/invite-team-member",
+    getTeamMembers: "/users/get-all-company-invited-team-member",
+    teamMemberLogin: "/users/team-member-login",
+  },
+
   shipment: {
     trackShipment: "/shipments/shipment-tracking-id",
     createShipment: "/shipments/create-shipment",
