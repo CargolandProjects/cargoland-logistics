@@ -23,6 +23,7 @@ import { countries } from "country-data-list";
 import { Mode } from "../sharedPages/MyShipmentPageContent";
 import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Camera, Check, Loader2 } from "lucide-react";
+import { useUploadImage } from "@/lib/hooks/mutation/useImage";
 
 interface ProfileUpdateFormProps {
   setShowMobile?: (open: boolean) => void;
@@ -50,7 +51,16 @@ const profileSchema = z
         "last name can only contain letters, spaces, hyphens, and apostrophes",
       )
       .or(z.literal("")),
-    businessName: z
+    email: z
+      .email("Enter a valid email address")
+      .max(100, "email must be less than 100 characters long")
+      .or(z.literal("")),
+    userProfileUrl: z.string().optional(),
+    userProfilePubId: z.string().optional(),
+
+    phoneNumber: phoneSchema,
+    country: z.string("must provid a valid country").or(z.literal("")),
+    companyName: z
       .string()
       .min(3, "First name must be at least 3 characters long")
       .max(100, "First name must be less than 100 characters long")
@@ -68,13 +78,6 @@ const profileSchema = z
         "last name can only contain letters, spaces, hyphens, and apostrophes",
       )
       .or(z.literal("")),
-    email: z
-      .email("Enter a valid email address")
-      .max(100, "email must be less than 100 characters long")
-      .or(z.literal("")),
-
-    country: z.string("must provid a valid country").or(z.literal("")),
-    phoneNumber: phoneSchema,
   })
   .partial();
 
@@ -84,13 +87,15 @@ const UpdateProfile = ({
   setShowMobile,
   mode = "USER",
 }: ProfileUpdateFormProps) => {
-  const { mutate, isPending } = useUpdateProfile();
+  const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile();
+  const { mutate: uploadImage, isPending: isUploadingAvatar } =
+    useUploadImage();
+
   const { session, isAuthenticated } = useSession();
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
+
   // ---------- Avatar upload state ----------
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
   const { control, handleSubmit, setValue, setValues } =
     useForm<ProfileUpdateData>({
@@ -102,6 +107,10 @@ const UpdateProfile = ({
         email: "",
         country: "",
         phoneNumber: "",
+        businessAddress: "",
+        companyName: "",
+        userProfilePubId: "",
+        userProfileUrl: "",
       },
     });
 
@@ -145,7 +154,7 @@ const UpdateProfile = ({
     if (!selectedCountry) return;
 
     const payload = { ...data, country: selectedCountry?.name };
-    mutate(payload, {
+    updateProfile(payload, {
       onSuccess: (res) => {
         toast.success(res.message);
       },
@@ -182,19 +191,38 @@ const UpdateProfile = ({
     };
     reader.readAsDataURL(file);
 
-    setAvatarFile(file);
-    setIsUploadingAvatar(true);
+    if (!session?.email) return;
 
     // Trigger upload
-    // uploadAvatar(file);
+    uploadImage(
+      { file: file, userEmail: session.email },
+      {
+        onSuccess: (res) => {
+          updateProfile(
+            {
+              userProfileUrl: res.url,
+              userProfilePubId: res.publicId,
+            },
+            {
+              onSuccess: () => {
+                toast.success("Profile image updated");
+              },
+              onSettled: () => {
+                setAvatarPreview(null);
+              },
+            },
+          );
+        },
+      },
+    );
 
     // Reset input to allow re-uploading the same file
     event.target.value = "";
   };
 
   const initials = `${session?.firstName.charAt(0)} ${session?.lastName.charAt(0)}`;
-
-  const avatarSrc = avatarPreview || "session.";
+  const avatarSrc = avatarPreview || session?.userProfileUrl || undefined;
+  const isUploading = isUploadingAvatar || isUpdating;
 
   return (
     <div
@@ -234,12 +262,12 @@ const UpdateProfile = ({
                 />
                 <AvatarFallback>{initials}</AvatarFallback>
                 {/* Loading overlay (grayed out) */}
-                {isUploadingAvatar && (
+                {isUploading && (
                   <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-full" />
                 )}
 
                 <AvatarBadge className="size-8! flex items-center justify-center bg-[#1671D9]">
-                  {isUploadingAvatar ? (
+                  {isUploading ? (
                     <Loader2 className="size-5! animate-spin text-white" />
                   ) : (
                     <Check className="size-5.5!" />
@@ -250,7 +278,7 @@ const UpdateProfile = ({
               {/* Updaate Profile image section */}
               <label
                 htmlFor="avatar-upload"
-                className={`px-3 py-2 border-[1.5px] rounded-md border-primary ${isUploadingAvatar ? "grayscale-45 cursor-default" : "cursor-pointer"} `}
+                className={`px-3 py-2 border-[1.5px] rounded-md border-primary ${isUploading ? "grayscale-45 cursor-default" : "cursor-pointer"} `}
               >
                 <input
                   id="avatar-upload"
@@ -258,7 +286,7 @@ const UpdateProfile = ({
                   accept="image/jpeg,image/jpg,image/png,image/webp"
                   onChange={handleImageUpload}
                   className="hidden"
-                  disabled={isUploadingAvatar}
+                  disabled={isUploading}
                 />
 
                 <div className="text-primary flex gap-2 items-center">
@@ -274,7 +302,7 @@ const UpdateProfile = ({
               {mode === "B2B" && (
                 <>
                   <Controller
-                    name="businessName"
+                    name="companyName"
                     control={control}
                     render={({ field, fieldState }) => (
                       <Field
@@ -515,7 +543,7 @@ const UpdateProfile = ({
         </FieldSet>
 
         <Button
-          disabled={isPending}
+          disabled={isUpdating}
           type="submit"
           className={`${mode === "B2B" ? "max-w-[248px] mt-10" : "mt-12 sm:mt-6"} submit-button`}
         >

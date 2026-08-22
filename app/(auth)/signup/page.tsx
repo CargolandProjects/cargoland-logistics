@@ -19,7 +19,6 @@ import { useSignUp } from "@/lib/hooks/mutation/useAuth";
 import { useSession } from "@/lib/hooks/useSession";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, Eye } from "lucide-react";
-import { RocknRoll_One } from "next/font/google";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -29,6 +28,7 @@ import z from "zod";
 
 const signUpSchema = z
   .object({
+    role: z.enum(["USER", "B2B"]),
     firstName: z
       .string()
       .min(3, "First name must be at least 3 characters long")
@@ -36,7 +36,8 @@ const signUpSchema = z
       .regex(
         /^[a-zA-Z\s'-]+$/,
         "First name can only contain letters, spaces, hyphens, and apostrophes",
-      ),
+      )
+      .or(z.literal("")),
     lastName: z
       .string()
       .min(3, "Last name must be at least 3 characters long")
@@ -44,7 +45,17 @@ const signUpSchema = z
       .regex(
         /^[a-zA-Z\s'-]+$/,
         "last name can only contain letters, spaces, hyphens, and apostrophes",
-      ),
+      )
+      .or(z.literal("")),
+    companyName: z
+      .string()
+      .min(3, "Business name must be at least 3 characters long")
+      .max(100, "Business name must be less than 100 characters long")
+      .regex(
+        /^[a-zA-Z\s'-]+$/,
+        "Business name can only contain letters, spaces, hyphens, and apostrophes",
+      )
+      .or(z.literal("")),
     email: z
       .email("Enter a valid email address")
       .max(100, "email must be less than 100 characters long"),
@@ -85,6 +96,32 @@ const signUpSchema = z
   .refine((data) => data.password === data.confirmPassword, {
     error: "Passwords do not match",
     path: ["confirmPassword"],
+  }) // Role-based requirements – new
+  .superRefine((data, ctx) => {
+    if (data.role === "USER") {
+      if (!data.firstName?.trim()) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "First name is required",
+          path: ["firstName"],
+        });
+      }
+      if (!data.lastName?.trim()) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Last name is required",
+          path: ["lastName"],
+        });
+      }
+    } else if (data.role === "B2B") {
+      if (!data.companyName?.trim()) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Company name is required",
+          path: ["companyName"],
+        });
+      }
+    }
   });
 
 export type SignUpData = z.infer<typeof signUpSchema>;
@@ -108,6 +145,8 @@ export default function SignupPage() {
     defaultValues: {
       firstName: "",
       lastName: "",
+      companyName: "",
+      country: "",
       email: "",
       phoneNumber: "",
       password: "",
@@ -134,8 +173,9 @@ export default function SignupPage() {
 
   const onSubmit = (data: SignUpData) => {
     if (!selectedCountry?.name) return;
+    // console.log("Form data submitted:", data);
 
-    const payload = { ...data, role: "B2B", country: selectedCountry.name };
+    const payload = { ...data, role: data.role, country: selectedCountry.name };
 
     signUp(payload, {
       onSuccess: (res) => {
@@ -174,7 +214,10 @@ export default function SignupPage() {
             {/* Select rolses buttons */}
             <div className="mt-6 flex max-sm:flex-col gap-3">
               <Button
-                onClick={() => setRole("B2B")}
+                onClick={() => {
+                  setRole("B2B");
+                  setValue("role", "B2B");
+                }}
                 variant="ghost"
                 className={`${role === "B2B" ? " text-primary bg-primary-light border-primary/30 hover:text-primary hover:bg-primary-light" : ""} p-4! h-auto flex-col gap-4 sm:gap-6 items-start border-gray-200/80`}
               >
@@ -189,7 +232,10 @@ export default function SignupPage() {
               </Button>
 
               <Button
-                onClick={() => setRole("USER")}
+                onClick={() => {
+                  setRole("USER");
+                  setValue("role", "USER");
+                }}
                 variant="ghost"
                 className={`${role === "USER" ? " text-primary bg-primary-light border-primary/30 hover:text-primary hover:bg-primary-light [&>svg]:fill-primary" : ""} p-4! h-auto flex-col gap-4 sm:gap-6 items-start border-gray-200/80`}
               >
@@ -227,6 +273,7 @@ export default function SignupPage() {
                 </ul>
               </div>
             )}
+
             {role === "USER" && (
               <div className="mt-6 sm:mt-5 p-4 border border-slate-300 rounded-lg">
                 <h4 className="text-xs font-medium leading-5">
@@ -268,9 +315,8 @@ export default function SignupPage() {
           <FieldSet className="gap-0">
             <div className="flex flex-col items-center">
               <FieldTitle className="font-heading text-2xl font-bold leading-8 text-center">
-                {role === "USER"
-                  ? " Create Your CargoLand Account"
-                  : "Get Started for Business"}
+                {role === "USER" && " Create Your CargoLand Account"}
+                {role === "B2B" && "Get Started for Business"}
               </FieldTitle>
               <FieldLegend className="mt-2 font-roboto text-brand-gray text-base font-normal leading-6 text-center">
                 {role === "USER"
@@ -280,57 +326,125 @@ export default function SignupPage() {
             </div>
 
             <FieldGroup className="mt-8 gap-6">
-              <div className="grid grid-cols-2 gap-3 md:gap-4.5">
-                <Controller
-                  name="firstName"
-                  control={control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid} className="gap-1">
-                      <FieldLabel htmlFor={field.name} className="form-label">
-                        First Name
-                      </FieldLabel>
-                      <Input
-                        {...field}
-                        id={field.name}
-                        aria-invalid={fieldState.invalid}
-                        placeholder="First Name"
-                        className="form-input"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError
-                          errors={[fieldState.error]}
-                          className="form-error"
+              {role === "USER" && (
+                <div className="grid grid-cols-2 gap-3 md:gap-4.5">
+                  <Controller
+                    name="firstName"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <Field
+                        data-invalid={fieldState.invalid}
+                        className="gap-1"
+                      >
+                        <FieldLabel htmlFor={field.name} className="form-label">
+                          First Name
+                        </FieldLabel>
+                        <Input
+                          {...field}
+                          id={field.name}
+                          aria-invalid={fieldState.invalid}
+                          placeholder="First Name"
+                          className="form-input"
                         />
-                      )}
-                    </Field>
-                  )}
-                />
+                        {fieldState.invalid && (
+                          <FieldError
+                            errors={[fieldState.error]}
+                            className="form-error"
+                          />
+                        )}
+                      </Field>
+                    )}
+                  />
 
-                <Controller
-                  name="lastName"
-                  control={control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid} className="gap-1">
-                      <FieldLabel htmlFor={field.name} className="form-label">
-                        Last Name
-                      </FieldLabel>
-                      <Input
-                        {...field}
-                        id={field.name}
-                        aria-invalid={fieldState.invalid}
-                        placeholder="Last Name"
-                        className="form-input"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError
-                          errors={[fieldState.error]}
-                          className="form-error"
+                  <Controller
+                    name="lastName"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <Field
+                        data-invalid={fieldState.invalid}
+                        className="gap-1"
+                      >
+                        <FieldLabel htmlFor={field.name} className="form-label">
+                          Last Name
+                        </FieldLabel>
+                        <Input
+                          {...field}
+                          id={field.name}
+                          aria-invalid={fieldState.invalid}
+                          placeholder="Last Name"
+                          className="form-input"
                         />
-                      )}
-                    </Field>
-                  )}
-                />
-              </div>
+                        {fieldState.invalid && (
+                          <FieldError
+                            errors={[fieldState.error]}
+                            className="form-error"
+                          />
+                        )}
+                      </Field>
+                    )}
+                  />
+                </div>
+              )}
+
+              {role === "B2B" && (
+                <>
+                  <Controller
+                    name="firstName"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <Field
+                        data-invalid={fieldState.invalid}
+                        className="gap-1"
+                      >
+                        <FieldLabel htmlFor={field.name} className="form-label">
+                          Name
+                        </FieldLabel>
+                        <Input
+                          {...field}
+                          id={field.name}
+                          aria-invalid={fieldState.invalid}
+                          placeholder="Your Name"
+                          className="form-input"
+                        />
+                        {fieldState.invalid && (
+                          <FieldError
+                            errors={[fieldState.error]}
+                            className="form-error"
+                          />
+                        )}
+                      </Field>
+                    )}
+                  />
+
+                  <Controller
+                    name="companyName"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <Field
+                        data-invalid={fieldState.invalid}
+                        className="gap-1"
+                      >
+                        <FieldLabel htmlFor={field.name} className="form-label">
+                          Company Name
+                        </FieldLabel>
+                        <Input
+                          {...field}
+                          id={field.name}
+                          aria-invalid={fieldState.invalid}
+                          placeholder="Company Name"
+                          className="form-input"
+                        />
+                        {fieldState.invalid && (
+                          <FieldError
+                            errors={[fieldState.error]}
+                            className="form-error"
+                          />
+                        )}
+                      </Field>
+                    )}
+                  />
+                </>
+              )}
 
               <Controller
                 name="email"

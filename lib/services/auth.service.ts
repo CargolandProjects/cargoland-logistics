@@ -13,6 +13,11 @@ export type APIResponse<T> = {
   data: T;
 };
 
+interface Document {
+  imageUrl: string;
+  publicId: string;
+}
+
 export interface User {
   id: string;
   firstName: string;
@@ -20,10 +25,17 @@ export interface User {
   email: string;
   phoneNumber: string;
   country: string;
-  isActive: boolean;
   termsAndCondition: boolean;
-  otpVerifiedAt: string | null;
   role: "B2B" | "USER";
+  refreshToken: string;
+  otpVerifiedAt: string | null;
+  userProfileUrl: string | null;
+  userProfilePubId: string | null;
+  documentType: string;
+  document: Document[];
+  companyName: string | null;
+  kycVerified: boolean;
+  isActive: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -51,10 +63,7 @@ export interface LogIn {
 
 interface SubmitKyc {
   documentType: string;
-  document: {
-    imageUrl: string;
-    publicId: string;
-  }[];
+  document: Document[];
 }
 
 type SignUpRes = APIResponse<User>;
