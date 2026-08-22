@@ -13,6 +13,11 @@ export type APIResponse<T> = {
   data: T;
 };
 
+interface Document {
+  imageUrl: string;
+  publicId: string;
+}
+
 export interface User {
   id: string;
   firstName: string;
@@ -20,10 +25,17 @@ export interface User {
   email: string;
   phoneNumber: string;
   country: string;
-  isActive: boolean;
   termsAndCondition: boolean;
-  otpVerifiedAt: string | null;
   role: "B2B" | "USER";
+  refreshToken: string;
+  otpVerifiedAt: string | null;
+  userProfileUrl: string | null;
+  userProfilePubId: string | null;
+  documentType: string;
+  document: Document[];
+  companyName: string | null;
+  kycVerified: boolean;
+  isActive: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -47,6 +59,11 @@ interface VerifyEmailData {
 export interface LogIn {
   user: User;
   token: Tokens;
+}
+
+interface SubmitKyc {
+  documentType: string;
+  document: Document[];
 }
 
 type SignUpRes = APIResponse<User>;
@@ -106,6 +123,14 @@ export const auth = {
 
   async changePassword(data: ChangePasswordData) {
     const res = await apiClient.post(API_ROUTES.auth.changePassword, data);
+    return res.data;
+  },
+
+  async submitKyc(data: SubmitKyc) {
+    const res = await apiClient.post<APIResponse<null>>(
+      API_ROUTES.auth.submitKyc,
+      data,
+    );
     return res.data;
   },
 

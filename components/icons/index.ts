@@ -46,6 +46,7 @@ import Locations from "./Locations";
 import Wallet2 from "./Wallet2";
 import HelpCircle from "./HelpCircle";
 import Bell from "./Bell";
+import AddImage from "./AddImage"
 
 export {
   Location,
@@ -95,5 +96,6 @@ export {
   Locations,
   Wallet2,
   HelpCircle,
-  Bell
+  Bell,
+  AddImage
 };

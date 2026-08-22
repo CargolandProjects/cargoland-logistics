@@ -55,8 +55,16 @@ export const useUpdatePassword = () => {
     mutationFn: auth.updatePassword,
   });
 };
+
 export const useChangePassword = () => {
   return useMutation({
     mutationFn: auth.changePassword,
   });
 };
+
+export const useSubmitKyc = () => {
+  return useMutation({
+    mutationFn: auth.submitKyc,
+  });
+};
+

@@ -17,9 +17,11 @@ import { Separator } from "../ui/separator";
 import { Check, Eye } from "lucide-react";
 import { useChangePassword } from "@/lib/hooks/mutation/useAuth";
 import { toast } from "sonner";
+import { Mode } from "../sharedPages/MyShipmentPageContent";
 
 interface UpdatePasswordProps {
-  setShowMobile: (val: boolean) => void;
+  setShowMobile?: (val: boolean) => void;
+  mode?: Mode;
 }
 
 const signUpSchema = z
@@ -53,7 +55,10 @@ const signUpSchema = z
 
 export type ChangePasswordData = z.infer<typeof signUpSchema>;
 
-const UpdatePassword = ({ setShowMobile }: UpdatePasswordProps) => {
+const UpdatePassword = ({
+  setShowMobile,
+  mode = "USER",
+}: UpdatePasswordProps) => {
   const { mutate, isPending } = useChangePassword();
   const [isVisible, setIsVisible] = useState({
     oldPassword: false,
@@ -90,22 +95,27 @@ const UpdatePassword = ({ setShowMobile }: UpdatePasswordProps) => {
   };
 
   return (
-    <div className="bg-background-screen max-sm:px-4">
-      <Button
-        onClick={() => setShowMobile(false)}
-        variant="ghost"
-        type="button"
-        className="sm:hidden gap-1 p-0 h-5 bg-transparent text-black hover:bg-transparent"
-      >
-        <ArrowLeft className="size-4" /> Back
-      </Button>
+    <div
+      className={`bg-background-screen ${mode === "USER" ? " max-sm:px-4" : ""}`}
+    >
+      {setShowMobile && (
+        <Button
+          onClick={() => setShowMobile(false)}
+          variant="ghost"
+          type="button"
+          className="sm:hidden gap-1 p-0 h-5 bg-transparent text-black hover:bg-transparent"
+        >
+          <ArrowLeft className="size-4" /> Back
+        </Button>
+      )}
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="p-4 pb-6 md:p-6 max-sm:mt-5 rounded-lg bg-white"
       >
         <FieldSet className="gap-0">
           <FieldTitle className="text-lg sm:text-base font-semibold sm:font-bold leading-7 sm:leading-6">
-            Reset Password
+            {mode === "USER" && "Reset Password"}
+            {mode === "B2B" && "Change Password"}
           </FieldTitle>
 
           <Separator className="mt-2" />
@@ -117,7 +127,7 @@ const UpdatePassword = ({ setShowMobile }: UpdatePasswordProps) => {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor={field.name} className="form-label">
-                    Old Password
+                    Current Password
                   </FieldLabel>
                   <div className="relative">
                     <Input
@@ -312,7 +322,7 @@ const UpdatePassword = ({ setShowMobile }: UpdatePasswordProps) => {
         <Button
           disabled={isPending}
           type="submit"
-          className="mt-12 sm:mt-6 submit-button"
+          className={`${mode === "B2B" ? "max-w-62 mt-10" : "mt-12 sm:mt-6"} submit-button`}
         >
           Save Update
         </Button>
