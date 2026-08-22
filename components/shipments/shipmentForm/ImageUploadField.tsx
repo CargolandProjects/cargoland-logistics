@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { AlertCircle, Loader2, Upload, X } from "lucide-react";
+import { AlertCircle, Loader2, Upload, UploadCloud, X } from "lucide-react";
 import { toast } from "sonner";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { useUploadImage, useDeleteImage } from "@/lib/hooks/mutation/useImage";
 import { Button } from "@/components/ui/button";
+import { Mode } from "@/components/sharedPages/MyShipmentPageContent";
 
 export type ImageAsset = {
   imageUrl: string;
@@ -26,7 +27,6 @@ const ALLOWED_IMAGE_FORMATS = [
   "image/png",
   "image/webp",
 ];
-const MAX_IMAGES = 6;
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 const generateId = () => crypto.randomUUID?.() || Date.now().toString();
@@ -36,6 +36,7 @@ interface ImageUploadFieldProps {
   onChange: (assets: ImageAsset[]) => void;
   email: string;
   disabled?: boolean;
+  mode?: Mode;
 }
 
 // ----- Render helpers -----
@@ -80,6 +81,7 @@ export const ImageUploadField = ({
   onChange,
   email,
   disabled = false,
+  mode = "USER",
 }: ImageUploadFieldProps) => {
   const { mutate: uploadImage, isPending: isUploading } = useUploadImage();
   const { mutateAsync: deleteImage } = useDeleteImage();
@@ -91,6 +93,12 @@ export const ImageUploadField = ({
   const [isDraggingOver, setIsDraggingOver] = useState(false);
 
   const isPreview = imageAssets.length > 0 || fileItems.length > 0;
+
+  const MAX_IMAGES = mode === "USER" ? 6 : 2;
+  const acceptedFileTypes =
+    mode === "USER"
+      ? "image/jpeg,image/jpg,image/png,image/webp"
+      : "image/jpeg,image/jpg,image/png,image/webp,application/pdf";
 
   // ----- Upload (mutate with callbacks) -----
   const uploadFile = (item: FileItem) => {
@@ -267,7 +275,7 @@ export const ImageUploadField = ({
           disabled={isMaxReached || isUploading || disabled}
           onChange={handleFileChange}
           className="hidden"
-          accept="image/jpeg,image/jpg,image/png,image/webp"
+          accept={acceptedFileTypes}
         />
 
         <div
@@ -280,13 +288,35 @@ export const ImageUploadField = ({
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
         >
-          <Upload className="size-9.5 text-gray-400" />
-          <p className="mt-2 text-xs leading-4.5 text-gray-500 text-center">
-            Click to upload or drag and drop
-          </p>
-          <p className="mt-1 text-xs leading-4.5 text-gray-400 text-center">
-            JPG, PNG, WEBP (Max 10MB each, up to 6 images)
-          </p>
+          {mode === "USER" && (
+            <>
+              <Upload className="size-9.5 text-gray-400" />
+              <p className="mt-2 text-xs leading-4.5 text-gray-500 text-center">
+                Click to upload or drag and drop
+              </p>
+              <p className="mt-1 text-xs leading-4.5 text-gray-400 text-center">
+                JPG, PNG, WEBP (Max 10MB each, up to 6 images)
+              </p>
+            </>
+          )}
+
+          {mode === "B2B" && (
+            <>
+              <div className="size-12 flex items-center justify-center rounded-full bg-gray-200">
+                <UploadCloud className="size-6 text-[#273583]" />
+              </div>
+              <p className="mt-2 md:mt-4 max-md:text-xs leading-4 text-gray-500 text-center">
+                <span className="font-bold leading-4 text-[#273583]">
+                  Click to upload{" "}
+                </span>
+                or drag and drop
+              </p>
+              <p className="mt-1 text-xs leading-4.5 text-gray-400 text-center">
+                PDF, PNG, JPG, or JPEG (max. 5MB)
+              </p>
+            </>
+          )}
+
           {!email && (
             <p className="mt-2 text-xs text-amber-600 flex items-center gap-1">
               <AlertCircle className="size-3" />

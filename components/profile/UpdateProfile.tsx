@@ -211,53 +211,6 @@ const UpdateProfile = ({
         </Button>
       )}
 
-      {/* Profile Update */}
-      {mode === "B2B" && (
-        <div className="relative flex items-center gap-8">
-          {/* Profile Image */}
-          <Avatar className="size-30 border-2 border-gray-200">
-            <AvatarImage
-              src={avatarSrc}
-              alt={session?.firstName}
-              className="size-full object-cover"
-            />
-            <AvatarFallback>{initials}</AvatarFallback>
-            {/* Loading overlay (grayed out) */}
-            {isUploadingAvatar && (
-              <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-full" />
-            )}
-
-            <AvatarBadge className="size-8! flex items-center justify-center bg-[#1671D9]">
-              {isUploadingAvatar ? (
-                <Loader2 className="size-5! animate-spin text-white" />
-              ) : (
-                <Check className="size-5.5!" />
-              )}
-            </AvatarBadge>
-          </Avatar>
-
-          {/* Updaate Profile image section */}
-          <label
-            htmlFor="avatar-upload"
-            className={`px-3 py-2 border-[1.5px] rounded-md border-primary ${isUploadingAvatar ? "grayscale-45 cursor-default" : "cursor-pointer"} `}
-          >
-            <input
-              id="avatar-upload"
-              type="file"
-              accept="image/jpeg,image/jpg,image/png,image/webp"
-              onChange={handleImageUpload}
-              className="hidden"
-              disabled={isUploadingAvatar}
-            />
-
-            <div className="text-primary flex gap-2 items-center">
-              <AddImage className="size-5" />
-              <p className="">Change Photo</p>
-            </div>
-          </label>
-        </div>
-      )}
-
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="p-4 pb-6 md:p-6 max-sm:mt-5 rounded-lg bg-white"
@@ -268,6 +221,53 @@ const UpdateProfile = ({
           </FieldTitle>
 
           <Separator className="mt-2" />
+
+          {/* Profile Update */}
+          {mode === "B2B" && (
+            <div className="relative mt-8 flex items-center gap-8">
+              {/* Profile Image */}
+              <Avatar className="size-30 border-2 border-gray-200">
+                <AvatarImage
+                  src={avatarSrc}
+                  alt={session?.firstName}
+                  className="size-full object-cover"
+                />
+                <AvatarFallback>{initials}</AvatarFallback>
+                {/* Loading overlay (grayed out) */}
+                {isUploadingAvatar && (
+                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-full" />
+                )}
+
+                <AvatarBadge className="size-8! flex items-center justify-center bg-[#1671D9]">
+                  {isUploadingAvatar ? (
+                    <Loader2 className="size-5! animate-spin text-white" />
+                  ) : (
+                    <Check className="size-5.5!" />
+                  )}
+                </AvatarBadge>
+              </Avatar>
+
+              {/* Updaate Profile image section */}
+              <label
+                htmlFor="avatar-upload"
+                className={`px-3 py-2 border-[1.5px] rounded-md border-primary ${isUploadingAvatar ? "grayscale-45 cursor-default" : "cursor-pointer"} `}
+              >
+                <input
+                  id="avatar-upload"
+                  type="file"
+                  accept="image/jpeg,image/jpg,image/png,image/webp"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                  disabled={isUploadingAvatar}
+                />
+
+                <div className="text-primary flex gap-2 items-center">
+                  <AddImage className="size-5" />
+                  <p className="">Change Photo</p>
+                </div>
+              </label>
+            </div>
+          )}
 
           <FieldGroup className="mt-8 gap-4 md:gap-6">
             <div className="grid sm:grid-cols-2 gap-2.5 md:gap-4.5">

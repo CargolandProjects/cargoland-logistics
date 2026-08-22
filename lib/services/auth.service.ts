@@ -49,6 +49,14 @@ export interface LogIn {
   token: Tokens;
 }
 
+interface SubmitKyc {
+  documentType: string;
+  document: {
+    imageUrl: string;
+    publicId: string;
+  }[];
+}
+
 type SignUpRes = APIResponse<User>;
 
 type LogInRes = APIResponse<LogIn>;
@@ -106,6 +114,14 @@ export const auth = {
 
   async changePassword(data: ChangePasswordData) {
     const res = await apiClient.post(API_ROUTES.auth.changePassword, data);
+    return res.data;
+  },
+
+  async submitKyc(data: SubmitKyc) {
+    const res = await apiClient.post<APIResponse<null>>(
+      API_ROUTES.auth.submitKyc,
+      data,
+    );
     return res.data;
   },
 

@@ -3,6 +3,7 @@
 import { User } from "@/components/icons";
 import UpdatePassword from "@/components/profile/UpdatePassword";
 import UpdateProfile from "@/components/profile/UpdateProfile";
+import Verification from "@/components/settings/Verification";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, ShieldPlus, UserCircle, Users2 } from "lucide-react";
 import { useState } from "react";
@@ -36,7 +37,7 @@ export default function SettingsPage() {
       case "Profile":
         return <UpdateProfile mode="B2B" />;
       case "Verification":
-        return "Okay now";
+        return <Verification />;
       case "Security":
         return <UpdatePassword mode="B2B" />;
     }
