@@ -15,7 +15,7 @@ const Verification = () => {
 
       <div
         onClick={() => setOpen(true)}
-        className="mt-11.5 px-4 py-3.5 flex justify-between items-center rounded-lg bg-gray-100/89 cursor-pointer"
+        className="mt-6 md:mt-11.5 px-4 py-3.5 flex justify-between items-center rounded-lg bg-gray-100/89 cursor-pointer"
       >
         <div>
           <h3 className="font-semibold leading-5.5">KYC Verification</h3>

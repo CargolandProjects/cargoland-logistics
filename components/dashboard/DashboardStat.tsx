@@ -14,8 +14,8 @@ const DashboardStat = ({
   figure,
 }: DashboardStatProps) => {
   return (
-    <div className=" px-5.25 py-6.75 bg-white rounded-[16px]">
-      <div className="flex items-center gap-3">
+    <div className="px-4 md:px-5 py-4 md:py-6.75 bg-white rounded-[16px]">
+      <div className="flex items-center gap-2 md:gap-3">
         <Icon className="size-6 text-primary" />
         <p className="leading-5.5 text-neutral-500">{title}</p>
       </div>
@@ -23,7 +23,7 @@ const DashboardStat = ({
       <p
         className={` ${
           isLoading && "animate-pulse duration-300"
-        } mt-5 text-xl font-semibold leading-7`}
+        } mt-3 md:mt-5 text-xl font-semibold leading-7`}
       >
         {figure.toLocaleString()}
       </p>

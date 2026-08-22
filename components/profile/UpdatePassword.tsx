@@ -322,7 +322,7 @@ const UpdatePassword = ({
         <Button
           disabled={isPending}
           type="submit"
-          className="mt-12 sm:mt-6 submit-button"
+          className={`${mode === "B2B" ? "max-w-62 mt-10" : "mt-12 sm:mt-6"} submit-button`}
         >
           Save Update
         </Button>

@@ -252,9 +252,9 @@ const UpdateProfile = ({
 
           {/* Profile Update */}
           {mode === "B2B" && (
-            <div className="relative mt-8 flex items-center gap-8">
+            <div className="relative mt-8 flex items-center gap-4 md:gap-8">
               {/* Profile Image */}
-              <Avatar className="size-30 border-2 border-gray-200">
+              <Avatar className="size-20 md:size-30 border-2 border-gray-200">
                 <AvatarImage
                   src={avatarSrc}
                   alt={session?.firstName}
@@ -545,7 +545,7 @@ const UpdateProfile = ({
         <Button
           disabled={isUpdating}
           type="submit"
-          className={`${mode === "B2B" ? "max-w-[248px] mt-10" : "mt-12 sm:mt-6"} submit-button`}
+          className={`${mode === "B2B" ? "max-w-62 mt-10" : "mt-12 sm:mt-6"} submit-button`}
         >
           Save Update
         </Button>
