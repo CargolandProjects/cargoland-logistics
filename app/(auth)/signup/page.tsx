@@ -326,96 +326,60 @@ export default function SignupPage() {
             </div>
 
             <FieldGroup className="mt-8 gap-6">
-              {role === "USER" && (
-                <div className="grid grid-cols-2 gap-3 md:gap-4.5">
-                  <Controller
-                    name="firstName"
-                    control={control}
-                    render={({ field, fieldState }) => (
-                      <Field
-                        data-invalid={fieldState.invalid}
-                        className="gap-1"
-                      >
-                        <FieldLabel htmlFor={field.name} className="form-label">
-                          First Name
-                        </FieldLabel>
-                        <Input
-                          {...field}
-                          id={field.name}
-                          aria-invalid={fieldState.invalid}
-                          placeholder="First Name"
-                          className="form-input"
+              <div className="grid grid-cols-2 gap-3 md:gap-4.5">
+                <Controller
+                  name="firstName"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid} className="gap-1">
+                      <FieldLabel htmlFor={field.name} className="form-label">
+                        First Name
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id={field.name}
+                        aria-invalid={fieldState.invalid}
+                        placeholder="First Name"
+                        className="form-input"
+                      />
+                      {fieldState.invalid && (
+                        <FieldError
+                          errors={[fieldState.error]}
+                          className="form-error"
                         />
-                        {fieldState.invalid && (
-                          <FieldError
-                            errors={[fieldState.error]}
-                            className="form-error"
-                          />
-                        )}
-                      </Field>
-                    )}
-                  />
+                      )}
+                    </Field>
+                  )}
+                />
 
-                  <Controller
-                    name="lastName"
-                    control={control}
-                    render={({ field, fieldState }) => (
-                      <Field
-                        data-invalid={fieldState.invalid}
-                        className="gap-1"
-                      >
-                        <FieldLabel htmlFor={field.name} className="form-label">
-                          Last Name
-                        </FieldLabel>
-                        <Input
-                          {...field}
-                          id={field.name}
-                          aria-invalid={fieldState.invalid}
-                          placeholder="Last Name"
-                          className="form-input"
+                <Controller
+                  name="lastName"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid} className="gap-1">
+                      <FieldLabel htmlFor={field.name} className="form-label">
+                        Last Name
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id={field.name}
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Last Name"
+                        className="form-input"
+                      />
+                      {fieldState.invalid && (
+                        <FieldError
+                          errors={[fieldState.error]}
+                          className="form-error"
                         />
-                        {fieldState.invalid && (
-                          <FieldError
-                            errors={[fieldState.error]}
-                            className="form-error"
-                          />
-                        )}
-                      </Field>
-                    )}
-                  />
-                </div>
-              )}
+                      )}
+                    </Field>
+                  )}
+                />
+              </div>
 
               {role === "B2B" && (
-                <>
-                  <Controller
-                    name="firstName"
-                    control={control}
-                    render={({ field, fieldState }) => (
-                      <Field
-                        data-invalid={fieldState.invalid}
-                        className="gap-1"
-                      >
-                        <FieldLabel htmlFor={field.name} className="form-label">
-                          Name
-                        </FieldLabel>
-                        <Input
-                          {...field}
-                          id={field.name}
-                          aria-invalid={fieldState.invalid}
-                          placeholder="Your Name"
-                          className="form-input"
-                        />
-                        {fieldState.invalid && (
-                          <FieldError
-                            errors={[fieldState.error]}
-                            className="form-error"
-                          />
-                        )}
-                      </Field>
-                    )}
-                  />
-
+                <div className="grid grid-cols-2 gap-3 md:gap-4.5">
                   <Controller
                     name="companyName"
                     control={control}
@@ -443,34 +407,62 @@ export default function SignupPage() {
                       </Field>
                     )}
                   />
-                </>
+
+                  <Controller
+                    name="email"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor={field.name} className="form-label">
+                          Email Address
+                        </FieldLabel>
+                        <Input
+                          {...field}
+                          id={field.name}
+                          type="email"
+                          aria-invalid={fieldState.invalid}
+                          placeholder="Email Address"
+                          className="form-input"
+                        />
+                        {fieldState.invalid && (
+                          <FieldError
+                            errors={[fieldState.error]}
+                            className="form-error"
+                          />
+                        )}
+                      </Field>
+                    )}
+                  />
+                </div>
               )}
 
-              <Controller
-                name="email"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor={field.name} className="form-label">
-                      Email Address
-                    </FieldLabel>
-                    <Input
-                      {...field}
-                      id={field.name}
-                      type="email"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Email Address"
-                      className="form-input"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError
-                        errors={[fieldState.error]}
-                        className="form-error"
+              {role === "USER" && (
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor={field.name} className="form-label">
+                        Email Address
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id={field.name}
+                        type="email"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Email Address"
+                        className="form-input"
                       />
-                    )}
-                  </Field>
-                )}
-              />
+                      {fieldState.invalid && (
+                        <FieldError
+                          errors={[fieldState.error]}
+                          className="form-error"
+                        />
+                      )}
+                    </Field>
+                  )}
+                />
+              )}
 
               <div className="flex gap-3 md:gap-4.5">
                 <Controller

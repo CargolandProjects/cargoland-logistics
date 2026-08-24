@@ -135,7 +135,7 @@ const UpdatePassword = ({
                       id={field.name}
                       type={isVisible.oldPassword ? "text" : "password"}
                       aria-invalid={fieldState.invalid}
-                      placeholder="Create Password"
+                      placeholder="Current Password"
                       className="form-input"
                     />
                     <button

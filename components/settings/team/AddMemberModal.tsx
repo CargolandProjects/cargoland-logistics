@@ -70,7 +70,7 @@ const AddMemberModal = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="py-10 px-8 gap-0 max-w-[514px]! rounded-[16px] overflow-auto hide-scrollbar">
+      <DialogContent className="py-10 px-8 gap-0 md:max-w-[514px]! rounded-[16px] overflow-auto hide-scrollbar">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold leading-8">
             Invite Team Member

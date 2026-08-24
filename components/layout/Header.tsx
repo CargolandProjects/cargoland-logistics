@@ -264,14 +264,20 @@ const Header = () => {
                 {!isAuthenticated ? (
                   <div className="space-y-2">
                     <Button
-                      onClick={() => router.push("/login")}
+                      onClick={() => {
+                        setOpenMenu(false);
+                        router.push("/login");
+                      }}
                       variant="outline"
                       className="h-12! w-full rounded-lg text-primary border-primary hover:text-primary"
                     >
                       Sign In
                     </Button>
                     <Button
-                      onClick={() => router.push("/signup")}
+                      onClick={() => {
+                        setOpenMenu(false);
+                        router.push("/signup");
+                      }}
                       className="h-12! w-full rounded-lg"
                     >
                       Get Started

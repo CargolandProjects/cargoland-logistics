@@ -1,6 +1,7 @@
 // components/RoutePricing.tsx
 import { CurveArrowRight } from "@/components/icons";
 import { Button } from "@/components/ui/button";
+import { useSession } from "@/lib/hooks/useSession";
 import { ShipmentType } from "@/lib/services/pricing.service";
 import { useRouter } from "next/navigation";
 
@@ -32,6 +33,7 @@ export const RoutePricing = ({
   brackets,
   weight,
 }: RoutePricingProps) => {
+  const { session } = useSession();
   const router = useRouter();
 
   // Find ALL brackets that match the weight range
@@ -104,9 +106,15 @@ export const RoutePricing = ({
     );
   }
 
-  const route = uniqueFreightPrices.some((p) => p.key !== "domestic")
-    ? "/shipment?shipmentType=INTERNATIONAL"
-    : "/shipment?shipmentType=DOMESTIC";
+  const userRoute = uniqueFreightPrices.some((p) => p.key !== "domestic")
+    ? "/book-shipment?shipmentType=INTERNATIONAL"
+    : "/book-shipment?shipmentType=DOMESTIC";
+
+  const b2bRoute = uniqueFreightPrices.some((p) => p.key !== "domestic")
+    ? "/b2b/book-shipment?shipmentType=INTERNATIONAL"
+    : "/b2b/book-shipment?shipmentType=DOMESTIC";
+
+  const route = session?.role === "USER" ? userRoute : b2bRoute;
 
   return (
     <div className="space-y-6">
