@@ -1,18 +1,20 @@
 import { ShipmentVolume as SVolume } from "@/lib/services/company.service";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  ResponsiveContainer,
-} from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
+
+//   const shipmentVolume = [
+//     { month: "Mar", volume: 45 },
+//     { month: "Apr", volume: 68 },
+//     { month: "May", volume: 32 },
+//     { month: "Jun", volume: 90 },
+//     { month: "Jul", volume: 75 },
+//     { month: "Aug", volume: 50 },
+//   ];
 
 const ShipmentVolume = ({ volumeData }: { volumeData: SVolume[] }) => {
   const chartConfig = {
@@ -21,15 +23,6 @@ const ShipmentVolume = ({ volumeData }: { volumeData: SVolume[] }) => {
       color: "#273583",
     },
   } satisfies ChartConfig;
-
-  //   const shipmentVolume = [
-  //     { month: "Mar", volume: 45 },
-  //     { month: "Apr", volume: 68 },
-  //     { month: "May", volume: 32 },
-  //     { month: "Jun", volume: 90 },
-  //     { month: "Jul", volume: 75 },
-  //     { month: "Aug", volume: 50 },
-  //   ];
 
   // Check if all volumes are zero (or if data is empty)
   const hasData = volumeData?.some((item) => item.volume > 0);
@@ -69,7 +62,7 @@ const ShipmentVolume = ({ volumeData }: { volumeData: SVolume[] }) => {
             axisLine={false}
             tickMargin={0}
             allowDecimals={false}
-
+            hide={!hasData}
             // domain={[0, "dataMax + 10"]}
           />
           <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
