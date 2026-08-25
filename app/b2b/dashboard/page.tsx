@@ -130,7 +130,7 @@ export default function B2BDashboardPage() {
       </section>
 
       <Link
-        href="/b2b/settings?tab=verification"
+        href="/b2b/settings?tab=VERIFICATION"
         className="relative mt-5 md:mt-7 pr-3 md:pr-5.5 flex items-center justify-between rounded-[16px] bg-[#FFFBF0] overflow-hidden border border-[#FFB703]"
       >
         <div className="absolute top-1.75 -left-6 size-[72px] md:size-[87.79px] rotate-[21.86deg]">

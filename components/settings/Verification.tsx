@@ -1,9 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Separator } from "../ui/separator";
 import KycVerificationModal from "./KycVerificationModal";
 
-const Verification = () => {
+const Verification = ({ isTriggered }: { isTriggered: boolean }) => {
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isTriggered) return;
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setOpen(true);
+  }, [isTriggered]);
 
   return (
     <div className="p-4 md:p-6 bg-white rounded-lg">

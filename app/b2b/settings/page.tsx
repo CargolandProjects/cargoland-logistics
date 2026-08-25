@@ -1,45 +1,57 @@
 "use client";
 
-import { User } from "@/components/icons";
 import UpdatePassword from "@/components/profile/UpdatePassword";
 import UpdateProfile from "@/components/profile/UpdateProfile";
+import Team from "@/components/settings/team/Team";
 import Verification from "@/components/settings/Verification";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, ShieldPlus, UserCircle, Users2 } from "lucide-react";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 
-type Tabs = "Profile" | "Verification" | "Security" | "Team";
+type Tabs = "PROFILE" | "VERIFICATION" | "SECURITY" | "TEAM";
 
-const tabs = [
+const tabs: { title: Tabs; icon: React.ElementType }[] = [
   {
-    title: "Profile",
+    title: "PROFILE",
     icon: UserCircle,
   },
   {
-    title: "Verification",
+    title: "VERIFICATION",
     icon: ShieldCheck,
   },
   {
-    title: "Security",
+    title: "SECURITY",
     icon: ShieldPlus,
   },
   {
-    title: "Team",
+    title: "TEAM",
     icon: Users2,
   },
 ];
 
-export default function SettingsPage() {
-  const [activeTab, setActiveTab] = useState<Tabs>("Profile");
+const SettingsPageContent = () => {
+  const [activeTab, setActiveTab] = useState<Tabs>("PROFILE");
+  const searchParams = useSearchParams();
+  const tab = searchParams.get("tab") as Tabs;
+
+  useEffect(() => {
+    if (!tab) return;
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setActiveTab(tab as Tabs);
+  }, [tab]);
 
   const showActiveTab = () => {
     switch (activeTab) {
-      case "Profile":
+      case "PROFILE":
         return <UpdateProfile mode="B2B" />;
-      case "Verification":
-        return <Verification />;
-      case "Security":
+      case "VERIFICATION":
+        return <Verification isTriggered={tab === "VERIFICATION"} />;
+      case "SECURITY":
         return <UpdatePassword mode="B2B" />;
+      case "TEAM":
+        return <Team />;
     }
   };
 
@@ -59,10 +71,10 @@ export default function SettingsPage() {
               onClick={() => setActiveTab(tab.title as Tabs)}
               key={idx}
               variant="ghost"
-              className={`${isActive ? "bg-white hover:bg-white! text-black!" : ""} flex-1 gap-1 md:gap-2 py-0.75 md:py-1 h-auto leading-5.5 text-neutral-600/86 hover:bg-gray-400/20 transition-all duration-200`}
+              className={`${isActive ? "bg-white hover:bg-white! text-black!" : ""} flex-1 gap-1 md:gap-2 py-0.75 md:py-1 h-auto leading-5.5 capitalize text-neutral-600/86 hover:bg-gray-400/20 transition-all duration-200`}
             >
               <Icon className="size-3.5 md:size-6" />
-              {tab.title}
+              {tab.title.toLowerCase()}
             </Button>
           );
         })}
@@ -70,5 +82,13 @@ export default function SettingsPage() {
 
       <section className="mt-5 md:mt-7">{showActiveTab()}</section>
     </div>
+  );
+};
+
+export default function SettingsPage() {
+  return (
+    <Suspense>
+      <SettingsPageContent />
+    </Suspense>
   );
 }

@@ -91,9 +91,9 @@ const B2BHeader = ({ setOpenMenu }: { setOpenMenu: (v: boolean) => void }) => {
             <DropdownMenuTrigger asChild>
               {isAuthenticated ? (
                 <div className="flex gap-2.5 shrink-0 cursor-pointer">
-                  <Avatar className="size-9 border-2">
+                  <Avatar className="size-9">
                     <AvatarImage
-                      // src={session?.avatarUrl}
+                      src={session?.userProfileUrl || undefined}
                       alt={session?.lastName}
                     />
                     <AvatarFallback className="max-sm:text-xs pt-0.5">
