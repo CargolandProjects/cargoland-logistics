@@ -16,7 +16,7 @@ export const API_ROUTES = {
 
   team: {
     inviteMember: "/users/invite-team-member",
-    getTeamMembers: "/users/get-all-company-invited-team-member",
+    getTeamMembers: "/users/get-all-company/invited-team-member",
     teamMemberLogin: "/users/team-member-login",
   },
 
