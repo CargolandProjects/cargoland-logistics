@@ -40,7 +40,7 @@ const b2bLinks = [
       },
       {
         title: "Insight",
-        href: "#",
+        href: "/b2b/insights",
         icon: BarChart,
       },
     ],

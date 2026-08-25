@@ -57,4 +57,6 @@ export const API_ROUTES = {
     chargeWallet: "/users/charge-wallet",
     getBalance: "/users/get-wallet-balance",
   },
+  
+  company: "/users/get-company/insight",
 };
