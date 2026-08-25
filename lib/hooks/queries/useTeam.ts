@@ -5,5 +5,6 @@ export const useGetTeamMembers = () => {
   return useQuery({
     queryKey: ["teamMembers"],
     queryFn: team.getTeamMembers,
+    select: (res) => res.data,
   });
 };
