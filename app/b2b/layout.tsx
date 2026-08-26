@@ -21,7 +21,7 @@ export default function B2BLayout({
   return (
     <div className="w-full bg-background-screen flex">
       <B2BSidebar open={openMenu} setOpen={setOpenMenu} />
-      <div className="flex-1 lg:ml-68 w-full">
+      <div className="flex-1 lg:ml-68 w-full min-h-screen">
         <B2BHeader setOpenMenu={setOpenMenu} />
         <div className="px-4 md:px-10 py-9 md:py-12 w-full ">{children}</div>
       </div>

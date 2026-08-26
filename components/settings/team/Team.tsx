@@ -6,8 +6,9 @@ import { Plus, Trash2 } from "lucide-react";
 import React, { useState } from "react";
 import AddMemberModal from "./AddMemberModal";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Delete, Invite } from "@/components/icons";
 
-const IsLoading = () => (
+const LoadingState = () => (
   <div className="mt-6 md:mt-8 space-y-6">
     {Array.from({ length: 4 }).map((_, i) => (
       <div key={i} className="flex justify-between items-center">
@@ -31,10 +32,30 @@ const IsLoading = () => (
   </div>
 );
 
+const EmptyState = ({ setOpen }: { setOpen: (v: boolean) => void }) => {
+  return (
+    <div className="mt-8 flex flex-col items-center">
+      <div className="size-25 flex justify-center items-center bg-linear-to-t from-[#F6BABCCC]/80 to-[#FFFAFACC]/80 rounded-full">
+        <Invite className="size-10 text-primary" />
+      </div>
+      <h2 className="mt-6 text-lg font-medium">Invite Team Members</h2>
+      <p className="mt-3 font-light">
+        Add staff or team members to your Cargoland Africa B2B Account.
+      </p>
+      <Button
+        onClick={() => setOpen(true)}
+        className="mt-2 px-4 py-1 h-auto gap-2 leading-5.5"
+      >
+        <Plus className="size-4" /> Invite
+      </Button>
+    </div>
+  );
+};
+
 const Team = () => {
   const { data, isLoading, isError, isSuccess } = useGetTeamMembers();
   const [open, setOpen] = useState(false);
-  
+
   return (
     <div className="p-4 md:p-6 bg-white rounded-lg">
       <div className="flex justify-between">
@@ -44,15 +65,17 @@ const Team = () => {
 
         <Button
           onClick={() => setOpen(true)}
-          className="px-4 py-1 h-auto gap-2 bg-primary/30 text-primary hover:text-white duration-200 leading-5.5"
+          className="px-4 py-1 h-auto gap-2 leading-5.5"
         >
-          <Plus className="size-6" /> Invite
+          <Plus className="size-4" /> Invite
         </Button>
       </div>
 
       <Separator className="mt-2" />
 
-      {isLoading && <IsLoading />}
+      {isLoading && <LoadingState />}
+
+      {isSuccess && data.length === 0 && <EmptyState setOpen={setOpen} />}
 
       {isSuccess && data.length > 0 && (
         <div className="mt-6 md:mt-8">
@@ -96,7 +119,7 @@ const Team = () => {
                       variant="ghost"
                       className="ml-2 p-0 h-auto hover:bg-transparent hover:text-red-500 transition duration-200"
                     >
-                      <Trash2 className="size-4" />
+                      <Delete className="size-4" />
                     </Button>
                   </div>
                 </div>
