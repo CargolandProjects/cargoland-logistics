@@ -145,7 +145,6 @@ const ShipmentForm = () => {
       "address",
       "postalCode",
       "cityCode",
-
       "pickUpAddressType",
       "pickupDate",
       "pickupTime",
@@ -523,6 +522,7 @@ const ShipmentForm = () => {
               >
                 Cancel Shipment
               </Button>
+
               {step < 2 && (
                 <Button
                   onClick={handleNext}

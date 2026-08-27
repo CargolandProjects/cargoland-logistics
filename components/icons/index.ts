@@ -46,7 +46,13 @@ import Locations from "./Locations";
 import Wallet2 from "./Wallet2";
 import HelpCircle from "./HelpCircle";
 import Bell from "./Bell";
-import AddImage from "./AddImage"
+import AddImage from "./AddImage";
+import Invite from "./Invite";
+import Delete from "./Delete";
+import Team from "./Team";
+import SecurityLock from "./SecurityLock";
+import ShieldCheck from "./ShieldCheck";
+import UserCircle from "./UserCircle";
 
 export {
   Location,
@@ -97,5 +103,11 @@ export {
   Wallet2,
   HelpCircle,
   Bell,
-  AddImage
+  AddImage,
+  Invite,
+  Delete,
+  Team,
+  SecurityLock,
+  ShieldCheck,
+  UserCircle,
 };

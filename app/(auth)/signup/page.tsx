@@ -36,8 +36,7 @@ const signUpSchema = z
       .regex(
         /^[a-zA-Z\s'-]+$/,
         "First name can only contain letters, spaces, hyphens, and apostrophes",
-      )
-      .or(z.literal("")),
+      ),
     lastName: z
       .string()
       .min(3, "Last name must be at least 3 characters long")
@@ -45,8 +44,7 @@ const signUpSchema = z
       .regex(
         /^[a-zA-Z\s'-]+$/,
         "last name can only contain letters, spaces, hyphens, and apostrophes",
-      )
-      .or(z.literal("")),
+      ),
     companyName: z
       .string()
       .min(3, "Business name must be at least 3 characters long")
