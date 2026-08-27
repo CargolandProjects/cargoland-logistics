@@ -71,12 +71,8 @@ const profileSchema = z
       .or(z.literal("")),
     businessAddress: z
       .string()
-      .min(3, "Last name must be at least 3 characters long")
-      .max(100, "Last name must be less than 100 characters long")
-      .regex(
-        /^[a-zA-Z\s'-]+$/,
-        "last name can only contain letters, spaces, hyphens, and apostrophes",
-      )
+      .min(3, "Adress must be at least 5 characters long")
+      .max(100, "Address must be less than 500 characters long")
       .or(z.literal("")),
   })
   .partial();
@@ -118,26 +114,20 @@ const UpdateProfile = ({
   useEffect(() => {
     if (!isAuthenticated || !session) return;
 
+    console.log("Session: ", session);
     const baseValues = {
       email: session.email,
       country: session.country,
       phoneNumber: session.phoneNumber,
+      firstName: session.firstName,
+      lastName: session.lastName,
+      ...(session.role === "B2B" && {
+        companyName: session.companyName ?? "",
+        businessAddress: session.businessAddress ?? "",
+      }),
     };
 
-    const roleValues =
-      session.role === "USER"
-        ? {
-            firstName: session.firstName ?? "",
-            lastName: session.lastName ?? "",
-            businessName: "",
-            businessAddress: "",
-          }
-        : {
-            businessName: session.firstName ?? "",
-            businessAddress: session.lastName ?? "",
-          };
-
-    setValues({ ...baseValues, ...roleValues });
+    setValues(baseValues);
 
     const defaultCountry = countries.all.find(
       (country) => country.name === session.country,
@@ -298,7 +288,57 @@ const UpdateProfile = ({
           )}
 
           <FieldGroup className="mt-8 gap-4 md:gap-6">
-            <div className="grid sm:grid-cols-2 gap-2.5 md:gap-4.5">
+            <div className="grid sm:grid-cols-2 gap-4 md:gap-6">
+              <Controller
+                name="firstName"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid} className="gap-1">
+                    <FieldLabel htmlFor={field.name} className="form-label">
+                      First Name
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id={field.name}
+                      aria-invalid={fieldState.invalid}
+                      placeholder="First Name"
+                      className="form-input"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="form-error"
+                      />
+                    )}
+                  </Field>
+                )}
+              />
+
+              <Controller
+                name="lastName"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid} className="gap-1">
+                    <FieldLabel htmlFor={field.name} className="form-label">
+                      Last Name
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id={field.name}
+                      aria-invalid={fieldState.invalid}
+                      placeholder="Last Name"
+                      className="form-input"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="form-error"
+                      />
+                    )}
+                  </Field>
+                )}
+              />
+
               {mode === "B2B" && (
                 <>
                   <Controller
@@ -347,65 +387,6 @@ const UpdateProfile = ({
                           disabled
                           aria-invalid={fieldState.invalid}
                           placeholder="Email Address"
-                          className="form-input"
-                        />
-                        {fieldState.invalid && (
-                          <FieldError
-                            errors={[fieldState.error]}
-                            className="form-error"
-                          />
-                        )}
-                      </Field>
-                    )}
-                  />
-                </>
-              )}
-              {mode === "USER" && (
-                <>
-                  <Controller
-                    name="firstName"
-                    control={control}
-                    render={({ field, fieldState }) => (
-                      <Field
-                        data-invalid={fieldState.invalid}
-                        className="gap-1"
-                      >
-                        <FieldLabel htmlFor={field.name} className="form-label">
-                          First Name
-                        </FieldLabel>
-                        <Input
-                          {...field}
-                          id={field.name}
-                          aria-invalid={fieldState.invalid}
-                          placeholder="First Name"
-                          className="form-input"
-                        />
-                        {fieldState.invalid && (
-                          <FieldError
-                            errors={[fieldState.error]}
-                            className="form-error"
-                          />
-                        )}
-                      </Field>
-                    )}
-                  />
-
-                  <Controller
-                    name="lastName"
-                    control={control}
-                    render={({ field, fieldState }) => (
-                      <Field
-                        data-invalid={fieldState.invalid}
-                        className="gap-1"
-                      >
-                        <FieldLabel htmlFor={field.name} className="form-label">
-                          Last Name
-                        </FieldLabel>
-                        <Input
-                          {...field}
-                          id={field.name}
-                          aria-invalid={fieldState.invalid}
-                          placeholder="Last Name"
                           className="form-input"
                         />
                         {fieldState.invalid && (

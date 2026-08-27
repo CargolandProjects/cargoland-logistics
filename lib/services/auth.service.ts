@@ -6,6 +6,7 @@ import { createPasswordData } from "@/app/(auth)/create-password/page";
 import apiClient from "../api/client";
 import { ProfileUpdateData } from "@/components/profile/UpdateProfile";
 import { ChangePasswordData } from "@/components/profile/UpdatePassword";
+import { KycData } from "@/components/settings/kyc/KycVerificationModal";
 
 export type APIResponse<T> = {
   status: string;
@@ -34,6 +35,7 @@ export interface User {
   documentType: string;
   document: Document[];
   companyName: string | null;
+  businessAddress: string | null;
   kycVerified: boolean;
   isActive: boolean;
   createdAt: string;
@@ -59,11 +61,6 @@ interface VerifyEmailData {
 export interface LogIn {
   user: User;
   token: Tokens;
-}
-
-interface SubmitKyc {
-  documentType: string;
-  document: Document[];
 }
 
 type SignUpRes = APIResponse<User>;
@@ -126,7 +123,7 @@ export const auth = {
     return res.data;
   },
 
-  async submitKyc(data: SubmitKyc) {
+  async submitKyc(data: KycData) {
     const res = await apiClient.post<APIResponse<null>>(
       API_ROUTES.auth.submitKyc,
       data,

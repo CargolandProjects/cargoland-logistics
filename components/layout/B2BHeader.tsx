@@ -20,8 +20,6 @@ const B2BHeader = ({ setOpenMenu }: { setOpenMenu: (v: boolean) => void }) => {
   const { isAuthenticated, session, signOut } = useSession();
   const [open, setOpen] = useState(false);
 
-  const businessName = "Apex Logistics LLC";
-
   const initials =
     (session?.firstName &&
       session?.lastName &&
@@ -106,7 +104,9 @@ const B2BHeader = ({ setOpenMenu }: { setOpenMenu: (v: boolean) => void }) => {
                       <p className="font-medium">
                         {session?.firstName} {session?.lastName}
                       </p>
-                      <p className="text-xs text-neutral-500">{businessName}</p>
+                      <p className="text-xs text-neutral-500 max-w-[110px] line-clamp-1">
+                        {session?.companyName}
+                      </p>
                     </div>
                   </div>
                 </div>

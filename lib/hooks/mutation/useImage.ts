@@ -2,12 +2,14 @@ import { image } from "@/lib/services/uploadImage.service";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-export const useUploadImage = () => {
+export const useUploadImage = (
+  { showSuccess }: { showSuccess?: boolean } = { showSuccess: false },
+) => {
   return useMutation({
     mutationFn: image.upload,
-    // onSuccess: (data) => {
-    //   toast.success(data.message || "Image upload successful");
-    // },
+    onSuccess: (data) => {
+      if (showSuccess) toast.success(data.message || "Image upload successful");
+    },
     onError: (error) => {
       toast.error(error.message || "Image upload failed");
     },

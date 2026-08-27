@@ -1,14 +1,19 @@
 import apiClient from "../api/client";
 import { API_ROUTES } from "../api/endpoints";
 
-interface UploadResponse {
+export interface UploadResponse {
   message: string;
   url: string;
   publicId: string;
 }
 
+export interface Upload {
+  file: File;
+  userEmail: string;
+}
+
 export const image = {
-  async upload({ file, userEmail }: { file: File; userEmail: string }) {
+  async upload({ file, userEmail }: Upload) {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("userEmail", userEmail);

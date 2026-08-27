@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Separator } from "../ui/separator";
-import KycVerificationModal from "./KycVerificationModal";
+import KycVerificationModal from "./kyc/KycVerificationModal";
 
 const Verification = ({ isTriggered }: { isTriggered: boolean }) => {
   const [open, setOpen] = useState(false);
