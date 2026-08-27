@@ -86,7 +86,7 @@ const SpendingTrend = ({ trendData }: { trendData: STrend[] }) => {
                 return (
                   <div className="px-2.5 py-1.5 rounded-lg bg-white shadow-lg">
                     <p className="text-xs font-medium text-gray-900">{label}</p>
-                    <p className="text-[12px] text-primary">
+                    <p className="mt-0.5 text-[12px] text-primary">
                       Spend: ₦{Number(value).toLocaleString()}
                     </p>
                   </div>

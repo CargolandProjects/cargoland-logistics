@@ -68,8 +68,8 @@ export const statusStyles: Partial<
   },
 
   CANCELLED: {
-    bgcolor: "bg-primary",
-    containerStyles: "border-primary bg-primary/5 text-primary",
+    bgcolor: "bg-red-500",
+    containerStyles: "border-primary bg-red-500/5 text-red-500",
   },
 };
 

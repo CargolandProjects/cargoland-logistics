@@ -36,7 +36,7 @@ export interface User {
   document: Document[];
   companyName: string | null;
   businessAddress: string | null;
-  kycVerified: boolean;
+  kycVerified: "PENDING" | "SUBMITTED" | "SUCCESS" | "FAILED";
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
