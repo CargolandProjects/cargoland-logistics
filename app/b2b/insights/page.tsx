@@ -1,7 +1,6 @@
 "use client";
 
 import DashboardStat from "@/components/dashboard/DashboardStat";
-import { useDashboardStats } from "@/lib/hooks/queries/useShipment";
 import {
   DeliveryTruckBolt,
   DeliveryTruckSpeed,
@@ -11,6 +10,7 @@ import {
 import ShipmentVolume from "@/components/insights/ShipmentVolume";
 import { useCompanyInsight } from "@/lib/hooks/queries/useCompanyInsights";
 import SpendingTrend from "@/components/insights/SpendingTrend";
+import TopDestinations from "@/components/insights/TopDestinations";
 
 export default function InsightsPage() {
   const { data, isLoading } = useCompanyInsight();
@@ -46,6 +46,7 @@ export default function InsightsPage() {
   const dashboardStats = getDashboardStats();
   const shipmentVolume = data?.shipmentVolume || [];
   const spendingTrend = data?.spendingTrend || [];
+  const topDestData = data?.topDestination || [];
 
   return (
     <div>
@@ -72,9 +73,10 @@ export default function InsightsPage() {
       </section>
 
       {/* shipment & spending charts */}
-      <section className="mt-7 grid md:grid-cols-2 gap-6">
+      <section className="mt-7 grid md:grid-cols-2 gap-6 md:gap-y-7">
         <ShipmentVolume volumeData={shipmentVolume} />
         <SpendingTrend trendData={spendingTrend} />
+        <TopDestinations topDestData={topDestData} />
       </section>
     </div>
   );

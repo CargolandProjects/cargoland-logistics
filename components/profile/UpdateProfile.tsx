@@ -114,7 +114,7 @@ const UpdateProfile = ({
   useEffect(() => {
     if (!isAuthenticated || !session) return;
 
-    console.log("Session: ", session);
+    // console.log("Session: ", session);
     const baseValues = {
       email: session.email,
       country: session.country,
