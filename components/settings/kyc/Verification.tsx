@@ -1,15 +1,19 @@
 import { useCallback, useEffect, useState } from "react";
-import { Separator } from "../ui/separator";
-import KycVerificationModal from "./kyc/KycVerificationModal";
+import { Separator } from "../../ui/separator";
+import KycVerificationModal from "./KycVerificationModal";
 import { useSession } from "@/lib/hooks/useSession";
 import { toast } from "sonner";
+import { ChevronRight } from "lucide-react";
+import { verifiedUser } from "@/assets/images";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
 
 const statusStyles = {
-  PENDING: {
-    bgcolor: "bg-orange-400",
-    containerStyles: "border-orange-400 bg-orange-400/5 text-orange-400",
+  NOT_VERIFIED: {
+    bgcolor: "bg-gray-400",
+    containerStyles: "border-gray-400 bg-gray-400/5 text-gray-400",
   },
-  SUBMITTED: {
+  PENDING: {
     bgcolor: "bg-orange-400",
     containerStyles: "border-orange-400 bg-orange-400/5 text-orange-400",
   },
@@ -28,10 +32,12 @@ const Verification = ({ isTriggered }: { isTriggered: boolean }) => {
   const [open, setOpen] = useState(false);
   const { session, isAuthenticated } = useSession();
 
+  console.log("Session:", session);
+
   const handleOpen = useCallback(() => {
     if (session?.kycVerified === "SUCCESS") return;
 
-    if (session?.kycVerified === "SUBMITTED") {
+    if (session?.kycVerified === "PENDING") {
       toast.warning("Currently under review");
       return;
     }
@@ -46,8 +52,9 @@ const Verification = ({ isTriggered }: { isTriggered: boolean }) => {
     handleOpen();
   }, [isTriggered, handleOpen]);
 
-  const showCursor =
-    session?.kycVerified === "PENDING" || session?.kycVerified === "FAILED";
+  const showModal =
+    session?.kycVerified === "NOT_VERIFIED" ||
+    session?.kycVerified === "FAILED";
 
   return (
     <div className="p-4 md:p-6 bg-white rounded-lg">
@@ -57,10 +64,30 @@ const Verification = ({ isTriggered }: { isTriggered: boolean }) => {
 
       <Separator className="mt-2" />
 
-      <div
-        onClick={handleOpen}
-        className={`${showCursor ? "cursor-pointer" : "cursor-default"} mt-6 md:mt-11.5 px-4 py-3.5 flex justify-between items-center rounded-lg bg-gray-100/89`}
-      >
+      {/* Trigger modal */}
+      {showModal && (
+        <div
+          onClick={handleOpen}
+          className="relative h-auto w-full mt-5 md:mt-7 pr-3 md:pr-5.5 flex items-center justify-between rounded-[16px] bg-[#FFFBF0] overflow-hidden border border-[#FFB703] hover:bg-[#FFFBF0] hover:cursor-pointer"
+        >
+          <div className="absolute top-1.75 -left-6 size-[72px] md:size-[87.79px] rotate-[21.86deg]">
+            <Image
+              src={verifiedUser}
+              alt="verified user image"
+              className="size-full object-cover"
+            />
+          </div>
+          <div className="py-5.5 md:py-6 pl-12.5 md:pl-17.5 ">
+            <p className="mt-0.5 text-[10px] md:text-sm font-roboto font-light">
+              Verify your business identity to unlock all platform features and
+              services.{" "}
+            </p>
+          </div>
+          <ChevronRight className="size-6 text-[#BF8902]" />
+        </div>
+      )}
+
+      <div className=" mt-4 px-4 py-3.5 flex justify-between items-center rounded-lg bg-gray-100/89">
         <div>
           <h3 className="font-semibold leading-5.5">KYC Verification</h3>
           <p className="text-xs font-light text-gray-500">

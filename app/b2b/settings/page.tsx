@@ -4,7 +4,7 @@ import { SecurityLock, UserCircle, Team as Users } from "@/components/icons";
 import UpdatePassword from "@/components/profile/UpdatePassword";
 import UpdateProfile from "@/components/profile/UpdateProfile";
 import Team from "@/components/settings/team/Team";
-import Verification from "@/components/settings/Verification";
+import Verification from "@/components/settings/kyc/Verification";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck } from "lucide-react";
 import { useSearchParams } from "next/navigation";
