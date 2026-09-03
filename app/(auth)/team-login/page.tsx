@@ -12,7 +12,7 @@ import {
   FieldTitle,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useLogIn } from "@/lib/hooks/mutation/useAuth";
+import { useTeamLogin } from "@/lib/hooks/mutation/useTeamAuth";
 import { useSession } from "@/lib/hooks/useSession";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye } from "lucide-react";
@@ -24,6 +24,14 @@ import { toast } from "sonner";
 import z from "zod";
 
 const loginSchema = z.object({
+  username: z
+    .string()
+    .min(3, "First name must be at least 3 characters long")
+    .max(100, "First name must be less than 100 characters long")
+    .regex(
+      /^[a-zA-Z\s'-]+$/,
+      "Username can only contain letters, spaces, hyphens, and apostrophes",
+    ),
   email: z
     .email("Enter a valid email address")
     .max(100, "email must be less than 100 characters long"),
@@ -43,8 +51,9 @@ const loginSchema = z.object({
 export type LoginData = z.infer<typeof loginSchema>;
 
 export default function LogInPage() {
-  const { mutate, isPending } = useLogIn();
-  const { setUser, setTokens, isAuthenticated, session } = useSession();
+  const { mutate, isPending } = useTeamLogin();
+  const { setUser, setTokens, isAuthenticated, session, getDashboardPath } =
+    useSession();
   const router = useRouter();
   const [isVisible, setIsVisible] = useState({
     createPassword: false,
@@ -62,10 +71,9 @@ export default function LogInPage() {
   // route user to dashboard if authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      if (session?.role === "USER") router.replace("/dashboard");
-      if (session?.role === "B2B") router.replace("/b2b/dashboard");
+      router.replace(getDashboardPath());
     }
-  }, [isAuthenticated, router, session]);
+  }, [getDashboardPath, isAuthenticated, router, session]);
 
   const onSubmit = (data: LoginData) => {
     // console.log(data);
@@ -97,15 +105,38 @@ export default function LogInPage() {
         <FieldSet className="gap-0">
           <div className="flex flex-col items-center">
             <FieldTitle className="font-heading text-2xl font-bold leading-8 text-center">
-              Cargoland Account Login
+              Welcome Back, Business Partner
             </FieldTitle>
             <FieldLegend className="mt-2 font-roboto text-brand-gray text-base font-normal leading-6 text-center">
-              Welcome back! Sign in to continue shipping and tracking your
-              packages.
+              Everything your business needs to ship.
             </FieldLegend>
           </div>
 
           <FieldGroup className="mt-8 gap-6">
+            <Controller
+              name="username"
+              control={control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor={field.name} className="form-label">
+                    Username
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Your username"
+                    className="form-input"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="form-error"
+                    />
+                  )}
+                </Field>
+              )}
+            />
             <Controller
               name="email"
               control={control}
@@ -201,9 +232,9 @@ export default function LogInPage() {
             </label>
             <span className="text-slate-500">Remember me</span>
           </div>
-          <Link href="/forgot-password" className="text-primary underline">
+          {/* <Link href="/forgot-password" className="text-primary underline">
             Forget Password{" "}
-          </Link>
+          </Link> */}
         </div>
 
         <Button
@@ -213,10 +244,6 @@ export default function LogInPage() {
         >
           Sign In
         </Button>
-
-        <div className="mt-6 px-4 py-2 rounded-sm border w-fit mx-auto">
-          <p className=""> As A Team? <Link href="/team-login" className="text-primary underline">Login</Link></p>
-        </div>
       </form>
     </div>
   );

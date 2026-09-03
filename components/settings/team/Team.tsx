@@ -2,11 +2,23 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useGetTeamMembers } from "@/lib/hooks/queries/useTeam";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import React, { useState } from "react";
 import AddMemberModal from "./AddMemberModal";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Delete, Invite } from "@/components/icons";
+
+const statusStyles = {
+  PENDING: {
+    bgcolor: "bg-orange-400",
+    containerStyles: "border-orange-400 bg-orange-400/5 text-orange-400",
+  },
+  ACTIVE: {
+    bgcolor: "bg-cargo-success",
+    containerStyles:
+      "border-cargo-success bg-cargo-success/5 text-cargo-success",
+  },
+};
 
 const LoadingState = () => (
   <div className="mt-6 md:mt-8 space-y-6">
@@ -81,7 +93,7 @@ const Team = () => {
         <div className="mt-6 md:mt-8">
           {data.map((member, idx) => {
             const [firstName, lastName] = member.fullName.split(" ");
-            const initials = `${firstName.charAt(0)}${lastName.charAt(0)}`;
+            const initials = `${firstName ? firstName?.charAt(0) : ""}${lastName ? lastName?.charAt(0) : ""}`;
             return (
               <React.Fragment key={idx}>
                 <div className="flex justify-between items-center">
@@ -108,11 +120,13 @@ const Team = () => {
                       {member.role.toLocaleLowerCase()}
                     </p>
                     {/* Status */}
-                    <div className="py-0.5 px-2 flex gap-1 items-center border-[1.5px] border-cargo-success rounded-full bg-cargo-success/5">
-                      <div className="size-1.5 rounded-full bg-cargo-success" />
-                      <p className="text-xs leading-5 text-cargo-success">
-                        Active
-                      </p>
+                    <div
+                      className={`${statusStyles[member.teamStatus].containerStyles} py-0.5 px-2 flex gap-1 items-center border-[1.5px] rounded-full`}
+                    >
+                      <div
+                        className={`${statusStyles[member.teamStatus].bgcolor} size-1.5 rounded-full `}
+                      />
+                      <p className="text-xs leading-5">{member.teamStatus}</p>
                     </div>
 
                     <Button

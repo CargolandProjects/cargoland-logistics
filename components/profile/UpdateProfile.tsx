@@ -32,7 +32,6 @@ interface ProfileUpdateFormProps {
 
 const profileSchema = z
   .object({
-    role: z.enum(["USER", "B2B"]),
     firstName: z
       .string()
       .min(3, "First name must be at least 3 characters long")
@@ -97,7 +96,6 @@ const UpdateProfile = ({
     useForm<ProfileUpdateData>({
       resolver: zodResolver(profileSchema),
       defaultValues: {
-        role: session?.role,
         firstName: "",
         lastName: "",
         email: "",

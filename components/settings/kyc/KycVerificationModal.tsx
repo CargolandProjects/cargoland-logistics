@@ -105,9 +105,9 @@ const KycVerificationModal = ({
     },
   });
 
-  useEffect(() => {
-    console.log("FORM ERRORS: ", form.formState.errors);
-  }, [form.formState.errors]);
+  // useEffect(() => {
+  //   console.log("FORM ERRORS: ", form.formState.errors);
+  // }, [form.formState.errors]);
 
   const kycFields = [
     ["personalDocumentType", "document", "fullName", "ninNumber"],

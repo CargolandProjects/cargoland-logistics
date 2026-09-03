@@ -120,6 +120,9 @@ const Header = () => {
   };
   const authenticatedLinks =
     session?.role === "USER" ? mainAuthLinks : b2bAuthLinks;
+  const profileLinks = session?.role === "USER" ? "/profile" : "/b2b/settings";
+  const walletLinks = session?.role === "USER" ? "wallet" : "/b2b/wallet";
+
   const displayLinks = isAuthenticated ? authenticatedLinks : homeLinks; // check if user is a
   const desktopLinks = displayLinks.filter(
     (link) => link.title !== "Profile" && link.title !== "Wallet",
@@ -198,14 +201,14 @@ const Header = () => {
                   asChild
                   className="p-0 font-medium leading-5.5 hover:p-2 hover:bg-primary/8! duration-200 cursor-pointer"
                 >
-                  <Link href="/profile">Profile</Link>
+                  <Link href={profileLinks}>Profile</Link>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem
                   asChild
                   className="p-0 font-medium leading-5.5 hover:p-2 hover:bg-primary/8! duration-200 cursor-pointer"
                 >
-                  <Link href="/wallet">Wallet</Link>
+                  <Link href={walletLinks}>Wallet</Link>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem

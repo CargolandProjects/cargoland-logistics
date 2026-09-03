@@ -17,7 +17,7 @@ import SignOutModal from "../SignOutModal";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 const B2BHeader = ({ setOpenMenu }: { setOpenMenu: (v: boolean) => void }) => {
-  const { isAuthenticated, session, signOut } = useSession();
+  const { isAuthenticated, session, isTeamMember, signOut } = useSession();
   const [open, setOpen] = useState(false);
 
   const initials =
@@ -134,12 +134,14 @@ const B2BHeader = ({ setOpenMenu }: { setOpenMenu: (v: boolean) => void }) => {
 
             {isAuthenticated && (
               <DropdownMenuContent sideOffset={8} className=" space-y-2 p-2">
-                <DropdownMenuItem
-                  asChild
-                  className="p-0 font-medium leading-5.5 hover:p-2 hover:bg-primary/8! duration-200 cursor-pointer"
-                >
-                  <Link href="/b2b/settings">Profile</Link>
-                </DropdownMenuItem>
+                {!isTeamMember && (
+                  <DropdownMenuItem
+                    asChild
+                    className="p-0 font-medium leading-5.5 hover:p-2 hover:bg-primary/8! duration-200 cursor-pointer"
+                  >
+                    <Link href="/b2b/settings">Profile</Link>
+                  </DropdownMenuItem>
+                )}
 
                 <DropdownMenuItem
                   asChild
