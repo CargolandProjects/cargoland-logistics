@@ -12,8 +12,9 @@ import {
 } from "../icons";
 import { usePathname } from "next/navigation";
 import { Settings } from "lucide-react";
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
+import { Sheet, SheetContent, SheetTitle } from "../ui/sheet";
 import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
+import { useSession } from "@/lib/hooks/useSession";
 
 const b2bLinks = [
   {
@@ -65,8 +66,24 @@ const B2BSidebar = ({
   open: boolean;
   setOpen: (v: boolean) => void;
 }) => {
+  const { isTeamMember } = useSession();
   const isMobile = useMediaQuery("(max-width: 1024px)");
   const pathName = usePathname();
+
+  // Create a filter function
+  const visibleLinks = b2bLinks
+    .map((section) => ({
+      ...section,
+      links: section.links.filter((link) => {
+        // Hide "Settings" and "Insight" for team members
+        if (isTeamMember) {
+          if (link.title === "Settings" || link.title === "Insight")
+            return false;
+        }
+        return true;
+      }),
+    }))
+    .filter((section) => section.links.length > 0); // remove empty sections
 
   return (
     <>
@@ -85,7 +102,7 @@ const B2BSidebar = ({
         </Link>
 
         <div className="mt-5 px-2">
-          {b2bLinks.map((section, idx) => {
+          {visibleLinks.map((section, idx) => {
             return (
               <div key={idx}>
                 {section.title && (
@@ -140,7 +157,7 @@ const B2BSidebar = ({
             </Link>
 
             <div className="mt-5 px-2">
-              {b2bLinks.map((section, idx) => {
+              {visibleLinks.map((section, idx) => {
                 return (
                   <div key={idx}>
                     {section.title && (

@@ -9,12 +9,12 @@ import React, { useState } from "react";
 export default function B2BLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const { session, status } = useSession();
+  const { status, isTeamMember, isB2BAdmin } = useSession();
   const [openMenu, setOpenMenu] = useState(false);
 
   if (status === "loading") return null;
 
-  if (session?.role !== "B2B") {
+  if (!isB2BAdmin && !isTeamMember) {
     redirect("/");
   }
 

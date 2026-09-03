@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useInviteMember } from "@/lib/hooks/mutation/useAuthTeam";
+import { useInviteMember } from "@/lib/hooks/mutation/useTeamAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -61,8 +61,7 @@ const AddMemberModal = ({
     console.log("Invite Member:", data);
 
     inviteMember(data, {
-      onSuccess: (res) => {
-        toast.success(res.message);
+      onSuccess: () => {
         setOpen(false);
       },
     });

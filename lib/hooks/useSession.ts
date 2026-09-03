@@ -13,6 +13,7 @@ export function useSession() {
   // const updateUser = useAuthSessionStore((s) => s.updateUser);
   const storeSignOut = useAuthSessionStore((s) => s.signOut);
   const hydrate = useAuthSessionStore((s) => s.hydrateFromStorage);
+  const role = session?.role;
 
   const USER_KEY = process.env.NEXT_PUBLIC_USER_KEY;
   const ACCESS_KEY = process.env.NEXT_PUBLIC_ACCESS_KEY;
@@ -70,6 +71,17 @@ export function useSession() {
     storeSignOut(queryClient);
   }, [storeSignOut, queryClient]);
 
+  const isTeamMember = role === "ADMIN" || role === "STAFF";
+  const isB2BAdmin = role === "B2B";
+  // const isTeamActive = isTeamMember && session?.teamStatus === "ACTIVE";
+
+  // Central dashboard path
+  const getDashboardPath = useCallback(() => {
+    if (!session) return "/";
+    // All non‑USER roles go to B2B dashboard
+    return role === "USER" ? "/dashboard" : "/b2b/dashboard";
+  }, [role, session]);
+
   return {
     session,
     status,
@@ -77,8 +89,12 @@ export function useSession() {
     // actions
     setUser,
     setTokens,
+    getDashboardPath,
     // updateUser,
     signOut,
     refreshSession,
+
+    isTeamMember,
+    isB2BAdmin,
   } as const;
 }

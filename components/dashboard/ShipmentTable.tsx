@@ -33,9 +33,9 @@ const ShipmentTable = ({
   handleTrack,
 }: ShipmentTableProps) => {
   return (
-    <Table className="mt-3 bg-white rounded-lg">
+    <Table className="mt-3 bg-white rounded-lg table-fixed">
       <TableHeader>
-        <TableRow className="h-[53px] hover:bg-white">
+        <TableRow className="h-[53px] hover:bg-white table-uniform">
           <TableHead className="pl-6 text-sm font-normal leading-5.5 font-roboto text-neutral-600/90">
             Tracking ID
           </TableHead>
@@ -54,8 +54,8 @@ const ShipmentTable = ({
           <TableHead className="text-sm font-normal leading-5.5 font-roboto text-neutral-600/90">
             Status
           </TableHead>
-          <TableHead className="text-sm font-normal leading-5.5 font-roboto text-neutral-600/90 sr-only">
-            Actions
+          <TableHead className="text-sm font-normal leading-5.5 font-roboto text-neutral-600/90 max-w-[70px]">
+            <p className="sr-only">Actions</p>
           </TableHead>
         </TableRow>
       </TableHeader>
@@ -70,14 +70,16 @@ const ShipmentTable = ({
               key={idx}
               className="h-15.5"
             >
-              <TableCell className="pl-6 leading-5.5">
+              <TableCell className="pl-6 leading-5.5 truncate">
                 {shipment.trackingId}
               </TableCell>
               <TableCell>
                 <div className="flex items-center gap-2 leading-5.5 max-w-[180px]">
                   <p className="leading-5.5">{shipment.country}</p>
                   <ArrowRight className="shrink-0 size-4.5 text-primary" />
-                  <p className="leading-5.5 min-w-0 truncate">{shipment.receiverCountry}</p>
+                  <p className="leading-5.5 min-w-0 truncate">
+                    {shipment.receiverCountry}
+                  </p>
                 </div>
               </TableCell>
               <TableCell className="leading-5.5 capitalize">

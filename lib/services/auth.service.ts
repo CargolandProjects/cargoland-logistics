@@ -8,6 +8,8 @@ import { ProfileUpdateData } from "@/components/profile/UpdateProfile";
 import { ChangePasswordData } from "@/components/profile/UpdatePassword";
 import { KycData } from "@/components/settings/kyc/KycVerificationModal";
 
+// type UserRole = "USER" | "B2B" | "ADMIN" | "STAFF";
+
 export type APIResponse<T> = {
   status: string;
   message: string;
@@ -19,15 +21,15 @@ interface Document {
   publicId: string;
 }
 
-export interface User {
+// Common fields shared by all user types
+interface BaseUser {
   id: string;
-  firstName: string;
-  lastName: string;
   email: string;
   phoneNumber: string;
   country: string;
+  firstName: string;
+  lastName: string;
   termsAndCondition: boolean;
-  role: "B2B" | "USER";
   refreshToken: string;
   otpVerifiedAt: string | null;
   userProfileUrl: string | null;
@@ -40,7 +42,30 @@ export interface User {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  // role will be added in each variant
 }
+
+// Individual user
+export interface IndividualUser extends BaseUser {
+  role: "USER";
+}
+
+// B2B company admin
+export interface B2BAdminUser extends BaseUser {
+  role: "B2B";
+
+  // (companyName is already in BaseUser but could be moved here if needed)
+}
+
+// Team member (Admin or Member)
+export interface TeamMemberUser extends BaseUser {
+  role: "ADMIN" | "STAFF";
+  username: string;
+  userId: string;
+  teamStatus: "ACTIVE" | "PENDING";
+}
+
+export type User = IndividualUser | B2BAdminUser | TeamMemberUser;
 
 type UpdateProfile = User & {
   verificationCode: string;
@@ -65,7 +90,7 @@ export interface LogIn {
 
 type SignUpRes = APIResponse<User>;
 
-type LogInRes = APIResponse<LogIn>;
+export type LogInRes = APIResponse<LogIn>;
 
 type UpdatePasswordData = createPasswordData & { email: string };
 

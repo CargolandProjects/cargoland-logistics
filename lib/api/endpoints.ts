@@ -17,7 +17,7 @@ export const API_ROUTES = {
   team: {
     inviteMember: "/users/invite-team-member",
     getTeamMembers: "/users/get-all-company/invited-team-member",
-    teamMemberLogin: "/users/team-member-login",
+    teamLogin: "/users/team-member-login",
   },
 
   shipment: {
@@ -57,6 +57,6 @@ export const API_ROUTES = {
     chargeWallet: "/users/charge-wallet",
     getBalance: "/users/get-wallet-balance",
   },
-  
+
   company: "/users/get-company/insight",
 };

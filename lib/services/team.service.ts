@@ -1,7 +1,7 @@
 import { InviteData } from "@/components/settings/team/AddMemberModal";
 import apiClient from "../api/client";
 import { API_ROUTES } from "../api/endpoints";
-import { APIResponse } from "./auth.service";
+import { APIResponse, LogInRes } from "./auth.service";
 
 interface TeamMember {
   id: string;
@@ -10,6 +10,7 @@ interface TeamMember {
   email: string;
   role: string;
   userId: string;
+  teamStatus: "PENDING" | "ACTIVE";
   createdAt: string;
   updatedAt: string;
 }
@@ -29,6 +30,11 @@ export const team = {
       API_ROUTES.team.inviteMember,
       data,
     );
+    return res.data;
+  },
+
+  async teamLogin(data: { username: string; email: string; password: string }) {
+    const res = await apiClient.post<LogInRes>(API_ROUTES.team.teamLogin, data);
     return res.data;
   },
 };

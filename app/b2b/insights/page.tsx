@@ -11,10 +11,16 @@ import ShipmentVolume from "@/components/insights/ShipmentVolume";
 import { useCompanyInsight } from "@/lib/hooks/queries/useCompanyInsights";
 import SpendingTrend from "@/components/insights/SpendingTrend";
 import TopDestinations from "@/components/insights/TopDestinations";
+import { redirect } from "next/navigation";
+import { useSession } from "@/lib/hooks/useSession";
 
 export default function InsightsPage() {
   const { data, isLoading } = useCompanyInsight();
-  console.log("Data:", data);
+  const { isB2BAdmin } = useSession();
+
+  if (!isB2BAdmin) redirect("/b2b/dashboard");
+  
+  // console.log("Data:", data);
 
   const getDashboardStats = () => {
     const dashboardStats = [

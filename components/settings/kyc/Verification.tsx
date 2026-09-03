@@ -6,7 +6,6 @@ import { toast } from "sonner";
 import { ChevronRight } from "lucide-react";
 import { verifiedUser } from "@/assets/images";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 
 const statusStyles = {
   NOT_VERIFIED: {
