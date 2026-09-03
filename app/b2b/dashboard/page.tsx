@@ -36,8 +36,7 @@ export default function B2BDashboardPage() {
     isLoading,
     isError,
   } = useAllShipments(currentPage);
-  const { session } = useSession();
-  const { isChecking } = useProtectedRoute();
+  const { session, isB2BAdmin } = useSession();
   const router = useRouter();
 
   // console.log("DashboardStats", data);
@@ -104,10 +103,6 @@ export default function B2BDashboardPage() {
     handleRoute(`/track-shipment/?trackingId=${trackingId}`);
   };
 
-  if (isChecking) {
-    return null;
-  }
-
   return (
     <div>
       <section className="flex max-md:flex-col md:gap-2 justify-between md:items-end">
@@ -129,25 +124,29 @@ export default function B2BDashboardPage() {
         </Button>
       </section>
 
-      <Link
-        href="/b2b/settings?tab=VERIFICATION"
-        className="relative mt-5 md:mt-7 pr-3 md:pr-5.5 flex items-center justify-between rounded-[16px] bg-[#FFFBF0] overflow-hidden border border-[#FFB703]"
-      >
-        <div className="absolute top-1.75 -left-6 size-[72px] md:size-[87.79px] rotate-[21.86deg]">
-          <Image
-            src={verifiedUser}
-            alt="verified user image"
-            className="size-full object-cover"
-          />
-        </div>
-        <div className="py-5.5 md:py-6 pl-12.5 md:pl-17.5 ">
-          <h3 className="text-xs md:text-base font-semibold font-montserrat ">Identity Verification Required</h3>
-          <p className="mt-0.5 text-[10px] md:text-sm font-roboto font-light">
-            Verify your business identity to unlock all services.
-          </p>
-        </div>
-        <ChevronRight className="size-6 text-[#BF8902]" />
-      </Link>
+      {isB2BAdmin && (
+        <Link
+          href="/b2b/settings?tab=VERIFICATION"
+          className="relative mt-5 md:mt-7 pr-3 md:pr-5.5 flex items-center justify-between rounded-[16px] bg-[#FFFBF0] overflow-hidden border border-[#FFB703]"
+        >
+          <div className="absolute top-1.75 -left-6 size-[72px] md:size-[87.79px] rotate-[21.86deg]">
+            <Image
+              src={verifiedUser}
+              alt="verified user image"
+              className="size-full object-cover"
+            />
+          </div>
+          <div className="py-5.5 md:py-6 pl-12.5 md:pl-17.5 ">
+            <h3 className="text-xs md:text-base font-semibold font-montserrat ">
+              Identity Verification Required
+            </h3>
+            <p className="mt-0.5 text-[10px] md:text-sm font-roboto font-light">
+              Verify your business identity to unlock all services.
+            </p>
+          </div>
+          <ChevronRight className="size-6 text-[#BF8902]" />
+        </Link>
+      )}
 
       {/* Dashboard Stats */}
       <section className="mt-5 md:mt-7 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">

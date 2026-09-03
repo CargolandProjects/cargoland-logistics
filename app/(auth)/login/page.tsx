@@ -213,6 +213,10 @@ export default function LogInPage() {
         >
           Sign In
         </Button>
+
+        <div className="mt-6 px-4 py-2 rounded-sm border w-fit mx-auto">
+          <p className=""> As A Team? <Link href="/team-login" className="text-primary underline">Login</Link></p>
+        </div>
       </form>
     </div>
   );
