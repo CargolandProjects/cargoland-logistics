@@ -53,6 +53,7 @@ import Team from "./Team";
 import SecurityLock from "./SecurityLock";
 import ShieldCheck from "./ShieldCheck";
 import UserCircle from "./UserCircle";
+import AlertTriangle from "./AlertTriangle";
 
 export {
   Location,
@@ -110,4 +111,5 @@ export {
   SecurityLock,
   ShieldCheck,
   UserCircle,
+  AlertTriangle,
 };

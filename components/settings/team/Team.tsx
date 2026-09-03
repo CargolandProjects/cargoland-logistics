@@ -6,7 +6,7 @@ import { Plus } from "lucide-react";
 import React, { useState } from "react";
 import AddMemberModal from "./AddMemberModal";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Delete, Invite } from "@/components/icons";
+import { AlertTriangle, Delete, Invite } from "@/components/icons";
 
 const statusStyles = {
   PENDING: {
@@ -19,6 +19,18 @@ const statusStyles = {
       "border-cargo-success bg-cargo-success/5 text-cargo-success",
   },
 };
+
+const ErrorState = () => (
+  <div className="mt-8 flex flex-col items-center">
+    <div className="size-17 flex justify-center items-center bg-linear-to-t from-[#F6BABCCC]/80 to-[#FFFAFACC]/80 rounded-full">
+      <AlertTriangle className="size-6 text-primary" />
+    </div>
+    <h2 className="mt-4 md:mt-6 text-lg font-medium">Failed to Load</h2>
+    <p className="mt-1 md:mt-3 font-light text-center">
+      We couldn’t load your team members. Please try again or refresh the page.
+    </p>
+  </div>
+);
 
 const LoadingState = () => (
   <div className="mt-6 md:mt-8 space-y-6">
@@ -47,11 +59,11 @@ const LoadingState = () => (
 const EmptyState = ({ setOpen }: { setOpen: (v: boolean) => void }) => {
   return (
     <div className="mt-8 flex flex-col items-center">
-      <div className="size-25 flex justify-center items-center bg-linear-to-t from-[#F6BABCCC]/80 to-[#FFFAFACC]/80 rounded-full">
-        <Invite className="size-10 text-primary" />
+      <div className="size-17 flex justify-center items-center bg-linear-to-t from-[#F6BABCCC]/80 to-[#FFFAFACC]/80 rounded-full">
+        <Invite className="size-6 text-primary" />
       </div>
-      <h2 className="mt-6 text-lg font-medium">Invite Team Members</h2>
-      <p className="mt-3 font-light">
+      <h2 className="mt-4 md:mt-6 text-lg font-medium">Invite Team Members</h2>
+      <p className="mt-1 md:mt-3 font-light text-center">
         Add staff or team members to your Cargoland Africa B2B Account.
       </p>
       <Button
@@ -87,6 +99,8 @@ const Team = () => {
 
       {isLoading && <LoadingState />}
 
+      {isError && <ErrorState />}
+
       {isSuccess && data.length === 0 && <EmptyState setOpen={setOpen} />}
 
       {isSuccess && data.length > 0 && (
@@ -110,8 +124,12 @@ const Team = () => {
                       </AvatarFallback>
                     </Avatar>
                     <div className="">
-                      <p className="text-base font-medium">{member.fullName}</p>
-                      <p className="text-gray-500">{member.email}</p>
+                      <p className="text-base font-medium line-clamp-1">
+                        {member.fullName}
+                      </p>
+                      <p className="text-gray-500 line-clamp-1">
+                        {member.email}
+                      </p>
                     </div>
                   </div>
 
@@ -126,7 +144,9 @@ const Team = () => {
                       <div
                         className={`${statusStyles[member.teamStatus].bgcolor} size-1.5 rounded-full `}
                       />
-                      <p className="text-xs leading-5">{member.teamStatus}</p>
+                      <p className="text-xs leading-5 capitalize">
+                        {member.teamStatus.toLowerCase()}
+                      </p>
                     </div>
 
                     <Button
