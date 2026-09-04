@@ -22,13 +22,20 @@ import {
 import { useInviteMember } from "@/lib/hooks/mutation/useTeamAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { toast } from "sonner";
 import z from "zod";
 
 const roleTypes = ["ADMIN", "STAFF"] as const;
 
 const inviteSchema = z.object({
-  fullName: z
+  firstName: z
+    .string()
+    .min(3, "First name must be at least 3 characters long")
+    .max(100, "First name must be less than 100 characters long")
+    .regex(
+      /^[a-zA-Z\s'-]+$/,
+      "last name can only contain letters, spaces, hyphens, and apostrophes",
+    ),
+  lastName: z
     .string()
     .min(3, "Last name must be at least 3 characters long")
     .max(100, "Last name must be less than 100 characters long")
@@ -54,7 +61,7 @@ const AddMemberModal = ({
   const { mutate: inviteMember, isPending } = useInviteMember();
   const { handleSubmit, control } = useForm<InviteData>({
     resolver: zodResolver(inviteSchema),
-    defaultValues: { role: undefined, fullName: "", email: "" },
+    defaultValues: { role: undefined, firstName: "", lastName: "", email: "" },
   });
 
   const onSubmit = (data: InviteData) => {
@@ -78,30 +85,57 @@ const AddMemberModal = ({
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-6">
           <FieldGroup>
-            <Controller
-              name="fullName"
-              control={control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid} className="gap-1">
-                  <FieldLabel htmlFor={field.name} className="form-label">
-                    Full Name
-                  </FieldLabel>
-                  <Input
-                    {...field}
-                    id={field.name}
-                    aria-invalid={fieldState.invalid}
-                    placeholder="Name"
-                    className="form-input"
-                  />
-                  {fieldState.invalid && (
-                    <FieldError
-                      errors={[fieldState.error]}
-                      className="form-error"
+            <div className="grid sm:grid-cols-2 gap-5 md:gap-4">
+              <Controller
+                name="firstName"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid} className="gap-1">
+                    <FieldLabel htmlFor={field.name} className="form-label">
+                      First Name
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id={field.name}
+                      aria-invalid={fieldState.invalid}
+                      placeholder="First Name"
+                      className="form-input"
                     />
-                  )}
-                </Field>
-              )}
-            />
+                    {fieldState.invalid && (
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="form-error"
+                      />
+                    )}
+                  </Field>
+                )}
+              />
+
+              <Controller
+                name="lastName"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid} className="gap-1">
+                    <FieldLabel htmlFor={field.name} className="form-label">
+                      Last Name
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id={field.name}
+                      aria-invalid={fieldState.invalid}
+                      placeholder="Last Name"
+                      className="form-input"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="form-error"
+                      />
+                    )}
+                  </Field>
+                )}
+              />
+            </div>
 
             <Controller
               name="email"
