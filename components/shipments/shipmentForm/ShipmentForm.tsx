@@ -34,7 +34,8 @@ export type PaymentMethod = "WALLET" | "ONLINE";
 
 const ShipmentForm = () => {
   const { mutate: createShipment } = useCreateShipment();
-  const { mutate: createShipmentUser } = useCreateShipmentUser();
+  const { mutate: createShipmentUser, isPending: isBooking } =
+    useCreateShipmentUser();
   const { mutate: makePayment, isPending: isPaying } = useMakePayment();
   const { mutate: chargeWallet, isPending: isCharging } = useChargeWallet();
   const formData = useShipmentStore((s) => s.formData);
@@ -538,6 +539,7 @@ const ShipmentForm = () => {
             default form behaviour thereby introducing a bug */}
               {step === 2 && (
                 <Button
+                  disabled={isBooking}
                   type="submit"
                   className="w-full md:w-[215px] h-13.75 rounded-md"
                 >

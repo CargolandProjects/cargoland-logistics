@@ -1,5 +1,6 @@
 import { shipment } from "@/lib/services/shipment.service";
 import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export const useCreateShipment = () => {
   return useMutation({
@@ -28,6 +29,9 @@ export const useShipmentEstimate = () => {
 export const useMakePayment = () => {
   return useMutation({
     mutationFn: shipment.makePayment,
+    onError: (res) => {
+      toast.error(res.message || "Payment failed. Please try again.");
+    },
   });
 };
 
