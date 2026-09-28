@@ -18,6 +18,7 @@ export const API_ROUTES = {
     inviteMember: "/users/invite-team-member",
     getTeamMembers: "/users/get-all-company/invited-team-member",
     teamLogin: "/users/team-member-login",
+    removeTeamMember: (id: string) => `/users/remove-team-member/${id}`,
   },
 
   shipment: {

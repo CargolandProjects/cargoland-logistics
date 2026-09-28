@@ -24,7 +24,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 
-const roleTypes = ["ADMIN", "STAFF"] as const;
+const roleTypes = [ "STAFF"] as const;
 
 const inviteSchema = z.object({
   firstName: z

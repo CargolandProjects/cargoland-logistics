@@ -107,7 +107,7 @@ const homeLinks = [
 ];
 
 const Header = () => {
-  const { isAuthenticated, signOut, session } = useSession();
+  const { isAuthenticated, signOut, session, isTeamMember } = useSession();
   const [open, setOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -197,12 +197,14 @@ const Header = () => {
 
             {isAuthenticated && (
               <DropdownMenuContent className="max-md:hidden space-y-2 p-2">
-                <DropdownMenuItem
-                  asChild
-                  className="p-0 font-medium leading-5.5 hover:p-2 hover:bg-primary/8! duration-200 cursor-pointer"
-                >
-                  <Link href={profileLinks}>Profile</Link>
-                </DropdownMenuItem>
+                {!isTeamMember && (
+                  <DropdownMenuItem
+                    asChild
+                    className="p-0 font-medium leading-5.5 hover:p-2 hover:bg-primary/8! duration-200 cursor-pointer"
+                  >
+                    <Link href={profileLinks}>Profile</Link>
+                  </DropdownMenuItem>
+                )}
 
                 <DropdownMenuItem
                   asChild
