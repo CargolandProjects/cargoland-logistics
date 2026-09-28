@@ -5,7 +5,8 @@ import { APIResponse, LogInRes } from "./auth.service";
 
 interface TeamMember {
   id: string;
-  fullName: string;
+  firstName: string;
+  lastName: string;
   username: string;
   email: string;
   role: string;
@@ -30,6 +31,11 @@ export const team = {
       API_ROUTES.team.inviteMember,
       data,
     );
+    return res.data;
+  },
+
+  async removeTeamMember(id: string) {
+    const res = await apiClient.delete(API_ROUTES.team.removeTeamMember(id));
     return res.data;
   },
 

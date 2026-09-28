@@ -2,11 +2,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useGetTeamMembers } from "@/lib/hooks/queries/useTeam";
-import { Plus } from "lucide-react";
+import { Loader, Plus } from "lucide-react";
 import React, { useState } from "react";
 import AddMemberModal from "./AddMemberModal";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertTriangle, Delete, Invite } from "@/components/icons";
+import { useRemoveTeamMember } from "@/lib/hooks/mutation/useTeamAuth";
+import ConfirmAlertDialog from "@/components/ConfirmAlertDialog";
 
 const statusStyles = {
   PENDING: {
@@ -78,7 +80,19 @@ const EmptyState = ({ setOpen }: { setOpen: (v: boolean) => void }) => {
 
 const Team = () => {
   const { data, isLoading, isError, isSuccess } = useGetTeamMembers();
+  const { mutate: removeMember, isPending } = useRemoveTeamMember();
+
+  const [removingId, setRemovingId] = useState("");
+  const [openAlert, setOpenAlert] = useState(false);
   const [open, setOpen] = useState(false);
+
+  const handleRemoveMember = () => {
+    removeMember(removingId, {
+      onSettled: () => {
+        setRemovingId("");
+      },
+    });
+  };
 
   return (
     <div className="p-4 md:p-6 bg-white rounded-lg">
@@ -106,8 +120,8 @@ const Team = () => {
       {isSuccess && data.length > 0 && (
         <div className="mt-6 md:mt-8">
           {data.map((member, idx) => {
-            const [firstName, lastName] = member.fullName.split(" ");
-            const initials = `${firstName ? firstName?.charAt(0) : ""}${lastName ? lastName?.charAt(0) : ""}`;
+            const initials = `${member.firstName?.charAt(0) || ""}${member.lastName?.charAt(0) || ""}`;
+            const removingMember = removingId === member.id && isPending;
             return (
               <React.Fragment key={idx}>
                 <div className="flex justify-between items-center">
@@ -125,7 +139,7 @@ const Team = () => {
                     </Avatar>
                     <div className="">
                       <p className="text-base font-medium line-clamp-1">
-                        {member.fullName}
+                        {member.firstName} {member.lastName}
                       </p>
                       <p className="text-gray-500 line-clamp-1">
                         {member.email}
@@ -150,10 +164,19 @@ const Team = () => {
                     </div>
 
                     <Button
+                      disabled={isPending}
+                      onClick={() => {
+                        setRemovingId(member.id);
+                        setOpenAlert(true);
+                      }}
                       variant="ghost"
                       className="ml-2 p-0 h-auto hover:bg-transparent hover:text-red-500 transition duration-200"
                     >
-                      <Delete className="size-4" />
+                      {removingMember ? (
+                        <Loader className="size-4 animate-spin" />
+                      ) : (
+                        <Delete className="size-4" />
+                      )}
                     </Button>
                   </div>
                 </div>
@@ -165,6 +188,13 @@ const Team = () => {
         </div>
       )}
 
+      <ConfirmAlertDialog
+        open={openAlert}
+        onOpenChange={setOpenAlert}
+        title="Remove Team Member"
+        desc="Are you sure you want to remove this team member? This action cannot be undone."
+        onConfirm={handleRemoveMember}
+      />
       <AddMemberModal open={open} setOpen={setOpen} />
     </div>
   );

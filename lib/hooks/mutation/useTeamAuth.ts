@@ -22,3 +22,17 @@ export const useTeamLogin = () => {
     mutationFn: team.teamLogin,
   });
 };
+
+export const useRemoveTeamMember = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: team.removeTeamMember,
+    onSuccess: (res) => {
+      toast.success(res.message);
+      queryClient.invalidateQueries({ queryKey: ["teamMembers"] });
+    },
+    onError: (res) => {
+      toast.error(res.message);
+    },
+  });
+};
