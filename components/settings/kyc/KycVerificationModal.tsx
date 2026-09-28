@@ -13,7 +13,7 @@ import { useSubmitKyc } from "@/lib/hooks/mutation/useAuth";
 import { toast } from "sonner";
 import { Button } from "../../ui/button";
 import { useUploadImage } from "@/lib/hooks/mutation/useImage";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import KycStep from "./KycStep";
 import PersonalInfo from "./PersonalInfo";
 import BusinessVerification from "./BusinessVerification";
@@ -130,7 +130,7 @@ const KycVerificationModal = ({
       onSuccess: (res) => {
         toast.success(res.message);
         setOpen(false);
-        setStep(0)
+        setStep(0);
         form.reset();
       },
       onError: (res) => {

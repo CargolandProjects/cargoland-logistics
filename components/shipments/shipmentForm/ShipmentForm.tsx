@@ -25,7 +25,7 @@ import { useSession } from "@/lib/hooks/useSession";
 import { toast } from "sonner";
 import AuthPrompt from "../AuthPrompt";
 import { ArrowLeft } from "@/components/icons";
-import ConfirmDialog from "@/components/ConfirmDialog";
+import ConfirmDialog from "@/components/ConfirmAlertDialog";
 import PaymentModal from "./PaymentModal";
 import { useChargeWallet } from "@/lib/hooks/mutation/useWallet";
 import { normalizeCountryName } from "@/lib/utils/countryOptions";
